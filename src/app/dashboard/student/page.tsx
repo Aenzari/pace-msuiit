@@ -7,6 +7,7 @@ import {
   User,
   FileText,
   Calendar,
+  CalendarDays,
   MessageSquare,
   QrCode,
   MapPin,
@@ -18,8 +19,12 @@ import {
   Share2,
   ExternalLink,
   ChevronRight,
+  X,
   ShieldCheck,
   Building2,
+  BriefcaseBusiness,
+  Newspaper,
+  UserRound,
   Sliders,
   Send,
   Upload,
@@ -31,16 +36,17 @@ import {
 import DashboardLayout, { NavItem } from "@/components/DashboardLayout";
 
 const navItems: NavItem[] = [
-  { id: "overview", label: "Student Overview", icon: <LayoutDashboard size={18} /> },
-  { id: "credential", label: "QR Credential & Badging", icon: <QrCode size={18} /> },
-  { id: "simulator", label: "Mock Technical Evaluation", icon: <Award size={18} /> },
-  { id: "careerfair", label: "Campus Career Fair Booths", icon: <Building2 size={18} /> },
-  { id: "resume", label: "CV Central & Upload", icon: <FileText size={18} /> },
-  { id: "messages", label: "Counselor Messages", icon: <MessageSquare size={18} /> },
+  { id: "overview", label: "Overview", icon: <LayoutDashboard size={18} /> },
+  { id: "appointments", label: "Appointments", icon: <CalendarDays size={18} /> },
+  { id: "opportunities", label: "Career Opportunities", icon: <BriefcaseBusiness size={18} /> },
+  { id: "resume", label: "Resume & CV Checker", icon: <FileText size={18} /> },
+  { id: "messages", label: "Messages & Feedback", icon: <MessageSquare size={18} /> },
+  { id: "profile", label: "My Career Profile", icon: <UserRound size={18} /> },
 ];
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
 
   // Feature C: Career Center Verification QR State
   const [qrVerified, setQrVerified] = useState(true);
@@ -136,8 +142,11 @@ export default function StudentDashboard() {
         {/* Top Profile Strip (Clean My.IIT Style) */}
         <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-l-[#7A0016]">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-[#7A0016] text-[#FFD700] font-black text-xl flex items-center justify-center border-2 border-[#F5A623] shadow-xs">
-              AR
+            <div
+              className="w-14 h-14 rounded-full bg-[#F8FAFC] text-[#94A3B8] flex items-center justify-center border-2 border-[#D1D5DB] shadow-xs"
+              aria-label="Profile picture placeholder"
+            >
+              <User size={28} strokeWidth={1.5} />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -162,26 +171,176 @@ export default function StudentDashboard() {
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setActiveTab("credential")}
+              onClick={() => setActiveTab("appointments")}
               className="px-3.5 py-2 rounded-lg bg-[#FFF3D6] hover:bg-[#FFE5A3] text-[#7A0016] text-xs font-bold border border-[#F5A623]/60 flex items-center gap-1.5 transition-colors btn-press shadow-xs"
             >
-              <QrCode size={14} />
-              <span>View Verified QR</span>
+              <CalendarDays size={14} />
+              <span>Book Counseling</span>
             </button>
             <button
-              onClick={() => setActiveTab("careerfair")}
+              onClick={() => setActiveTab("opportunities")}
               className="px-3.5 py-2 rounded-lg bg-[#7A0016] hover:bg-[#9B0020] text-white text-xs font-bold flex items-center gap-1.5 transition-colors btn-press shadow-xs"
             >
-              <Building2 size={14} />
-              <span>Gym Career Fair</span>
+              <BriefcaseBusiness size={14} />
+              <span>View Opportunities</span>
             </button>
           </div>
         </div>
 
-        {/* ─────────────────────────────────────────────────────────────
-            TAB 1: OVERVIEW
-            ───────────────────────────────────────────────────────────── */}
+        {/* CareerConnect+ student overview */}
         {activeTab === "overview" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-xs border-l-4 border-l-[#7A0016]">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#7A0016]">CareerConnect+ Student Workspace</p>
+                  <h1 className="text-2xl font-black text-[#0F172A] mt-1">Good morning, Alexandra.</h1>
+                  <p className="text-sm text-[#64748B] mt-1 max-w-2xl">
+                    Manage your career guidance journey, connect with your counselor, and stay informed about opportunities.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveTab("appointments")}
+                  className="px-4 py-2.5 rounded-lg bg-[#7A0016] hover:bg-[#9B0020] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-xs"
+                >
+                  <CalendarDays size={15} />
+                  Book an appointment
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { label: "Upcoming appointment", value: "Oct 30, 10:00 AM", note: "Dr. Maria Santos", icon: CalendarDays, color: "text-[#7A0016]", tab: "appointments" },
+                { label: "Resume status", value: "Needs review", note: "Last updated 2 days ago", icon: FileText, color: "text-[#D97706]", tab: "resume" },
+                { label: "New opportunities", value: "8 available", note: "3 posted this week", icon: BriefcaseBusiness, color: "text-[#0284C7]", tab: "opportunities" },
+                { label: "Unread feedback", value: "2 messages", note: "From your counselor", icon: MessageSquare, color: "text-emerald-700", tab: "messages" },
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button key={item.label} onClick={() => setActiveTab(item.tab)} className="bg-white rounded-xl border border-[#E2E8F0] p-4 text-left shadow-xs hover:border-[#9B0020] transition-colors">
+                    <Icon size={18} className={`${item.color} mb-3`} />
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">{item.label}</p>
+                    <p className="text-base font-black text-[#0F172A] mt-1">{item.value}</p>
+                    <p className="text-[11px] text-[#64748B] mt-1">{item.note}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              <div className="lg:col-span-3 bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs">
+                <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-[#0F172A]">Career guidance checklist</h2>
+                    <p className="text-[11px] text-[#64748B] mt-1">Complete these steps to prepare for counseling.</p>
+                  </div>
+                  <span className="text-xs font-bold text-[#7A0016]">3 of 5 complete</span>
+                </div>
+                <div className="space-y-3 mt-4">
+                  {[
+                    ["Complete your career profile", true, "profile"],
+                    ["Upload your latest resume", true, "resume"],
+                    ["Request counselor feedback", false, "messages"],
+                    ["Book a guidance appointment", false, "appointments"],
+                    ["Review current opportunities", false, "opportunities"],
+                  ].map(([label, complete, tab]) => (
+                    <button key={label as string} onClick={() => setActiveTab(tab as string)} className="w-full flex items-center gap-3 text-left group">
+                      <span className={`w-5 h-5 rounded-full flex items-center justify-center border ${complete ? "bg-emerald-600 border-emerald-600 text-white" : "border-[#CBD5E1] text-transparent group-hover:border-[#7A0016]"}`}>
+                        <Check size={12} />
+                      </span>
+                      <span className={`text-xs ${complete ? "text-[#64748B] line-through" : "font-semibold text-[#334155]"}`}>{label as string}</span>
+                      {!complete && <ChevronRight size={14} className="ml-auto text-[#94A3B8]" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="lg:col-span-2 bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs">
+                <div className="flex items-center gap-2 border-b border-[#F1F5F9] pb-3">
+                  <Newspaper size={17} className="text-[#7A0016]" />
+                  <div>
+                    <h2 className="text-sm font-bold text-[#0F172A]">Career updates</h2>
+                    <p className="text-[11px] text-[#64748B]">From the Career Center</p>
+                  </div>
+                </div>
+                <div className="divide-y divide-[#F1F5F9]">
+                  {[
+                    ["Career Center orientation", "New student orientation sessions open for November.", "Today"],
+                    ["Internship opportunities", "Partner companies posted 3 new internships.", "Yesterday"],
+                    ["Resume workshop", "Registration is open for the next CV clinic.", "Oct 24"],
+                  ].map(([title, text, date]) => (
+                    <button key={title} onClick={() => setActiveTab("opportunities")} className="w-full text-left py-3 hover:bg-[#F8FAFC]">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-xs font-bold text-[#334155]">{title}</span>
+                        <span className="text-[10px] text-[#94A3B8] whitespace-nowrap">{date}</span>
+                      </div>
+                      <p className="text-[11px] text-[#64748B] mt-1">{text}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "appointments" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#7A0016]">Appointment Scheduling</p>
+                <h2 className="text-xl font-black text-[#0F172A] mt-1">Connect with a counselor</h2>
+                <p className="text-xs text-[#64748B] mt-1">View availability and request a career guidance session.</p>
+              </div>
+              <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">Counselor availability updated</span>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {[
+                ["Dr. Maria Santos", "Career Placement Officer", "Available this week", "Oct 30 • 10:00 AM"],
+                ["Mr. Paolo Dela Cruz", "Career Guidance Counselor", "Available next week", "Nov 4 • 2:00 PM"],
+                ["Ms. Elena Macaraeg", "Resume & Career Advisor", "Limited availability", "Nov 6 • 9:30 AM"],
+              ].map(([name, role, status, slot]) => (
+                <div key={name} className="bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#F8FAFC] border border-[#D1D5DB] flex items-center justify-center text-[#94A3B8]"><UserRound size={20} /></div>
+                    <div><h3 className="text-sm font-bold text-[#0F172A]">{name}</h3><p className="text-[11px] text-[#64748B]">{role}</p></div>
+                  </div>
+                  <div className="mt-4 p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]"><p className="text-[10px] font-bold uppercase text-emerald-700">{status}</p><p className="text-xs font-semibold text-[#334155] mt-1">{slot}</p></div>
+                  <button onClick={() => alert(`Appointment request sent to ${name}.`)} className="w-full mt-4 px-3 py-2 rounded-lg bg-[#7A0016] text-white text-xs font-bold hover:bg-[#9B0020]">Request appointment</button>
+                </div>
+              ))}
+            </div>
+            <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs"><h3 className="text-sm font-bold text-[#0F172A]">Your upcoming sessions</h3><div className="mt-3 p-4 rounded-lg border-l-4 border-l-[#7A0016] bg-[#F8FAFC]"><p className="text-xs font-bold text-[#334155]">Career planning consultation with Dr. Maria Santos</p><p className="text-[11px] text-[#64748B] mt-1">October 30, 2026 • 10:00 AM • Career Center Office</p><span className="inline-block mt-2 text-[10px] font-bold text-emerald-700">CONFIRMED</span></div></div>
+          </div>
+        )}
+
+        {activeTab === "opportunities" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-xs"><p className="text-[11px] font-bold uppercase tracking-wider text-[#7A0016]">Career News & Opportunities</p><h2 className="text-xl font-black text-[#0F172A] mt-1">Explore your next opportunity</h2><p className="text-xs text-[#64748B] mt-1">Browse verified postings and career announcements shared by the Career Center.</p></div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {[
+                ["Junior Frontend Developer", "TechCorp Philippines", "Full-time • Iligan / Hybrid", "Posted 2 days ago"],
+                ["Software Engineering Intern", "Ayala Digital Labs", "Internship • Makati / Remote", "Posted 3 days ago"],
+                ["IT Support Associate", "MSU-IIT Partner Network", "Full-time • Iligan City", "Posted 5 days ago"],
+                ["Data Analyst Graduate Associate", "Mindanao Silicon Ventures", "Graduate role • Cagayan de Oro", "Posted 1 week ago"],
+              ].map(([title, company, details, date]) => (
+                <div key={title} className="bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs hover:border-[#9B0020] transition-colors"><div className="flex items-start justify-between gap-3"><div><h3 className="text-sm font-bold text-[#0F172A]">{title}</h3><p className="text-xs text-[#7A0016] font-semibold mt-1">{company}</p></div><span className="px-2 py-1 rounded bg-[#FFF3D6] text-[#7A0016] text-[10px] font-bold">VERIFIED</span></div><p className="text-xs text-[#475569] mt-4">{details}</p><div className="flex items-center justify-between mt-4 pt-3 border-t border-[#F1F5F9]"><span className="text-[11px] text-[#64748B]">{date}</span><button onClick={() => alert("This posting is view-only. Contact the Career Center for application guidance.")} className="text-xs font-bold text-[#7A0016] hover:underline">View posting <ChevronRight size={13} className="inline" /></button></div></div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "profile" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-xs"><p className="text-[11px] font-bold uppercase tracking-wider text-[#7A0016]">Student Account</p><h2 className="text-xl font-black text-[#0F172A] mt-1">My career profile</h2><p className="text-xs text-[#64748B] mt-1">Keep your information current so your counselor can provide relevant guidance.</p></div>
+            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-xs space-y-4"><div className="flex items-center gap-4"><div className="w-16 h-16 rounded-full bg-[#F8FAFC] border-2 border-[#D1D5DB] flex items-center justify-center text-[#94A3B8]"><User size={30} /></div><div><h3 className="text-lg font-bold text-[#0F172A]">Alexandra Reyes</h3><p className="text-xs text-[#64748B]">BS Information Technology • 4th Year</p></div></div><div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"><div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]"><span className="text-[10px] uppercase font-bold text-[#64748B]">Student ID</span><p className="font-semibold text-[#334155] mt-1">2021-0142</p></div><div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]"><span className="text-[10px] uppercase font-bold text-[#64748B]">Email</span><p className="font-semibold text-[#334155] mt-1">alexandra.reyes@g.msuiit.edu.ph</p></div></div><button onClick={() => alert("Profile editing will be connected to the student account service.")} className="px-4 py-2 rounded-lg border border-[#7A0016] text-[#7A0016] text-xs font-bold hover:bg-[#FFF3D6]">Edit profile</button></div>
+          </div>
+        )}
+
+        {/* ─────────────────────────────────────────────────────────────
+            LEGACY FEATURE VIEWS
+            ───────────────────────────────────────────────────────────── */}
+        {activeTab === "legacy-overview" && (
           <div className="space-y-6">
             {/* Quick Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -793,12 +952,68 @@ export default function StudentDashboard() {
                 <p className="text-[10px] text-[#64748B]">Verified by Dr. Maria Santos • 2 days ago</p>
               </div>
               <button
-                onClick={() => alert("Previewing verified PDF...")}
+                onClick={() => setPdfViewerOpen(true)}
                 className="px-3 py-1.5 rounded bg-white border border-[#CBD5E1] text-[#334155] font-bold text-xs"
               >
                 Preview PDF
               </button>
             </div>
+
+            {pdfViewerOpen && (
+              <div
+                className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="resume-viewer-title"
+                onClick={() => setPdfViewerOpen(false)}
+              >
+                <div
+                  className="w-full max-w-5xl h-[92vh] bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#D1D5DB] bg-white">
+                    <div className="min-w-0">
+                      <h4 id="resume-viewer-title" className="text-sm font-bold text-[#0F172A] truncate">
+                        Alexandra_Reyes_FullStack_v3.pdf
+                      </h4>
+                      <p className="text-[11px] text-[#64748B]">Counselor-verified resume • All pages</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <a
+                        href="/sample-resume-alexandra-reyes.pdf"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#CBD5E1] text-[#334155] text-xs font-bold hover:bg-[#F8FAFC]"
+                      >
+                        <ExternalLink size={13} />
+                        Open
+                      </a>
+                      <a
+                        href="/sample-resume-alexandra-reyes.pdf"
+                        download="Alexandra_Reyes_FullStack_v3.pdf"
+                        className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#7A0016] text-white text-xs font-bold hover:bg-[#9B0020]"
+                      >
+                        <Download size={13} />
+                        Download
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => setPdfViewerOpen(false)}
+                        aria-label="Close PDF viewer"
+                        className="p-1.5 rounded-lg text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  </div>
+                  <iframe
+                    src="/sample-resume-alexandra-reyes.pdf#view=FitH"
+                    title="Alexandra Reyes counselor-verified resume"
+                    className="w-full flex-1 border-0 bg-[#525659]"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
 

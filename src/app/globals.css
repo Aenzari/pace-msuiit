@@ -39,6 +39,106 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Shared auth surfaces */
+.gradient-maroon-dark {
+  background: linear-gradient(135deg, #0d0b0e 0%, #3b000b 52%, #5c0011 100%);
+}
+
+.gradient-maroon {
+  background: linear-gradient(135deg, #9b0020 0%, #7a0016 100%);
+}
+
+.glass {
+  background: rgba(20, 17, 23, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(13, 11, 14, 0.28);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #ffd700, #f5a623);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Registration form uses the same light institutional surfaces as the portal. */
+.register-page label,
+.register-page [class~="text-white/70"],
+.register-page [class~="text-white/40"],
+.register-page [class~="text-white/50"],
+.register-page [class~="text-white/35"],
+.register-page [class~="text-white/30"] {
+  color: #475569 !important;
+}
+
+.register-page input,
+.register-page select {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #d1d5db !important;
+}
+
+.register-page input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.register-page input:focus,
+.register-page select:focus {
+  border-color: #7a0016 !important;
+  box-shadow: 0 0 0 2px rgba(122, 0, 22, 0.12);
+}
+
+.register-page .myiit-card {
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+/* SuperAdmin uses the same institutional light surfaces as the other portals. */
+.superadmin-page [class*="bg-stone-"],
+.superadmin-page [class*="bg-[#0d0709]"],
+.superadmin-page [class*="bg-[#140b0e]"],
+.superadmin-page [class*="bg-[#12090c]"] {
+  background-color: #ffffff !important;
+}
+
+.superadmin-page [class*="border-stone-"] {
+  border-color: #d1d5db !important;
+}
+
+.superadmin-page [class*="text-stone-"] {
+  color: #475569 !important;
+}
+
+.superadmin-page [class*="hover:bg-stone-"]:hover {
+  background-color: #f8fafc !important;
+}
+
+.superadmin-page [class*="hover:text-white"]:hover {
+  color: #0f172a !important;
+}
+
+.superadmin-page .myiit-header-gradient [class*="text-stone-"],
+.superadmin-page .myiit-header-gradient [class*="hover:text-white"]:hover {
+  color: #e7e5e4 !important;
+}
+
+.superadmin-page .myiit-header-gradient [class*="bg-stone-"] {
+  background-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+.superadmin-page .superadmin-hero [class*="text-stone-"] {
+  color: #e7e5e4 !important;
+}
+
+.superadmin-page .superadmin-hero [class*="border-stone-"] {
+  border-color: rgba(231, 229, 228, 0.55) !important;
+}
+
+.superadmin-page .superadmin-hero [class*="hover:bg-stone-"]:hover {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+
 /* My.IIT Institutional Header Gradient */
 .myiit-header-gradient {
   background: linear-gradient(135deg, #7A0016 0%, #5C0011 50%, #40000B 100%);

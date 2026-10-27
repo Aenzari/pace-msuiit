@@ -25,6 +25,7 @@ export default function RecruiterDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMajor, setSelectedMajor] = useState('All');
   const [savedJobs, setSavedJobs] = useState<string[]>(['job-1']);
+  const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null);
 
   const jobsList = [
     {
@@ -338,7 +339,7 @@ export default function RecruiterDashboard() {
             <div className="bg-white p-4 rounded-xl border border-[#E2E8F0] shadow-xs flex justify-between items-center">
               <div>
                 <h3 className="text-sm font-bold text-[#0F172A]">MSU-IIT Verified Candidate Pool</h3>
-                <p className="text-xs text-[#64748B]">Filtered by college, cumulative GPA status, and verified portfolio</p>
+                <p className="text-xs text-[#64748B]">LinkedIn-style student profiles with counselor-reviewed resumes</p>
               </div>
               <span className="text-xs font-mono font-bold text-[#7A0016] bg-[#FFF3D6] px-2.5 py-1 rounded border border-[#F5A623]/60">
                 100% Verified Accounts
@@ -347,20 +348,30 @@ export default function RecruiterDashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { name: 'Alexandra Reyes', program: 'BS Information Technology', year: '4th Year Standing', gpa: '1.45', skills: ['Next.js 14', 'TypeScript', 'PostgreSQL'], badge: "Dean's Lister" },
-                { name: 'Kyle Fernandez', program: 'BS Computer Science', year: '3rd Year Standing', gpa: '1.38', skills: ['PyTorch', 'Distributed Systems', 'Python'], badge: "AI Fellow" },
-                { name: 'Bea Clarisse Ong', program: 'BS Electronics Engineering', year: '4th Year Standing', gpa: '1.52', skills: ['Embedded C', 'FPGA', 'IoT Sensors'], badge: "FabLab Lead" },
+                { name: 'Alexandra Reyes', program: 'BS Information Technology', year: '4th Year Standing', gpa: '1.45', skills: ['Next.js 14', 'TypeScript', 'PostgreSQL'], badge: "Dean's Lister", verified: true, counselor: 'Dr. Maria Santos', email: 'alexandra.reyes@g.msuiit.edu.ph' },
+                { name: 'Kyle Fernandez', program: 'BS Computer Science', year: '3rd Year Standing', gpa: '1.38', skills: ['PyTorch', 'Distributed Systems', 'Python'], badge: "AI Fellow", verified: true, counselor: 'Prof. Roberto Gomez', email: 'kyle.fernandez@g.msuiit.edu.ph' },
+                { name: 'Bea Clarisse Ong', program: 'BS Electronics Engineering', year: '4th Year Standing', gpa: '1.52', skills: ['Embedded C', 'FPGA', 'IoT Sensors'], badge: "FabLab Lead", verified: false, counselor: 'Not yet assigned', email: 'bea.ong@g.msuiit.edu.ph' },
               ].map((student, idx) => (
                 <div key={idx} className="bg-white rounded-xl border border-[#E2E8F0] p-4 shadow-xs space-y-3">
                   <div className="flex justify-between items-start">
-                    <div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#F8FAFC] border border-[#D1D5DB] flex items-center justify-center text-[#94A3B8]">
+                        <Users size={19} />
+                      </div>
+                      <div>
                       <h4 className="text-sm font-bold text-[#0F172A]">{student.name}</h4>
                       <p className="text-[11px] text-[#64748B]">{student.program}</p>
                       <p className="text-[10px] text-[#94A3B8] font-mono">{student.year}</p>
+                      <p className="text-[10px] text-[#64748B] mt-1">{student.email}</p>
+                      </div>
                     </div>
                     <span className="text-xs font-mono font-bold text-[#7A0016] bg-[#FFF3D6] px-2 py-0.5 rounded border border-[#F5A623]/60">
                       GPA {student.gpa}
                     </span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold border ${student.verified ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-[#64748B] border-[#E2E8F0]'}`}>
+                    <CheckCircle size={12} />
+                    {student.verified ? `COUNSELOR-VERIFIED RESUME • ${student.counselor}` : 'RESUME NOT YET COUNSELOR-VERIFIED'}
                   </div>
 
                   <div className="flex flex-wrap gap-1">
@@ -373,10 +384,10 @@ export default function RecruiterDashboard() {
 
                   <div className="pt-2 border-t border-[#F1F5F9] flex gap-2">
                     <button
-                      onClick={() => alert(`Reviewing ${student.name}'s verified CV.`)}
+                      onClick={() => setSelectedCandidate(student.name)}
                       className="flex-1 py-1.5 rounded-lg border border-[#CBD5E1] text-[#334155] hover:bg-slate-50 text-xs font-bold"
                     >
-                      View CV
+                      View Profile & CV
                     </button>
                     <button
                       onClick={() => {
@@ -390,6 +401,22 @@ export default function RecruiterDashboard() {
                 </div>
               ))}
             </div>
+            {selectedCandidate && (
+              <div className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setSelectedCandidate(null)}>
+                <div className="w-full max-w-lg bg-white rounded-xl border border-[#D1D5DB] shadow-xl p-6 space-y-4" onClick={(event) => event.stopPropagation()}>
+                  <div className="flex items-start justify-between">
+                    <div><p className="text-[10px] font-bold uppercase tracking-wider text-[#7A0016]">Student profile</p><h3 className="text-xl font-black text-[#0F172A]">{selectedCandidate}</h3><p className="text-xs text-[#64748B]">MSU-IIT student talent profile</p></div>
+                    <button onClick={() => setSelectedCandidate(null)} className="text-[#64748B] hover:text-[#0F172A]"><X size={18} /></button>
+                  </div>
+                  <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2 text-xs">
+                    <p className="font-bold text-[#334155]">Resume access</p>
+                    <p className="text-[#64748B]">This CV is available for viewing because the student has completed proper career counseling and received a counselor verification.</p>
+                    <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-[10px]"><CheckCircle size={12} /> COUNSELOR-VERIFIED RESUME</span>
+                  </div>
+                  <div className="flex gap-2"><button onClick={() => alert(`Opening ${selectedCandidate}'s counselor-verified resume preview.`)} className="flex-1 px-3 py-2 rounded-lg bg-[#7A0016] text-white text-xs font-bold">Preview CV</button><button onClick={() => setSelectedCandidate(null)} className="px-4 py-2 rounded-lg border border-[#CBD5E1] text-[#334155] text-xs font-bold">Close</button></div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

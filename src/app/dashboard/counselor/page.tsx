@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -191,6 +192,7 @@ const tabVariants = {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function CounselorDashboard() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -249,6 +251,11 @@ export default function CounselorDashboard() {
     if (msgTab === "students") setStudentConvos(updater);
     else setRecruiterConvos(updater);
     setChatInput("");
+  };
+
+  const handleSignOut = () => {
+    setSidebarOpen(false);
+    router.push("/auth/login");
   };
 
   const issueApproval = () => {
@@ -328,7 +335,13 @@ export default function CounselorDashboard() {
               <div className="text-white text-xs font-medium truncate">Dr. Maria Santos</div>
               <div className="text-white/40 text-xs truncate">Career Counselor</div>
             </div>
-            <button className="text-white/40 hover:text-white/70">
+            <button
+              type="button"
+              onClick={handleSignOut}
+              aria-label="Sign out"
+              title="Sign out"
+              className="text-white/40 hover:text-white/70"
+            >
               <LogOut size={15} />
             </button>
           </div>

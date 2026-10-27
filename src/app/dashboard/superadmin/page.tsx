@@ -31,6 +31,7 @@ import {
   Sparkles,
   Layers
 } from "lucide-react";
+import PaceLogo from "@/components/PaceLogo";
 
 interface CounselorItem {
   id: string;
@@ -69,6 +70,7 @@ export default function SuperadminDashboardPage() {
   ]);
 
   const [showAddCounselorModal, setShowAddCounselorModal] = useState(false);
+  const [generatedCounselorAccount, setGeneratedCounselorAccount] = useState<{ name: string; email: string; temporaryPassword: string } | null>(null);
   const [newCounselor, setNewCounselor] = useState({ name: "", email: "", department: "College of Computer Studies", quotaMax: 8 });
 
   // Recruiter State
@@ -104,6 +106,11 @@ export default function SuperadminDashboardPage() {
       rating: 5.0
     };
     setCounselors([added, ...counselors]);
+    setGeneratedCounselorAccount({
+      name: added.name,
+      email: added.email,
+      temporaryPassword: `PACE-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+    });
     setNewCounselor({ name: "", email: "", department: "College of Computer Studies", quotaMax: 8 });
     setShowAddCounselorModal(false);
   };
@@ -123,13 +130,13 @@ export default function SuperadminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0709] text-stone-100 flex flex-col selection:bg-[#F5A623] selection:text-black">
+    <div className="superadmin-page min-h-screen bg-[#EEF2F6] text-[#0F172A] flex flex-col selection:bg-[#F5A623] selection:text-white">
       {/* Top Navigation */}
-      <header className="h-16 border-b border-stone-800/80 bg-[#140b0e]/90 backdrop-blur sticky top-0 z-40 px-4 lg:px-8 flex items-center justify-between">
+      <header className="myiit-header-gradient h-16 text-white sticky top-0 z-40 px-4 lg:px-8 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#7A0016] to-[#F5A623] flex items-center justify-center font-black text-white text-base shadow-lg shadow-[#7A0016]/30 group-hover:scale-105 transition-transform">
-              P
+            <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-lg shadow-[#7A0016]/30 group-hover:scale-105 transition-transform">
+              <PaceLogo size={32} showText={false} />
             </div>
             <div>
               <div className="text-sm font-black tracking-wider flex items-center gap-1.5">
@@ -175,7 +182,7 @@ export default function SuperadminDashboardPage() {
       {/* Main Body Layout */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 border-r border-stone-800/80 bg-[#12090c] p-4 flex flex-col justify-between hidden md:flex shrink-0">
+        <aside className="w-64 border-r border-[#D1D5DB] bg-white p-4 flex flex-col justify-between hidden md:flex shrink-0">
           <div className="space-y-6">
             <div>
               <p className="text-[10px] font-mono uppercase tracking-wider text-stone-400 px-3 mb-2">Platform Hub</p>
@@ -286,6 +293,17 @@ export default function SuperadminDashboardPage() {
 
         {/* Content Pane */}
         <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
+          {generatedCounselorAccount && (
+            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-200">
+              <p className="font-bold text-emerald-300">Counselor account generated</p>
+              <p className="mt-1">Share these temporary credentials securely with {generatedCounselorAccount.name}.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 font-mono text-[11px]">
+                <span className="p-2 rounded bg-black/20">Email: {generatedCounselorAccount.email}</span>
+                <span className="p-2 rounded bg-black/20">Temp password: {generatedCounselorAccount.temporaryPassword}</span>
+              </div>
+              <button onClick={() => setGeneratedCounselorAccount(null)} className="mt-3 text-emerald-300 hover:text-white font-semibold">Dismiss credentials</button>
+            </div>
+          )}
           {/* Mobile Tab Nav */}
           <div className="flex md:hidden overflow-x-auto gap-2 pb-2 border-b border-stone-800">
             {(["overview", "counselors", "recruiters", "analytics", "settings"] as const).map(tab => (
@@ -323,7 +341,7 @@ export default function SuperadminDashboardPage() {
           {activeTab === "overview" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
               {/* Hero Banner */}
-              <div className="relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-r from-[#7A0016] via-[#5C0011] to-[#2B0007] border border-[#F5A623]/30 shadow-2xl shadow-[#7A0016]/20">
+              <div className="superadmin-hero relative overflow-hidden rounded-3xl p-6 md:p-8 bg-gradient-to-r from-[#7A0016] via-[#5C0011] to-[#2B0007] border border-[#F5A623]/30 shadow-2xl shadow-[#7A0016]/20">
                 <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#FFD700] to-transparent pointer-events-none"></div>
                 <div className="relative z-10 max-w-2xl space-y-3">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur border border-amber-400/30 text-[11px] text-amber-300 font-mono">

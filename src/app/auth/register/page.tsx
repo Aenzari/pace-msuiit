@@ -25,8 +25,8 @@ import {
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
+import PaceLogo from "@/components/PaceLogo";
 import Link from "next/link";
 
 /* ─── Types ─────────────────────────────────────────────── */
@@ -132,13 +132,13 @@ function SelectInput({
               ? "border-red-500/60 focus:ring-red-500/20"
               : "border-white/15 focus:border-[#F5A623]/60 focus:ring-[#F5A623]/20"
           }`}
-          style={{ colorScheme: "dark" }}
+          style={{ colorScheme: "light" }}
         >
-          <option value="" disabled className="bg-[#1A0005]">
+          <option value="" disabled className="bg-white text-[#0F172A]">
             Select {label}
           </option>
           {options.map((o) => (
-            <option key={o.value} value={o.value} className="bg-[#1A0005]">
+            <option key={o.value} value={o.value} className="bg-white text-[#0F172A]">
               {o.label}
             </option>
           ))}
@@ -640,21 +640,19 @@ export default function RegisterPage() {
   const currentRole = ROLES.find((r) => r.id === activeRole)!;
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center overflow-hidden">
+    <div className="register-page min-h-screen relative flex items-center justify-center overflow-hidden bg-[#EEF2F6] text-[#0F172A]">
       {/* Background */}
-      <div className="absolute inset-0 gradient-maroon-dark" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(122,0,22,0.5),transparent)]" />
-      <div className="absolute top-1/4 right-10 w-64 h-64 bg-[#F5A623]/8 rounded-full blur-[100px]" />
+    <div className="myiit-header-gradient absolute inset-x-0 top-0 h-20" />
 
       {/* Back */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="absolute top-6 left-6 z-20"
+        className="absolute top-6 left-4 sm:left-8 z-20"
       >
         <Link
           href="/auth/login"
-          className="flex items-center gap-2 text-white/60 hover:text-white text-sm transition-colors group"
+          className="flex items-center gap-2 text-stone-200 hover:text-white text-xs font-bold transition-colors group"
         >
           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Back to Sign In
@@ -665,17 +663,12 @@ export default function RegisterPage() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20"
+        className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20"
       >
-        <div className="w-9 h-9 rounded-xl gradient-maroon flex items-center justify-center font-bold font-playfair">
-          P
-        </div>
-        <div className="font-bold font-playfair text-base leading-tight">
-          P.A.C.E. <span className="text-[#F5A623] font-medium text-xs">MSU-IIT</span>
-        </div>
+        <PaceLogo size={42} variant="dark" />
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-lg mx-auto px-4 py-24">
+      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 py-28 sm:py-32">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -686,15 +679,15 @@ export default function RegisterPage() {
               <Sparkles className="w-3.5 h-3.5" />
               Create Account
             </Badge>
-            <h1 className="font-playfair text-3xl font-bold">
-              Join <span className="text-gradient-gold">PACE</span>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
+              Create your <span className="text-[#7A0016]">PACE</span> account
             </h1>
-            <p className="text-white/50 text-sm">
+            <p className="text-[#64748B] text-sm">
               Register as {currentRole.label} — {currentRole.description}
             </p>
           </div>
 
-          <Card className="p-8 space-y-6">
+          <div className="myiit-card p-6 sm:p-8 space-y-6">
             {/* Role Tabs (no superadmin for self-registration) */}
             <div>
               <div className="text-xs text-white/40 uppercase tracking-widest mb-3">
@@ -709,7 +702,7 @@ export default function RegisterPage() {
                     className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl text-xs font-medium transition-all duration-300 border ${
                       activeRole === role.id
                         ? "bg-[#7A0016] text-white border-[#9B0020] shadow-lg shadow-[#7A0016]/20"
-                        : "text-white/50 border-white/10 hover:border-white/20 hover:text-white hover:bg-white/5"
+                        : "text-[#475569] border-[#D1D5DB] bg-[#F8FAFC] hover:border-[#9B0020] hover:text-[#7A0016] hover:bg-white"
                     }`}
                   >
                     {role.icon}
@@ -804,7 +797,7 @@ export default function RegisterPage() {
                 Sign In
               </Link>
             </div>
-          </Card>
+          </div>
         </motion.div>
       </div>
     </div>
