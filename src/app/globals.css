@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   AUTHENTIC MY.IIT INSTITUTIONAL PALETTE & VISUAL SYSTEM
+   Mindanao State University – Iligan Institute of Technology
+   Tagline: "All your career advancement in one portal."
+   
+   Color Anatomy:
+   - Primary Header & Hero Anchor: Rich MSU-IIT Maroon (#7A0016 / #5C0011)
+   - Accent Gold: (#F5A623 / #FFD700) for badges, buttons, active highlights
+   - Clean Atmospheric Base: Soft Neutral Slate-Gray (#EEF2F6 / #E2E8F0)
+   - Surface Containers: Pure White (#FFFFFF) with solid slate borders (#D1D5DB)
+   - Deep Readable Typography: Slate Ink (#0F172A / #1E293B / #475569)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --myiit-maroon: #7A0016;
+  --myiit-maroon-dark: #5C0011;
+  --myiit-maroon-light: #9B0020;
+  --myiit-gold: #F5A623;
+  --myiit-gold-bright: #FFD700;
+  --myiit-bg-canvas: #EEF2F6;
+  --myiit-card: #FFFFFF;
+  --myiit-border: #D1D5DB;
+  --myiit-border-light: #E5E7EB;
+  --myiit-text-title: #0F172A;
+  --myiit-text-body: #334155;
+  --myiit-text-muted: #64748B;
+}
+
+body {
+  background-color: var(--myiit-bg-canvas);
+  color: var(--myiit-text-body);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.012em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* My.IIT Institutional Header Gradient */
+.myiit-header-gradient {
+  background: linear-gradient(135deg, #7A0016 0%, #5C0011 50%, #40000B 100%);
+  border-bottom: 3px solid #F5A623;
+}
+
+/* My.IIT Portal Card System */
+.myiit-card {
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  transition: all 0.16s ease-in-out;
+}
+
+.myiit-card:hover {
+  border-color: #9CA3AF;
+  box-shadow: 0 4px 12px rgba(122, 0, 22, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+}
+
+/* My.IIT Role Gate Buttons ("I'm a college student", etc.) */
+.myiit-gate-card {
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.myiit-gate-card:hover {
+  border-color: #7A0016;
+  background: #FFFDF9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(122, 0, 22, 0.1);
+}
+
+.myiit-gate-card.active {
+  border-color: #7A0016;
+  border-left-width: 5px;
+  background: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(122, 0, 22, 0.15);
+}
+
+/* Primary Button with MSU-IIT Regalia Styling */
+.btn-myiit-primary {
+  background: linear-gradient(to bottom, #7A0016, #630012);
+  color: #FFFFFF;
+  font-weight: 700;
+  border: 1px solid #5C0011;
+  box-shadow: 0 1px 2px rgba(92, 0, 17, 0.25);
+  transition: all 0.15s ease;
+}
+
+.btn-myiit-primary:hover {
+  background: linear-gradient(to bottom, #9B0020, #7A0016);
+  border-color: #40000B;
+}
+
+.btn-myiit-primary:active {
+  transform: scale(0.985);
+}
+
+/* Secondary Gold Button */
+.btn-myiit-gold {
+  background: linear-gradient(to bottom, #F5A623, #DF9215);
+  color: #0F172A;
+  font-weight: 700;
+  border: 1px solid #C8851C;
+  box-shadow: 0 1px 2px rgba(200, 133, 28, 0.25);
+  transition: all 0.15s ease;
+}
+
+.btn-myiit-gold:hover {
+  background: linear-gradient(to bottom, #FFB833, #F5A623);
+}
+
+/* Dense Data Table Header */
+.myiit-table-header {
+  background-color: #F8FAFC;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #E2E8F0;
+}
+
+/* Monospace numerics */
+.font-mono-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Minimal solid scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E2E8F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7A0016;
+}
