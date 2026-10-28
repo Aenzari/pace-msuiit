@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -19,6 +19,7 @@ import {
   Bell,
   LogOut,
   ChevronRight,
+  ChevronLeft,
   Award,
   RotateCcw,
   Minus,
@@ -189,6 +190,14 @@ const tabVariants = {
   exit: { opacity: 0, y: -10, transition: { duration: 0.18 } },
 };
 
+const WALK_IN_STORAGE_KEY = "pace-walk-in-schedule";
+const WALK_IN_UPDATED_EVENT = "pace-walk-in-schedule-updated";
+const INITIAL_WALK_IN_SCHEDULE: Record<string, { start: string; end: string }> = {
+  "2026-11-04": { start: "10:00", end: "12:00" },
+  "2026-11-06": { start: "09:00", end: "11:00" },
+  "2026-11-10": { start: "13:00", end: "15:00" },
+};
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function CounselorDashboard() {
@@ -199,6 +208,13 @@ export default function CounselorDashboard() {
   // Appointments
   const [appointments, setAppointments] = useState<PendingAppointment[]>(PENDING_APPOINTMENTS_INIT);
   const [remarksMap, setRemarksMap] = useState<Record<number, string>>({});
+  const [calendarMonth, setCalendarMonth] = useState(new Date(2026, 10, 1));
+  const [selectedDate, setSelectedDate] = useState("2026-11-04");
+  const [walkInSchedule, setWalkInSchedule] = useState<Record<string, { start: string; end: string }>>(INITIAL_WALK_IN_SCHEDULE);
+  const [walkInEditorOpen, setWalkInEditorOpen] = useState(false);
+  const [walkInStartTime, setWalkInStartTime] = useState("");
+  const [walkInEndTime, setWalkInEndTime] = useState("");
+  const [walkInError, setWalkInError] = useState("");
 
   // CV Review
   const [cvList] = useState<StudentCV[]>(STUDENT_CVS_INIT);
@@ -256,6 +272,104 @@ export default function CounselorDashboard() {
   const handleSignOut = () => {
     setSidebarOpen(false);
     router.push("/auth/login");
+  };
+
+  useEffect(() => {
+    const storedSchedule = window.localStorage.getItem(WALK_IN_STORAGE_KEY);
+    if (storedSchedule) {
+      try {
+        setWalkInSchedule(JSON.parse(storedSchedule));
+      } catch {
+        window.localStorage.removeItem(WALK_IN_STORAGE_KEY);
+      }
+    }
+
+    const syncWalkInSchedule = () => {
+      const nextSchedule = window.localStorage.getItem(WALK_IN_STORAGE_KEY);
+      if (!nextSchedule) return;
+      try {
+        setWalkInSchedule(JSON.parse(nextSchedule));
+      } catch {
+        window.localStorage.removeItem(WALK_IN_STORAGE_KEY);
+      }
+    };
+    window.addEventListener("storage", syncWalkInSchedule);
+    window.addEventListener(WALK_IN_UPDATED_EVENT, syncWalkInSchedule);
+    return () => {
+      window.removeEventListener("storage", syncWalkInSchedule);
+      window.removeEventListener(WALK_IN_UPDATED_EVENT, syncWalkInSchedule);
+    };
+  }, []);
+
+  const calendarDays = (() => {
+    const year = calendarMonth.getFullYear();
+    const month = calendarMonth.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    return Array.from({ length: Math.ceil((firstDay + daysInMonth) / 7) * 7 }, (_, index) => {
+      const day = index - firstDay + 1;
+      return day > 0 && day <= daysInMonth ? new Date(year, month, day) : null;
+    });
+  })();
+
+  const formatDateKey = (date: Date) => {
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${date.getFullYear()}-${month}-${day}`;
+  };
+
+  const openWalkInEditor = (dateKey: string) => {
+    setSelectedDate(dateKey);
+    const schedule = walkInSchedule[dateKey];
+    setWalkInStartTime(schedule?.start ?? "");
+    setWalkInEndTime(schedule?.end ?? "");
+    setWalkInError("");
+    setWalkInEditorOpen(true);
+  };
+
+  const saveWalkInSchedule = () => {
+    if (!walkInStartTime && !walkInEndTime) {
+      setWalkInSchedule((previous) => {
+        const next = { ...previous };
+        delete next[selectedDate];
+        window.localStorage.setItem(WALK_IN_STORAGE_KEY, JSON.stringify(next));
+        window.dispatchEvent(new Event(WALK_IN_UPDATED_EVENT));
+        return next;
+      });
+      setWalkInEditorOpen(false);
+      return;
+    }
+
+    if (!walkInStartTime || !walkInEndTime) {
+      setWalkInError("Choose both a start time and an end time.");
+      return;
+    }
+
+    if (walkInStartTime >= walkInEndTime) {
+      setWalkInError("The end time must be later than the start time.");
+      return;
+    }
+
+    setWalkInSchedule((previous) => {
+      const next = { ...previous, [selectedDate]: { start: walkInStartTime, end: walkInEndTime } };
+      window.localStorage.setItem(WALK_IN_STORAGE_KEY, JSON.stringify(next));
+      window.dispatchEvent(new Event(WALK_IN_UPDATED_EVENT));
+      return next;
+    });
+    setWalkInEditorOpen(false);
+  };
+
+  const removeWalkInSchedule = () => {
+    setWalkInSchedule((previous) => {
+      const next = { ...previous };
+      delete next[selectedDate];
+      window.localStorage.setItem(WALK_IN_STORAGE_KEY, JSON.stringify(next));
+      window.dispatchEvent(new Event(WALK_IN_UPDATED_EVENT));
+      return next;
+    });
+    setWalkInStartTime("");
+    setWalkInEndTime("");
+    setWalkInEditorOpen(false);
   };
 
   const issueApproval = () => {
@@ -434,67 +548,105 @@ export default function CounselorDashboard() {
             {/* ── AVAILABILITY ── */}
             {activeTab === "availability" && (
               <motion.div key="availability" variants={tabVariants} initial="initial" animate="animate" exit="exit" className="space-y-5">
-                {/* Max per day */}
-                <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-gray-800">Max Appointments Per Day</p>
-                    <p className="text-sm text-gray-400">Set your daily capacity limit</p>
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                      <h3 className="font-semibold text-gray-800 text-sm">Walk-in availability calendar</h3>
+                      <p className="text-xs text-gray-400 mt-1">Select a date to choose the periods when students may visit without an appointment.</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-gray-500">Max appointments/day</span>
+                      <button onClick={() => setMaxPerDay((v) => Math.max(1, v - 1))} className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"><Minus size={13} /></button>
+                      <span className="w-5 text-center font-bold text-gray-800">{maxPerDay}</span>
+                      <button onClick={() => setMaxPerDay((v) => Math.min(12, v + 1))} className="w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50"><Plus size={13} /></button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <button onClick={() => setMaxPerDay((v) => Math.max(1, v - 1))} className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50">
-                      <Minus size={14} />
-                    </button>
-                    <span className="w-8 text-center font-bold text-gray-800 text-lg">{maxPerDay}</span>
-                    <button onClick={() => setMaxPerDay((v) => Math.min(12, v + 1))} className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50">
-                      <Plus size={14} />
-                    </button>
+                  <div className="flex items-center justify-between mb-4">
+                    <button type="button" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))} className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100" aria-label="Previous month"><ChevronLeft size={17} /></button>
+                    <h4 className="text-sm font-bold text-gray-800">{calendarMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</h4>
+                    <button type="button" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))} className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100" aria-label="Next month"><ChevronRight size={17} /></button>
                   </div>
-                </div>
-
-                {/* Weekly grid */}
-                <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-                  <div className="px-5 py-3 border-b border-gray-100">
-                    <h3 className="font-semibold text-gray-800 text-sm">Weekly Availability (Mon – Fri)</h3>
+                  <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase text-gray-400 mb-2">
+                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <span key={day}>{day}</span>)}
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-[520px]">
-                      <thead>
-                        <tr style={{ background: "rgba(122,0,22,0.04)" }}>
-                          <th className="text-left px-5 py-2 text-xs font-semibold text-gray-500">Time</th>
-                          {weekSchedule.map((d) => (
-                            <th key={d.day} className="px-3 py-2 text-xs font-semibold text-gray-500 text-center">{d.day.slice(0, 3)}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {weekSchedule[0].slots.map((slot, slotIdx) => (
-                          <tr key={slotIdx} className="border-t border-gray-50">
-                            <td className="px-5 py-2.5 text-xs text-gray-500 font-medium">{slot.time}</td>
-                            {weekSchedule.map((day, dayIdx) => {
-                              const enabled = day.slots[slotIdx].enabled;
-                              return (
-                                <td key={dayIdx} className="px-3 py-2.5 text-center">
-                                  <button
-                                    onClick={() => toggleSlot(dayIdx, slotIdx)}
-                                    className={`w-10 h-6 rounded-full transition-colors relative inline-flex items-center ${enabled ? "" : "bg-gray-200"}`}
-                                    style={enabled ? { background: "#7A0016" } : {}}
-                                    title={`${day.day} ${slot.time}`}
-                                  >
-                                    <span className={`absolute w-4 h-4 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-5" : "translate-x-1"}`} />
-                                  </button>
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="grid grid-cols-7 gap-1">
+                    {calendarDays.map((date, index) => {
+                      if (!date) return <span key={`empty-${index}`} className="min-h-16" />;
+                      const dateKey = formatDateKey(date);
+                      const walkInsOpen = Boolean(walkInSchedule[dateKey]);
+                      const dayAppointments = appointments.filter((appointment) => {
+                        const parsed = new Date(appointment.requestedDate);
+                        return parsed.getFullYear() === date.getFullYear() && parsed.getMonth() === date.getMonth() && parsed.getDate() === date.getDate();
+                      });
+                      return (
+                        <button type="button" key={dateKey} onClick={() => openWalkInEditor(dateKey)} className={`min-h-16 rounded-lg border p-1.5 text-left transition-colors ${selectedDate === dateKey ? "border-[#7A0016] bg-red-50" : "border-transparent hover:border-gray-200 hover:bg-gray-50"}`}>
+                          <span className="text-xs font-semibold text-gray-700">{date.getDate()}</span>
+                          {dayAppointments.length > 0 && <span className="block mt-1 text-[9px] truncate text-[#7A0016]">{dayAppointments.length} appointment{dayAppointments.length > 1 ? "s" : ""}</span>}
+                          {walkInsOpen && <span className="block text-[9px] truncate text-emerald-700">Walk-ins open</span>}
+                        </button>
+                      );
+                    })}
                   </div>
-                  <div className="px-5 py-3 border-t border-gray-100 flex items-center gap-4 text-xs text-gray-400">
-                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full inline-block" style={{ background: "#7A0016" }} />Available</span>
-                    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full inline-block bg-gray-200" />Unavailable</span>
+                  <div className="flex items-center gap-4 text-[11px] text-gray-400 mt-4">
+                    <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />Walk-ins open</span>
+                    <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-[#7A0016]" />Appointment request</span>
                   </div>
                 </div>
+                {walkInEditorOpen && (
+                  <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => setWalkInEditorOpen(false)}>
+                    <div className="w-full max-w-md bg-white rounded-xl shadow-xl border border-gray-200 p-5 space-y-4" onClick={(event) => event.stopPropagation()}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-sm font-bold text-gray-800">Walk-in availability</h3>
+                          <p className="text-[11px] text-gray-500 mt-1">{new Date(`${selectedDate}T12:00:00`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
+                        </div>
+                        <button type="button" onClick={() => setWalkInEditorOpen(false)} className="text-gray-400 hover:text-gray-700" aria-label="Close walk-in availability"><X size={18} /></button>
+                      </div>
+                      <p className="text-xs text-gray-600">Choose the start and end time when students may visit without a prior appointment.</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label className="space-y-1">
+                          <span className="block text-[10px] font-bold uppercase tracking-wide text-gray-500">Walk-ins start</span>
+                          <input
+                            type="time"
+                            value={walkInStartTime}
+                            onChange={(event) => {
+                              setWalkInStartTime(event.target.value);
+                              setWalkInError("");
+                            }}
+                            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#7A0016]"
+                          />
+                        </label>
+                        <label className="space-y-1">
+                          <span className="block text-[10px] font-bold uppercase tracking-wide text-gray-500">Walk-ins end</span>
+                          <input
+                            type="time"
+                            value={walkInEndTime}
+                            onChange={(event) => {
+                              setWalkInEndTime(event.target.value);
+                              setWalkInError("");
+                            }}
+                            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#7A0016]"
+                          />
+                        </label>
+                      </div>
+                      {walkInError && <p className="text-xs font-medium text-red-600" role="alert">{walkInError}</p>}
+                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <span className="text-[11px] text-gray-500">
+                          {walkInStartTime && walkInEndTime ? `${walkInStartTime} – ${walkInEndTime}` : "No walk-in window set"}
+                        </span>
+                        <div className="flex gap-2">
+                          {walkInSchedule[selectedDate] && (
+                            <button type="button" onClick={removeWalkInSchedule} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100">
+                              Remove availability
+                            </button>
+                          )}
+                          <button type="button" onClick={() => setWalkInEditorOpen(false)} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Cancel</button>
+                          <button type="button" onClick={saveWalkInSchedule} className="px-3 py-1.5 rounded-lg text-xs font-bold text-white" style={{ background: "#7A0016" }}>Save availability</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -503,12 +655,49 @@ export default function CounselorDashboard() {
               <motion.div key="appointments" variants={tabVariants} initial="initial" animate="animate" exit="exit" className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-base font-semibold text-gray-800">
-                    Appointment Requests
+                    Appointment Calendar
                     <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-medium bg-yellow-100 text-yellow-700">
                       {appointments.filter((a) => a.status === "pending").length} pending
                     </span>
                   </h2>
                 </div>
+                <div>
+                  <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <button type="button" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))} className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100"><ChevronLeft size={17} /></button>
+                      <h3 className="text-sm font-bold text-gray-800">
+                        {calendarMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                      </h3>
+                      <button type="button" onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))} className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100"><ChevronRight size={17} /></button>
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase text-gray-400 mb-2">
+                      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <span key={day}>{day}</span>)}
+                    </div>
+                    <div className="grid grid-cols-7 gap-1">
+                      {calendarDays.map((date, index) => {
+                        if (!date) return <span key={`empty-${index}`} className="min-h-11" />;
+                        const dateKey = formatDateKey(date);
+                        const dayAppointments = appointments.filter((appointment) => {
+                          const parsed = new Date(appointment.requestedDate);
+                          return parsed.getFullYear() === date.getFullYear() && parsed.getMonth() === date.getMonth() && parsed.getDate() === date.getDate();
+                        });
+                        return (
+                          <button
+                            type="button"
+                            key={dateKey}
+                            onClick={() => setSelectedDate(dateKey)}
+                            className={`min-h-11 rounded-lg p-1 text-xs text-left transition-colors ${selectedDate === dateKey ? "bg-[#7A0016] text-white" : "hover:bg-red-50 text-gray-700"}`}
+                          >
+                            <span className="font-semibold">{date.getDate()}</span>
+                            {dayAppointments.length > 0 && <span className={`block mt-1 text-[9px] truncate ${selectedDate === dateKey ? "text-[#FFD700]" : "text-[#7A0016]"}`}>{dayAppointments.length} appointment{dayAppointments.length > 1 ? "s" : ""}</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="text-[11px] text-gray-400 mt-4">Select a date to view its appointment requests. Counselors can accept, reject, or reschedule requests below.</p>
+                  </div>
+                </div>
+                <h3 className="text-sm font-semibold text-gray-800 pt-2">Appointment requests</h3>
                 <div className="space-y-3">
                   {appointments.map((apt) => (
                     <div key={apt.id} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">

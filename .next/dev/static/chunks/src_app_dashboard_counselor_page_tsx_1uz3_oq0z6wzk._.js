@@ -26,6 +26,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/bell.js [app-client] (ecmascript) <export default as Bell>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/log-out.js [app-client] (ecmascript) <export default as LogOut>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-right.js [app-client] (ecmascript) <export default as ChevronRight>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-left.js [app-client] (ecmascript) <export default as ChevronLeft>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$award$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Award$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/award.js [app-client] (ecmascript) <export default as Award>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$rotate$2d$ccw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RotateCcw$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/rotate-ccw.js [app-client] (ecmascript) <export default as RotateCcw>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$minus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Minus$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/minus.js [app-client] (ecmascript) <export default as Minus>");
@@ -521,6 +522,22 @@ const tabVariants = {
         }
     }
 };
+const WALK_IN_STORAGE_KEY = "pace-walk-in-schedule";
+const WALK_IN_UPDATED_EVENT = "pace-walk-in-schedule-updated";
+const INITIAL_WALK_IN_SCHEDULE = {
+    "2026-11-04": {
+        start: "10:00",
+        end: "12:00"
+    },
+    "2026-11-06": {
+        start: "09:00",
+        end: "11:00"
+    },
+    "2026-11-10": {
+        start: "13:00",
+        end: "15:00"
+    }
+};
 function CounselorDashboard() {
     _s();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
@@ -529,6 +546,13 @@ function CounselorDashboard() {
     // Appointments
     const [appointments, setAppointments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(PENDING_APPOINTMENTS_INIT);
     const [remarksMap, setRemarksMap] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [calendarMonth, setCalendarMonth] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(new Date(2026, 10, 1));
+    const [selectedDate, setSelectedDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("2026-11-04");
+    const [walkInSchedule, setWalkInSchedule] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(INITIAL_WALK_IN_SCHEDULE);
+    const [walkInEditorOpen, setWalkInEditorOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [walkInStartTime, setWalkInStartTime] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [walkInEndTime, setWalkInEndTime] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [walkInError, setWalkInError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     // CV Review
     const [cvList] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(STUDENT_CVS_INIT);
     const [selectedCV, setSelectedCV] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
@@ -595,6 +619,112 @@ function CounselorDashboard() {
         setSidebarOpen(false);
         router.push("/auth/login");
     };
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "CounselorDashboard.useEffect": ()=>{
+            const storedSchedule = window.localStorage.getItem(WALK_IN_STORAGE_KEY);
+            if (storedSchedule) {
+                try {
+                    setWalkInSchedule(JSON.parse(storedSchedule));
+                } catch  {
+                    window.localStorage.removeItem(WALK_IN_STORAGE_KEY);
+                }
+            }
+            const syncWalkInSchedule = {
+                "CounselorDashboard.useEffect.syncWalkInSchedule": ()=>{
+                    const nextSchedule = window.localStorage.getItem(WALK_IN_STORAGE_KEY);
+                    if (!nextSchedule) return;
+                    try {
+                        setWalkInSchedule(JSON.parse(nextSchedule));
+                    } catch  {
+                        window.localStorage.removeItem(WALK_IN_STORAGE_KEY);
+                    }
+                }
+            }["CounselorDashboard.useEffect.syncWalkInSchedule"];
+            window.addEventListener("storage", syncWalkInSchedule);
+            window.addEventListener(WALK_IN_UPDATED_EVENT, syncWalkInSchedule);
+            return ({
+                "CounselorDashboard.useEffect": ()=>{
+                    window.removeEventListener("storage", syncWalkInSchedule);
+                    window.removeEventListener(WALK_IN_UPDATED_EVENT, syncWalkInSchedule);
+                }
+            })["CounselorDashboard.useEffect"];
+        }
+    }["CounselorDashboard.useEffect"], []);
+    const calendarDays = (()=>{
+        const year = calendarMonth.getFullYear();
+        const month = calendarMonth.getMonth();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        return Array.from({
+            length: Math.ceil((firstDay + daysInMonth) / 7) * 7
+        }, (_, index)=>{
+            const day = index - firstDay + 1;
+            return day > 0 && day <= daysInMonth ? new Date(year, month, day) : null;
+        });
+    })();
+    const formatDateKey = (date)=>{
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${date.getFullYear()}-${month}-${day}`;
+    };
+    const openWalkInEditor = (dateKey)=>{
+        setSelectedDate(dateKey);
+        const schedule = walkInSchedule[dateKey];
+        setWalkInStartTime(schedule?.start ?? "");
+        setWalkInEndTime(schedule?.end ?? "");
+        setWalkInError("");
+        setWalkInEditorOpen(true);
+    };
+    const saveWalkInSchedule = ()=>{
+        if (!walkInStartTime && !walkInEndTime) {
+            setWalkInSchedule((previous)=>{
+                const next = {
+                    ...previous
+                };
+                delete next[selectedDate];
+                window.localStorage.setItem(WALK_IN_STORAGE_KEY, JSON.stringify(next));
+                window.dispatchEvent(new Event(WALK_IN_UPDATED_EVENT));
+                return next;
+            });
+            setWalkInEditorOpen(false);
+            return;
+        }
+        if (!walkInStartTime || !walkInEndTime) {
+            setWalkInError("Choose both a start time and an end time.");
+            return;
+        }
+        if (walkInStartTime >= walkInEndTime) {
+            setWalkInError("The end time must be later than the start time.");
+            return;
+        }
+        setWalkInSchedule((previous)=>{
+            const next = {
+                ...previous,
+                [selectedDate]: {
+                    start: walkInStartTime,
+                    end: walkInEndTime
+                }
+            };
+            window.localStorage.setItem(WALK_IN_STORAGE_KEY, JSON.stringify(next));
+            window.dispatchEvent(new Event(WALK_IN_UPDATED_EVENT));
+            return next;
+        });
+        setWalkInEditorOpen(false);
+    };
+    const removeWalkInSchedule = ()=>{
+        setWalkInSchedule((previous)=>{
+            const next = {
+                ...previous
+            };
+            delete next[selectedDate];
+            window.localStorage.setItem(WALK_IN_STORAGE_KEY, JSON.stringify(next));
+            window.dispatchEvent(new Event(WALK_IN_UPDATED_EVENT));
+            return next;
+        });
+        setWalkInStartTime("");
+        setWalkInEndTime("");
+        setWalkInEditorOpen(false);
+    };
     const issueApproval = ()=>{
         if (!selectedCV) return;
         setApprovedCVs((prev)=>[
@@ -642,7 +772,7 @@ function CounselorDashboard() {
                 onClick: ()=>setSidebarOpen(false)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                lineNumber: 281,
+                lineNumber: 395,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -664,7 +794,7 @@ function CounselorDashboard() {
                                 children: "P"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                lineNumber: 291,
+                                lineNumber: 405,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -674,7 +804,7 @@ function CounselorDashboard() {
                                         children: "P.A.C.E."
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 295,
+                                        lineNumber: 409,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -682,13 +812,13 @@ function CounselorDashboard() {
                                         children: "Counselor Portal"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 296,
+                                        lineNumber: 410,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                lineNumber: 294,
+                                lineNumber: 408,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -698,18 +828,18 @@ function CounselorDashboard() {
                                     size: 18
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 299,
+                                    lineNumber: 413,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                lineNumber: 298,
+                                lineNumber: 412,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                        lineNumber: 290,
+                        lineNumber: 404,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -729,7 +859,7 @@ function CounselorDashboard() {
                                         size: 18
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 312,
+                                        lineNumber: 426,
                                         columnNumber: 15
                                     }, this),
                                     label,
@@ -742,7 +872,7 @@ function CounselorDashboard() {
                                         children: appointments.filter((a)=>a.status === "pending").length
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 315,
+                                        lineNumber: 429,
                                         columnNumber: 17
                                     }, this),
                                     key === "messages" && totalUnread > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -754,18 +884,18 @@ function CounselorDashboard() {
                                         children: totalUnread
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 320,
+                                        lineNumber: 434,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, key, true, {
                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                lineNumber: 306,
+                                lineNumber: 420,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                        lineNumber: 304,
+                        lineNumber: 418,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -782,7 +912,7 @@ function CounselorDashboard() {
                                     children: "MS"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 331,
+                                    lineNumber: 445,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -793,7 +923,7 @@ function CounselorDashboard() {
                                             children: "Dr. Maria Santos"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 335,
+                                            lineNumber: 449,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -801,13 +931,13 @@ function CounselorDashboard() {
                                             children: "Career Counselor"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 336,
+                                            lineNumber: 450,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 334,
+                                    lineNumber: 448,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -820,29 +950,29 @@ function CounselorDashboard() {
                                         size: 15
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 345,
+                                        lineNumber: 459,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 338,
+                                    lineNumber: 452,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                            lineNumber: 330,
+                            lineNumber: 444,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                        lineNumber: 329,
+                        lineNumber: 443,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                lineNumber: 285,
+                lineNumber: 399,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -858,12 +988,12 @@ function CounselorDashboard() {
                                     size: 22
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 356,
+                                    lineNumber: 470,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                lineNumber: 355,
+                                lineNumber: 469,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -873,12 +1003,12 @@ function CounselorDashboard() {
                                     children: navItems.find((n)=>n.key === activeTab)?.label
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 359,
+                                    lineNumber: 473,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                lineNumber: 358,
+                                lineNumber: 472,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -888,7 +1018,7 @@ function CounselorDashboard() {
                                         size: 20
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 364,
+                                        lineNumber: 478,
                                         columnNumber: 13
                                     }, this),
                                     totalUnread > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -900,19 +1030,19 @@ function CounselorDashboard() {
                                         children: totalUnread
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                        lineNumber: 366,
+                                        lineNumber: 480,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                lineNumber: 363,
+                                lineNumber: 477,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                        lineNumber: 354,
+                        lineNumber: 468,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -941,7 +1071,7 @@ function CounselorDashboard() {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 382,
+                                                    lineNumber: 496,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -949,7 +1079,7 @@ function CounselorDashboard() {
                                                     children: "Good morning,"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 383,
+                                                    lineNumber: 497,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -957,7 +1087,7 @@ function CounselorDashboard() {
                                                     children: "Dr. Maria Santos 👩‍💼"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 384,
+                                                    lineNumber: 498,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -965,7 +1095,7 @@ function CounselorDashboard() {
                                                     children: "Career Counselor · MSU-IIT"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 385,
+                                                    lineNumber: 499,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -973,13 +1103,13 @@ function CounselorDashboard() {
                                                     children: "Tuesday, October 27, 2026"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 386,
+                                                    lineNumber: 500,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 381,
+                                            lineNumber: 495,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1018,12 +1148,12 @@ function CounselorDashboard() {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 398,
+                                                                lineNumber: 512,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 397,
+                                                            lineNumber: 511,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1033,7 +1163,7 @@ function CounselorDashboard() {
                                                                     children: value
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 401,
+                                                                    lineNumber: 515,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1041,24 +1171,24 @@ function CounselorDashboard() {
                                                                     children: label
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 402,
+                                                                    lineNumber: 516,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 400,
+                                                            lineNumber: 514,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, label, true, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 396,
+                                                    lineNumber: 510,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 390,
+                                            lineNumber: 504,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1072,7 +1202,7 @@ function CounselorDashboard() {
                                                             children: "Today's Schedule"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 411,
+                                                            lineNumber: 525,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1087,19 +1217,19 @@ function CounselorDashboard() {
                                                                     size: 12
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 413,
+                                                                    lineNumber: 527,
                                                                     columnNumber: 30
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 412,
+                                                            lineNumber: 526,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 410,
+                                                    lineNumber: 524,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -1115,7 +1245,7 @@ function CounselorDashboard() {
                                                                     children: s.time
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 419,
+                                                                    lineNumber: 533,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1126,7 +1256,7 @@ function CounselorDashboard() {
                                                                             children: s.student
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 421,
+                                                                            lineNumber: 535,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1134,13 +1264,13 @@ function CounselorDashboard() {
                                                                             children: s.type
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 422,
+                                                                            lineNumber: 536,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 420,
+                                                                    lineNumber: 534,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1148,30 +1278,30 @@ function CounselorDashboard() {
                                                                     children: s.status
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 424,
+                                                                    lineNumber: 538,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, i, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 418,
+                                                            lineNumber: 532,
                                                             columnNumber: 23
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 416,
+                                                    lineNumber: 530,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 409,
+                                            lineNumber: 523,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, "overview", true, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 379,
+                                    lineNumber: 493,
                                     columnNumber: 15
                                 }, this),
                                 activeTab === "availability" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -1182,260 +1312,504 @@ function CounselorDashboard() {
                                     className: "space-y-5",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex items-center justify-between",
+                                            className: "bg-white rounded-xl border border-gray-100 shadow-sm p-5",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4",
                                                     children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "font-semibold text-gray-800",
-                                                            children: "Max Appointments Per Day"
-                                                        }, void 0, false, {
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                    className: "font-semibold text-gray-800 text-sm",
+                                                                    children: "Walk-in availability calendar"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 554,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "text-xs text-gray-400 mt-1",
+                                                                    children: "Select a date to choose the periods when students may visit without an appointment."
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 555,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 440,
+                                                            lineNumber: 553,
                                                             columnNumber: 21
                                                         }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-sm text-gray-400",
-                                                            children: "Set your daily capacity limit"
-                                                        }, void 0, false, {
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex items-center gap-3",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-xs text-gray-500",
+                                                                    children: "Max appointments/day"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 558,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    onClick: ()=>setMaxPerDay((v)=>Math.max(1, v - 1)),
+                                                                    className: "w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50",
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$minus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Minus$3e$__["Minus"], {
+                                                                        size: 13
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 559,
+                                                                        columnNumber: 205
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 559,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "w-5 text-center font-bold text-gray-800",
+                                                                    children: maxPerDay
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 560,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                    onClick: ()=>setMaxPerDay((v)=>Math.min(12, v + 1)),
+                                                                    className: "w-7 h-7 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50",
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
+                                                                        size: 13
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 561,
+                                                                        columnNumber: 206
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 561,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 441,
+                                                            lineNumber: 557,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 439,
+                                                    lineNumber: 552,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "flex items-center gap-3",
+                                                    className: "flex items-center justify-between mb-4",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>setMaxPerDay((v)=>Math.max(1, v - 1)),
-                                                            className: "w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50",
-                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$minus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Minus$3e$__["Minus"], {
-                                                                size: 14
+                                                            type: "button",
+                                                            onClick: ()=>setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1)),
+                                                            className: "p-1.5 rounded-lg text-gray-500 hover:bg-gray-100",
+                                                            "aria-label": "Previous month",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__["ChevronLeft"], {
+                                                                size: 17
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 445,
-                                                                columnNumber: 23
+                                                                lineNumber: 565,
+                                                                columnNumber: 237
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 444,
+                                                            lineNumber: 565,
                                                             columnNumber: 21
                                                         }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "w-8 text-center font-bold text-gray-800 text-lg",
-                                                            children: maxPerDay
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                            className: "text-sm font-bold text-gray-800",
+                                                            children: calendarMonth.toLocaleDateString("en-US", {
+                                                                month: "long",
+                                                                year: "numeric"
+                                                            })
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 447,
+                                                            lineNumber: 566,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                            onClick: ()=>setMaxPerDay((v)=>Math.min(12, v + 1)),
-                                                            className: "w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50",
-                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
-                                                                size: 14
+                                                            type: "button",
+                                                            onClick: ()=>setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1)),
+                                                            className: "p-1.5 rounded-lg text-gray-500 hover:bg-gray-100",
+                                                            "aria-label": "Next month",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
+                                                                size: 17
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 449,
-                                                                columnNumber: 23
+                                                                lineNumber: 567,
+                                                                columnNumber: 233
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 448,
+                                                            lineNumber: 567,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 443,
+                                                    lineNumber: 564,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase text-gray-400 mb-2",
+                                                    children: [
+                                                        "Sun",
+                                                        "Mon",
+                                                        "Tue",
+                                                        "Wed",
+                                                        "Thu",
+                                                        "Fri",
+                                                        "Sat"
+                                                    ].map((day)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            children: day
+                                                        }, day, false, {
+                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                            lineNumber: 570,
+                                                            columnNumber: 85
+                                                        }, this))
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                    lineNumber: 569,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "grid grid-cols-7 gap-1",
+                                                    children: calendarDays.map((date, index)=>{
+                                                        if (!date) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "min-h-16"
+                                                        }, `empty-${index}`, false, {
+                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                            lineNumber: 574,
+                                                            columnNumber: 41
+                                                        }, this);
+                                                        const dateKey = formatDateKey(date);
+                                                        const walkInsOpen = Boolean(walkInSchedule[dateKey]);
+                                                        const dayAppointments = appointments.filter((appointment)=>{
+                                                            const parsed = new Date(appointment.requestedDate);
+                                                            return parsed.getFullYear() === date.getFullYear() && parsed.getMonth() === date.getMonth() && parsed.getDate() === date.getDate();
+                                                        });
+                                                        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                            type: "button",
+                                                            onClick: ()=>openWalkInEditor(dateKey),
+                                                            className: `min-h-16 rounded-lg border p-1.5 text-left transition-colors ${selectedDate === dateKey ? "border-[#7A0016] bg-red-50" : "border-transparent hover:border-gray-200 hover:bg-gray-50"}`,
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-xs font-semibold text-gray-700",
+                                                                    children: date.getDate()
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 583,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                dayAppointments.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "block mt-1 text-[9px] truncate text-[#7A0016]",
+                                                                    children: [
+                                                                        dayAppointments.length,
+                                                                        " appointment",
+                                                                        dayAppointments.length > 1 ? "s" : ""
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 584,
+                                                                    columnNumber: 58
+                                                                }, this),
+                                                                walkInsOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "block text-[9px] truncate text-emerald-700",
+                                                                    children: "Walk-ins open"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 585,
+                                                                    columnNumber: 43
+                                                                }, this)
+                                                            ]
+                                                        }, dateKey, true, {
+                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                            lineNumber: 582,
+                                                            columnNumber: 25
+                                                        }, this);
+                                                    })
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                    lineNumber: 572,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex items-center gap-4 text-[11px] text-gray-400 mt-4",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "flex items-center gap-1",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "w-2.5 h-2.5 rounded-full bg-emerald-600"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 591,
+                                                                    columnNumber: 63
+                                                                }, this),
+                                                                "Walk-ins open"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                            lineNumber: 591,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "flex items-center gap-1",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "w-2.5 h-2.5 rounded-full bg-[#7A0016]"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 592,
+                                                                    columnNumber: 63
+                                                                }, this),
+                                                                "Appointment request"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                            lineNumber: 592,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                    lineNumber: 590,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 438,
+                                            lineNumber: 551,
                                             columnNumber: 17
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "px-5 py-3 border-b border-gray-100",
-                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                        className: "font-semibold text-gray-800 text-sm",
-                                                        children: "Weekly Availability (Mon – Fri)"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 457,
-                                                        columnNumber: 21
-                                                    }, this)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 456,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "overflow-x-auto",
-                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("table", {
-                                                        className: "w-full min-w-[520px]",
+                                        walkInEditorOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4",
+                                            onClick: ()=>setWalkInEditorOpen(false),
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-full max-w-md bg-white rounded-xl shadow-xl border border-gray-200 p-5 space-y-4",
+                                                onClick: (event)=>event.stopPropagation(),
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-start justify-between gap-3",
                                                         children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("thead", {
-                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                                    style: {
-                                                                        background: "rgba(122,0,22,0.04)"
-                                                                    },
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                                            className: "text-left px-5 py-2 text-xs font-semibold text-gray-500",
-                                                                            children: "Time"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 463,
-                                                                            columnNumber: 27
-                                                                        }, this),
-                                                                        weekSchedule.map((d)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                                                className: "px-3 py-2 text-xs font-semibold text-gray-500 text-center",
-                                                                                children: d.day.slice(0, 3)
-                                                                            }, d.day, false, {
-                                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 465,
-                                                                                columnNumber: 29
-                                                                            }, this))
-                                                                    ]
-                                                                }, void 0, true, {
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                        className: "text-sm font-bold text-gray-800",
+                                                                        children: "Walk-in availability"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 600,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        className: "text-[11px] text-gray-500 mt-1",
+                                                                        children: new Date(`${selectedDate}T12:00:00`).toLocaleDateString("en-US", {
+                                                                            weekday: "long",
+                                                                            month: "long",
+                                                                            day: "numeric",
+                                                                            year: "numeric"
+                                                                        })
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 601,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 599,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                type: "button",
+                                                                onClick: ()=>setWalkInEditorOpen(false),
+                                                                className: "text-gray-400 hover:text-gray-700",
+                                                                "aria-label": "Close walk-in availability",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
+                                                                    size: 18
+                                                                }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 462,
-                                                                    columnNumber: 25
+                                                                    lineNumber: 603,
+                                                                    columnNumber: 176
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 461,
-                                                                columnNumber: 23
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
-                                                                children: weekSchedule[0].slots.map((slot, slotIdx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                                        className: "border-t border-gray-50",
-                                                                        children: [
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                                                className: "px-5 py-2.5 text-xs text-gray-500 font-medium",
-                                                                                children: slot.time
-                                                                            }, void 0, false, {
-                                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 472,
-                                                                                columnNumber: 29
-                                                                            }, this),
-                                                                            weekSchedule.map((day, dayIdx)=>{
-                                                                                const enabled = day.slots[slotIdx].enabled;
-                                                                                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
-                                                                                    className: "px-3 py-2.5 text-center",
-                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                                                        onClick: ()=>toggleSlot(dayIdx, slotIdx),
-                                                                                        className: `w-10 h-6 rounded-full transition-colors relative inline-flex items-center ${enabled ? "" : "bg-gray-200"}`,
-                                                                                        style: enabled ? {
-                                                                                            background: "#7A0016"
-                                                                                        } : {},
-                                                                                        title: `${day.day} ${slot.time}`,
-                                                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                                            className: `absolute w-4 h-4 rounded-full bg-white shadow transition-transform ${enabled ? "translate-x-5" : "translate-x-1"}`
-                                                                                        }, void 0, false, {
-                                                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                            lineNumber: 483,
-                                                                                            columnNumber: 37
-                                                                                        }, this)
-                                                                                    }, void 0, false, {
-                                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                        lineNumber: 477,
-                                                                                        columnNumber: 35
-                                                                                    }, this)
-                                                                                }, dayIdx, false, {
-                                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 476,
-                                                                                    columnNumber: 33
-                                                                                }, this);
-                                                                            })
-                                                                        ]
-                                                                    }, slotIdx, true, {
-                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 471,
-                                                                        columnNumber: 27
-                                                                    }, this))
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 469,
-                                                                columnNumber: 23
+                                                                lineNumber: 603,
+                                                                columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 460,
-                                                        columnNumber: 21
+                                                        lineNumber: 598,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-xs text-gray-600",
+                                                        children: "Choose the start and end time when students may visit without a prior appointment."
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 605,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "grid grid-cols-1 sm:grid-cols-2 gap-3",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                                className: "space-y-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "block text-[10px] font-bold uppercase tracking-wide text-gray-500",
+                                                                        children: "Walk-ins start"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 608,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                        type: "time",
+                                                                        value: walkInStartTime,
+                                                                        onChange: (event)=>{
+                                                                            setWalkInStartTime(event.target.value);
+                                                                            setWalkInError("");
+                                                                        },
+                                                                        className: "w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#7A0016]"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 609,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 607,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                                className: "space-y-1",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "block text-[10px] font-bold uppercase tracking-wide text-gray-500",
+                                                                        children: "Walk-ins end"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 620,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                                        type: "time",
+                                                                        value: walkInEndTime,
+                                                                        onChange: (event)=>{
+                                                                            setWalkInEndTime(event.target.value);
+                                                                            setWalkInError("");
+                                                                        },
+                                                                        className: "w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#7A0016]"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 621,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 619,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 606,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    walkInError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-xs font-medium text-red-600",
+                                                        role: "alert",
+                                                        children: walkInError
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 632,
+                                                        columnNumber: 39
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between pt-2 border-t border-gray-100",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-[11px] text-gray-500",
+                                                                children: walkInStartTime && walkInEndTime ? `${walkInStartTime} – ${walkInEndTime}` : "No walk-in window set"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 634,
+                                                                columnNumber: 25
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "flex gap-2",
+                                                                children: [
+                                                                    walkInSchedule[selectedDate] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                        type: "button",
+                                                                        onClick: removeWalkInSchedule,
+                                                                        className: "px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100",
+                                                                        children: "Remove availability"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 639,
+                                                                        columnNumber: 29
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                        type: "button",
+                                                                        onClick: ()=>setWalkInEditorOpen(false),
+                                                                        className: "px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200",
+                                                                        children: "Cancel"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 643,
+                                                                        columnNumber: 27
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                        type: "button",
+                                                                        onClick: saveWalkInSchedule,
+                                                                        className: "px-3 py-1.5 rounded-lg text-xs font-bold text-white",
+                                                                        style: {
+                                                                            background: "#7A0016"
+                                                                        },
+                                                                        children: "Save availability"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 644,
+                                                                        columnNumber: 27
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 637,
+                                                                columnNumber: 25
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 633,
+                                                        columnNumber: 23
                                                     }, this)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 459,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "px-5 py-3 border-t border-gray-100 flex items-center gap-4 text-xs text-gray-400",
-                                                    children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "flex items-center gap-1",
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "w-3 h-3 rounded-full inline-block",
-                                                                    style: {
-                                                                        background: "#7A0016"
-                                                                    }
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 494,
-                                                                    columnNumber: 63
-                                                                }, this),
-                                                                "Available"
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 494,
-                                                            columnNumber: 21
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "flex items-center gap-1",
-                                                            children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "w-3 h-3 rounded-full inline-block bg-gray-200"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 495,
-                                                                    columnNumber: 63
-                                                                }, this),
-                                                                "Unavailable"
-                                                            ]
-                                                        }, void 0, true, {
-                                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 495,
-                                                            columnNumber: 21
-                                                        }, this)
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 493,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                lineNumber: 597,
+                                                columnNumber: 21
+                                            }, this)
+                                        }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 455,
-                                            columnNumber: 17
+                                            lineNumber: 596,
+                                            columnNumber: 19
                                         }, this)
                                     ]
                                 }, "availability", true, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 436,
+                                    lineNumber: 550,
                                     columnNumber: 15
                                 }, this),
                                 activeTab === "appointments" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -1450,7 +1824,7 @@ function CounselorDashboard() {
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                                 className: "text-base font-semibold text-gray-800",
                                                 children: [
-                                                    "Appointment Requests",
+                                                    "Appointment Calendar",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "ml-2 text-xs px-2 py-0.5 rounded-full font-medium bg-yellow-100 text-yellow-700",
                                                         children: [
@@ -1459,18 +1833,175 @@ function CounselorDashboard() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 507,
+                                                        lineNumber: 659,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                lineNumber: 505,
+                                                lineNumber: 657,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 504,
+                                            lineNumber: 656,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "bg-white rounded-xl border border-gray-100 shadow-sm p-5",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between mb-4",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                type: "button",
+                                                                onClick: ()=>setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1)),
+                                                                className: "p-1.5 rounded-lg text-gray-500 hover:bg-gray-100",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__["ChevronLeft"], {
+                                                                    size: 17
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 667,
+                                                                    columnNumber: 211
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 667,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                className: "text-sm font-bold text-gray-800",
+                                                                children: calendarMonth.toLocaleDateString("en-US", {
+                                                                    month: "long",
+                                                                    year: "numeric"
+                                                                })
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 668,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                type: "button",
+                                                                onClick: ()=>setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1)),
+                                                                className: "p-1.5 rounded-lg text-gray-500 hover:bg-gray-100",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRight$3e$__["ChevronRight"], {
+                                                                    size: 17
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                    lineNumber: 671,
+                                                                    columnNumber: 211
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 671,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 666,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase text-gray-400 mb-2",
+                                                        children: [
+                                                            "Sun",
+                                                            "Mon",
+                                                            "Tue",
+                                                            "Wed",
+                                                            "Thu",
+                                                            "Fri",
+                                                            "Sat"
+                                                        ].map((day)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                children: day
+                                                            }, day, false, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 674,
+                                                                columnNumber: 87
+                                                            }, this))
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 673,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "grid grid-cols-7 gap-1",
+                                                        children: calendarDays.map((date, index)=>{
+                                                            if (!date) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "min-h-11"
+                                                            }, `empty-${index}`, false, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 678,
+                                                                columnNumber: 43
+                                                            }, this);
+                                                            const dateKey = formatDateKey(date);
+                                                            const dayAppointments = appointments.filter((appointment)=>{
+                                                                const parsed = new Date(appointment.requestedDate);
+                                                                return parsed.getFullYear() === date.getFullYear() && parsed.getMonth() === date.getMonth() && parsed.getDate() === date.getDate();
+                                                            });
+                                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                type: "button",
+                                                                onClick: ()=>setSelectedDate(dateKey),
+                                                                className: `min-h-11 rounded-lg p-1 text-xs text-left transition-colors ${selectedDate === dateKey ? "bg-[#7A0016] text-white" : "hover:bg-red-50 text-gray-700"}`,
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: "font-semibold",
+                                                                        children: date.getDate()
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 691,
+                                                                        columnNumber: 29
+                                                                    }, this),
+                                                                    dayAppointments.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                        className: `block mt-1 text-[9px] truncate ${selectedDate === dateKey ? "text-[#FFD700]" : "text-[#7A0016]"}`,
+                                                                        children: [
+                                                                            dayAppointments.length,
+                                                                            " appointment",
+                                                                            dayAppointments.length > 1 ? "s" : ""
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                        lineNumber: 692,
+                                                                        columnNumber: 60
+                                                                    }, this)
+                                                                ]
+                                                            }, dateKey, true, {
+                                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                                lineNumber: 685,
+                                                                columnNumber: 27
+                                                            }, this);
+                                                        })
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 676,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-[11px] text-gray-400 mt-4",
+                                                        children: "Select a date to view its appointment requests. Counselors can accept, reject, or reschedule requests below."
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                        lineNumber: 697,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                                lineNumber: 665,
+                                                columnNumber: 19
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                            lineNumber: 664,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                            className: "text-sm font-semibold text-gray-800 pt-2",
+                                            children: "Appointment requests"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/dashboard/counselor/page.tsx",
+                                            lineNumber: 700,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1490,7 +2021,7 @@ function CounselorDashboard() {
                                                                     children: apt.studentName.split(" ").map((n)=>n[0]).join("").slice(0, 2)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 516,
+                                                                    lineNumber: 705,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1504,7 +2035,7 @@ function CounselorDashboard() {
                                                                                     children: apt.studentName
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 521,
+                                                                                    lineNumber: 710,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1512,7 +2043,7 @@ function CounselorDashboard() {
                                                                                     children: apt.program
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 522,
+                                                                                    lineNumber: 711,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1520,13 +2051,13 @@ function CounselorDashboard() {
                                                                                     children: apt.status
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 523,
+                                                                                    lineNumber: 712,
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 520,
+                                                                            lineNumber: 709,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1534,7 +2065,7 @@ function CounselorDashboard() {
                                                                             children: apt.reason
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 525,
+                                                                            lineNumber: 714,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1544,7 +2075,7 @@ function CounselorDashboard() {
                                                                                     size: 11
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 527,
+                                                                                    lineNumber: 716,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 apt.requestedDate,
@@ -1553,19 +2084,19 @@ function CounselorDashboard() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 526,
+                                                                            lineNumber: 715,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 519,
+                                                                    lineNumber: 708,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 515,
+                                                            lineNumber: 704,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1581,12 +2112,12 @@ function CounselorDashboard() {
                                                                 className: "w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-red-400 resize-none text-gray-700 bg-gray-50"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 535,
+                                                                lineNumber: 724,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 534,
+                                                            lineNumber: 723,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1604,14 +2135,14 @@ function CounselorDashboard() {
                                                                             size: 13
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 552,
+                                                                            lineNumber: 741,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         " Approve"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 546,
+                                                                    lineNumber: 735,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1623,14 +2154,14 @@ function CounselorDashboard() {
                                                                             size: 13
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 559,
+                                                                            lineNumber: 748,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         " Reject"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 554,
+                                                                    lineNumber: 743,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1642,37 +2173,37 @@ function CounselorDashboard() {
                                                                             size: 13
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 566,
+                                                                            lineNumber: 755,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         " Reschedule"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 561,
+                                                                    lineNumber: 750,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 545,
+                                                            lineNumber: 734,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, apt.id, true, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 514,
+                                                    lineNumber: 703,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 512,
+                                            lineNumber: 701,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, "appointments", true, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 503,
+                                    lineNumber: 655,
                                     columnNumber: 15
                                 }, this),
                                 activeTab === "cvreview" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -1693,7 +2224,7 @@ function CounselorDashboard() {
                                                             children: "Student CVs Awaiting Review"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 581,
+                                                            lineNumber: 770,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1704,13 +2235,13 @@ function CounselorDashboard() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 582,
+                                                            lineNumber: 771,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 580,
+                                                    lineNumber: 769,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -1732,7 +2263,7 @@ function CounselorDashboard() {
                                                                         children: cv.studentName.split(" ").map((n)=>n[0]).join("").slice(0, 2)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 591,
+                                                                        lineNumber: 780,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1746,7 +2277,7 @@ function CounselorDashboard() {
                                                                                         children: cv.studentName
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                        lineNumber: 596,
+                                                                                        lineNumber: 785,
                                                                                         columnNumber: 31
                                                                                     }, this),
                                                                                     approvedCVs.includes(cv.id) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$award$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Award$3e$__["Award"], {
@@ -1757,13 +2288,13 @@ function CounselorDashboard() {
                                                                                         }
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                        lineNumber: 597,
+                                                                                        lineNumber: 786,
                                                                                         columnNumber: 63
                                                                                     }, this)
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 595,
+                                                                                lineNumber: 784,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1771,7 +2302,7 @@ function CounselorDashboard() {
                                                                                 children: cv.program
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 599,
+                                                                                lineNumber: 788,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1779,7 +2310,7 @@ function CounselorDashboard() {
                                                                                 children: cv.submittedAt
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 600,
+                                                                                lineNumber: 789,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1787,35 +2318,35 @@ function CounselorDashboard() {
                                                                                 children: approvedCVs.includes(cv.id) ? "approved" : cv.status
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 601,
+                                                                                lineNumber: 790,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 594,
+                                                                        lineNumber: 783,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 587,
+                                                                lineNumber: 776,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, cv.id, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 586,
+                                                            lineNumber: 775,
                                                             columnNumber: 23
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 584,
+                                                    lineNumber: 773,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 579,
+                                            lineNumber: 768,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1827,7 +2358,7 @@ function CounselorDashboard() {
                                                         size: 48
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 615,
+                                                        lineNumber: 804,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1835,13 +2366,13 @@ function CounselorDashboard() {
                                                         children: "Select a student CV to review"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 616,
+                                                        lineNumber: 805,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                lineNumber: 614,
+                                                lineNumber: 803,
                                                 columnNumber: 21
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                                 children: [
@@ -1855,7 +2386,7 @@ function CounselorDashboard() {
                                                                         children: selectedCV.studentName
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 623,
+                                                                        lineNumber: 812,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1867,13 +2398,13 @@ function CounselorDashboard() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 624,
+                                                                        lineNumber: 813,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 622,
+                                                                lineNumber: 811,
                                                                 columnNumber: 25
                                                             }, this),
                                                             approvedCVs.includes(selectedCV.id) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1887,20 +2418,20 @@ function CounselorDashboard() {
                                                                         size: 13
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 628,
+                                                                        lineNumber: 817,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     " Badge Issued"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 627,
+                                                                lineNumber: 816,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 621,
+                                                        lineNumber: 810,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1917,7 +2448,7 @@ function CounselorDashboard() {
                                                                     className: "mx-auto mb-2"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 634,
+                                                                    lineNumber: 823,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1925,7 +2456,7 @@ function CounselorDashboard() {
                                                                     children: "PDF Preview"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 635,
+                                                                    lineNumber: 824,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1936,18 +2467,18 @@ function CounselorDashboard() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 636,
+                                                                    lineNumber: 825,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 633,
+                                                            lineNumber: 822,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 632,
+                                                        lineNumber: 821,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1958,7 +2489,7 @@ function CounselorDashboard() {
                                                                 children: "Structured Feedback"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 642,
+                                                                lineNumber: 831,
                                                                 columnNumber: 25
                                                             }, this),
                                                             [
@@ -1980,7 +2511,7 @@ function CounselorDashboard() {
                                                                             children: labels[field]
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 647,
+                                                                            lineNumber: 836,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -1994,13 +2525,13 @@ function CounselorDashboard() {
                                                                             className: "w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-red-400 resize-none"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 648,
+                                                                            lineNumber: 837,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, field, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 646,
+                                                                    lineNumber: 835,
                                                                     columnNumber: 29
                                                                 }, this);
                                                             }),
@@ -2011,7 +2542,7 @@ function CounselorDashboard() {
                                                                         children: "Overall Rating"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 661,
+                                                                        lineNumber: 850,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2036,12 +2567,12 @@ function CounselorDashboard() {
                                                                                         }
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                        lineNumber: 665,
+                                                                                        lineNumber: 854,
                                                                                         columnNumber: 33
                                                                                     }, this)
                                                                                 }, star, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 664,
+                                                                                    lineNumber: 853,
                                                                                     columnNumber: 31
                                                                                 }, this)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2049,19 +2580,19 @@ function CounselorDashboard() {
                                                                                 children: feedback.rating > 0 ? `${feedback.rating}/5` : "Not rated"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 672,
+                                                                                lineNumber: 861,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 662,
+                                                                        lineNumber: 851,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 660,
+                                                                lineNumber: 849,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2081,37 +2612,37 @@ function CounselorDashboard() {
                                                                         size: 16
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 687,
+                                                                        lineNumber: 876,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     approvedCVs.includes(selectedCV.id) ? "Approval Badge Issued" : "Issue Approval Badge"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 677,
+                                                                lineNumber: 866,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 641,
+                                                        lineNumber: 830,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                lineNumber: 619,
+                                                lineNumber: 808,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 612,
+                                            lineNumber: 801,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, "cvreview", true, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 577,
+                                    lineNumber: 766,
                                     columnNumber: 15
                                 }, this),
                                 activeTab === "messages" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -2143,7 +2674,7 @@ function CounselorDashboard() {
                                                             children: studentConvos.reduce((s, c)=>s + c.unread, 0)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 711,
+                                                            lineNumber: 900,
                                                             columnNumber: 25
                                                         }, this),
                                                         t === "recruiters" && recruiterConvos.some((c)=>c.unread > 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2155,18 +2686,18 @@ function CounselorDashboard() {
                                                             children: recruiterConvos.reduce((s, c)=>s + c.unread, 0)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                            lineNumber: 716,
+                                                            lineNumber: 905,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, t, true, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 703,
+                                                    lineNumber: 892,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 701,
+                                            lineNumber: 890,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2193,7 +2724,7 @@ function CounselorDashboard() {
                                                                             children: c.avatar
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 737,
+                                                                            lineNumber: 926,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2207,7 +2738,7 @@ function CounselorDashboard() {
                                                                                             children: c.contact
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                            lineNumber: 742,
+                                                                                            lineNumber: 931,
                                                                                             columnNumber: 33
                                                                                         }, this),
                                                                                         c.unread > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2219,13 +2750,13 @@ function CounselorDashboard() {
                                                                                             children: c.unread
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                            lineNumber: 744,
+                                                                                            lineNumber: 933,
                                                                                             columnNumber: 35
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 741,
+                                                                                    lineNumber: 930,
                                                                                     columnNumber: 31
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2233,34 +2764,34 @@ function CounselorDashboard() {
                                                                                     children: c.lastMessage
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 749,
+                                                                                    lineNumber: 938,
                                                                                     columnNumber: 31
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 740,
+                                                                            lineNumber: 929,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                    lineNumber: 730,
+                                                                    lineNumber: 919,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             }, c.id, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 729,
+                                                                lineNumber: 918,
                                                                 columnNumber: 25
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 727,
+                                                        lineNumber: 916,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 726,
+                                                    lineNumber: 915,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2279,7 +2810,7 @@ function CounselorDashboard() {
                                                                         children: currentConvo.avatar
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 762,
+                                                                        lineNumber: 951,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2289,7 +2820,7 @@ function CounselorDashboard() {
                                                                                 children: currentConvo.contact
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 766,
+                                                                                lineNumber: 955,
                                                                                 columnNumber: 29
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2297,19 +2828,19 @@ function CounselorDashboard() {
                                                                                 children: currentConvo.role
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                lineNumber: 767,
+                                                                                lineNumber: 956,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 765,
+                                                                        lineNumber: 954,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 761,
+                                                                lineNumber: 950,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2332,7 +2863,7 @@ function CounselorDashboard() {
                                                                                     children: msg.text
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 781,
+                                                                                    lineNumber: 970,
                                                                                     columnNumber: 33
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2340,23 +2871,23 @@ function CounselorDashboard() {
                                                                                     children: msg.time
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                                    lineNumber: 782,
+                                                                                    lineNumber: 971,
                                                                                     columnNumber: 33
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 773,
+                                                                            lineNumber: 962,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     }, msg.id, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 772,
+                                                                        lineNumber: 961,
                                                                         columnNumber: 29
                                                                     }, this))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 770,
+                                                                lineNumber: 959,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2370,7 +2901,7 @@ function CounselorDashboard() {
                                                                         className: "flex-1 bg-gray-50 rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-red-200"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 788,
+                                                                        lineNumber: 977,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2383,68 +2914,68 @@ function CounselorDashboard() {
                                                                             size: 15
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                            lineNumber: 796,
+                                                                            lineNumber: 985,
                                                                             columnNumber: 29
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                        lineNumber: 795,
+                                                                        lineNumber: 984,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                                lineNumber: 787,
+                                                                lineNumber: 976,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                        lineNumber: 760,
+                                                        lineNumber: 949,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                                    lineNumber: 758,
+                                                    lineNumber: 947,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                            lineNumber: 724,
+                                            lineNumber: 913,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, "messages", true, {
                                     fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                                    lineNumber: 699,
+                                    lineNumber: 888,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                            lineNumber: 375,
+                            lineNumber: 489,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                        lineNumber: 374,
+                        lineNumber: 488,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-                lineNumber: 352,
+                lineNumber: 466,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/counselor/page.tsx",
-        lineNumber: 278,
+        lineNumber: 392,
         columnNumber: 5
     }, this);
 }
-_s(CounselorDashboard, "7bV/hPuO4xTiOE0wOAj6PQRpPTM=", false, function() {
+_s(CounselorDashboard, "ApV+LifPG/Vi74+zpgOL8R+UKvg=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];

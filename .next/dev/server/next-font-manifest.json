@@ -1,5 +1,8 @@
 {
   "app": {
+    "[project]/src/app/auth/login/page": [
+      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2"
+    ],
     "[project]/src/app/dashboard/counselor/page": [
       "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2"
     ],
@@ -7,9 +10,6 @@
       "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2"
     ],
     "[project]/src/app/dashboard/student/page": [
-      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2"
-    ],
-    "[project]/src/app/dashboard/superadmin/page": [
       "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2"
     ],
     "[project]/src/app/page": [

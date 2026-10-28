@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -18,6 +18,7 @@ import {
   Download,
   Share2,
   ExternalLink,
+  ChevronLeft,
   ChevronRight,
   X,
   ShieldCheck,
@@ -44,9 +45,83 @@ const navItems: NavItem[] = [
   { id: "profile", label: "My Career Profile", icon: <UserRound size={18} /> },
 ];
 
+type CounselorWalkInAvailability = {
+  name: string;
+  role: string;
+  dates: Record<string, string[]>;
+};
+
+const WALK_IN_STORAGE_KEY = "pace-walk-in-schedule";
+const WALK_IN_UPDATED_EVENT = "pace-walk-in-schedule-updated";
+const INITIAL_WALK_IN_SCHEDULE: Record<string, { start: string; end: string }> = {
+  "2026-11-04": { start: "10:00", end: "12:00" },
+  "2026-11-06": { start: "09:00", end: "11:00" },
+  "2026-11-10": { start: "13:00", end: "15:00" },
+};
+
+const counselorWalkInAvailability: CounselorWalkInAvailability[] = [
+  {
+    name: "Dr. Maria Santos",
+    role: "Career Placement Officer",
+    dates: {
+      "2026-11-04": ["10:00 AM", "11:00 AM"],
+      "2026-11-06": ["09:00 AM", "10:00 AM"],
+      "2026-11-10": ["01:00 PM", "02:00 PM"],
+    },
+  },
+  {
+    name: "Mr. Paolo Dela Cruz",
+    role: "Career Guidance Counselor",
+    dates: {
+      "2026-11-04": ["02:00 PM", "03:00 PM"],
+      "2026-11-12": ["09:00 AM", "10:00 AM"],
+      "2026-11-17": ["01:00 PM", "02:00 PM"],
+    },
+  },
+  {
+    name: "Ms. Elena Macaraeg",
+    role: "Resume & Career Advisor",
+    dates: {
+      "2026-11-06": ["01:00 PM"],
+      "2026-11-13": ["09:00 AM", "10:00 AM"],
+      "2026-11-19": ["03:00 PM", "04:00 PM"],
+    },
+  },
+];
+
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
+  const [calendarMonth, setCalendarMonth] = useState(new Date(2026, 10, 1));
+  const [selectedWalkInDate, setSelectedWalkInDate] = useState("2026-11-04");
+  const [sharedWalkInSchedule, setSharedWalkInSchedule] = useState(INITIAL_WALK_IN_SCHEDULE);
+
+  useEffect(() => {
+    const storedSchedule = window.localStorage.getItem(WALK_IN_STORAGE_KEY);
+    if (storedSchedule) {
+      try {
+        setSharedWalkInSchedule(JSON.parse(storedSchedule));
+      } catch {
+        window.localStorage.removeItem(WALK_IN_STORAGE_KEY);
+      }
+    }
+
+    const syncWalkInSchedule = () => {
+      const nextSchedule = window.localStorage.getItem(WALK_IN_STORAGE_KEY);
+      if (!nextSchedule) return;
+      try {
+        setSharedWalkInSchedule(JSON.parse(nextSchedule));
+      } catch {
+        window.localStorage.removeItem(WALK_IN_STORAGE_KEY);
+      }
+    };
+    window.addEventListener("storage", syncWalkInSchedule);
+    window.addEventListener(WALK_IN_UPDATED_EVENT, syncWalkInSchedule);
+    return () => {
+      window.removeEventListener("storage", syncWalkInSchedule);
+      window.removeEventListener(WALK_IN_UPDATED_EVENT, syncWalkInSchedule);
+    };
+  }, []);
 
   // Feature C: Career Center Verification QR State
   const [qrVerified, setQrVerified] = useState(true);
@@ -126,6 +201,42 @@ export default function StudentDashboard() {
       alert(`Success! Speed interview time-slot [${slotSelected}] confirmed at ${currentBooth.company} (${currentBooth.location}). Present your digital QR pass at the gymnasium entrance.`);
     }
   };
+
+  const formatDateKey = (date: Date) => {
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${date.getFullYear()}-${month}-${day}`;
+  };
+
+  const formatWalkInTime = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return new Date(2026, 0, 1, hours, minutes).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  };
+
+  const calendarDays = (() => {
+    const year = calendarMonth.getFullYear();
+    const month = calendarMonth.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    return Array.from({ length: Math.ceil((firstDay + daysInMonth) / 7) * 7 }, (_, index) => {
+      const day = index - firstDay + 1;
+      return day > 0 && day <= daysInMonth ? new Date(year, month, day) : null;
+    });
+  })();
+
+  const currentCounselorAvailability = counselorWalkInAvailability.map((counselor) => {
+    if (counselor.name !== "Dr. Maria Santos") return counselor;
+    const dates = Object.fromEntries(
+      Object.entries(sharedWalkInSchedule).map(([date, window]) => [
+        date,
+        [`${formatWalkInTime(window.start)} – ${formatWalkInTime(window.end)}`],
+      ])
+    );
+    return { ...counselor, dates };
+  });
+  const availableCounselors = currentCounselorAvailability.filter(
+    (counselor) => counselor.dates[selectedWalkInDate]
+  );
 
   return (
     <DashboardLayout
@@ -293,6 +404,98 @@ export default function StudentDashboard() {
                 <p className="text-xs text-[#64748B] mt-1">View availability and request a career guidance session.</p>
               </div>
               <span className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">Counselor availability updated</span>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+              <div className="lg:col-span-3 bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-sm font-bold text-[#0F172A]">Walk-in availability calendar</h3>
+                    <p className="text-[11px] text-[#64748B] mt-1">Select a date to see counselors accepting walk-ins.</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))}
+                      className="p-1.5 rounded-lg text-[#64748B] hover:bg-[#F8FAFC]"
+                      aria-label="Previous month"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <h4 className="w-32 text-center text-xs font-bold text-[#334155]">
+                      {calendarMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                    </h4>
+                    <button
+                      type="button"
+                      onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))}
+                      className="p-1.5 rounded-lg text-[#64748B] hover:bg-[#F8FAFC]"
+                      aria-label="Next month"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold uppercase text-[#94A3B8] mb-2">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <span key={day}>{day}</span>)}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {calendarDays.map((date, index) => {
+                    if (!date) return <span key={`empty-${index}`} className="min-h-12" />;
+                    const dateKey = formatDateKey(date);
+                    const counselorsAvailable = currentCounselorAvailability.filter((counselor) => counselor.dates[dateKey]).length;
+                    const isSelected = selectedWalkInDate === dateKey;
+                    return (
+                      <button
+                        type="button"
+                        key={dateKey}
+                        onClick={() => setSelectedWalkInDate(dateKey)}
+                        className={`min-h-12 rounded-lg border p-1.5 text-left transition-colors ${isSelected ? "border-[#7A0016] bg-[#FFF3D6]" : "border-transparent hover:border-[#E2E8F0] hover:bg-[#F8FAFC]"}`}
+                      >
+                        <span className={`text-xs font-bold ${isSelected ? "text-[#7A0016]" : "text-[#334155]"}`}>{date.getDate()}</span>
+                        {counselorsAvailable > 0 && (
+                          <span className="mt-1 block truncate text-[9px] font-bold text-emerald-700">
+                            {counselorsAvailable} counselor{counselorsAvailable === 1 ? "" : "s"} open
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-4 flex items-center gap-2 text-[10px] text-[#64748B]">
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  Walk-in periods available
+                </div>
+              </div>
+              <div className="lg:col-span-2 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] p-5">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#7A0016]">Selected date</p>
+                <h3 className="text-base font-black text-[#0F172A] mt-1">
+                  {new Date(`${selectedWalkInDate}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                </h3>
+                <div className="mt-4 space-y-3">
+                  {availableCounselors.length > 0 ? availableCounselors.map((counselor) => (
+                    <div key={counselor.name} className="rounded-lg border border-[#E2E8F0] bg-white p-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D1D5DB] bg-[#F8FAFC] text-[#94A3B8]"><UserRound size={16} /></div>
+                        <div>
+                          <p className="text-xs font-bold text-[#0F172A]">{counselor.name}</p>
+                          <p className="text-[10px] text-[#64748B]">{counselor.role}</p>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-[10px] font-bold uppercase text-emerald-700">Walk-in periods</p>
+                      <div className="mt-1 flex flex-wrap gap-1.5">
+                        {counselor.dates[selectedWalkInDate].map((time) => (
+                          <span key={time} className="rounded bg-emerald-50 px-2 py-1 text-[10px] font-semibold text-emerald-700 border border-emerald-200">{time}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )) : (
+                    <div className="rounded-lg border border-dashed border-[#CBD5E1] bg-white p-4 text-center">
+                      <Clock size={20} className="mx-auto text-[#94A3B8]" />
+                      <p className="mt-2 text-xs font-semibold text-[#475569]">No walk-in counselors listed</p>
+                      <p className="mt-1 text-[10px] text-[#64748B]">Try another date or request a scheduled appointment.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {[
