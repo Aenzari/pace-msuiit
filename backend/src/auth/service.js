@@ -1,21 +1,14 @@
 import crypto from 'crypto';
-
-const passwordKeyLength = 64;
+import argon2 from 'argon2';
 
 export function hashPassword(password) {
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(password, salt, passwordKeyLength).toString('hex');
-  return `${salt}:${hash}`;
+  return argon2.hash(password, {
+    type: argon2.argon2id
+  });
 }
 
 export function verifyPassword(password, storedHash) {
-  const [salt, expected] = storedHash.split(':');
-  if (!salt || !expected) return false;
-  const actual = crypto.scryptSync(password, salt, passwordKeyLength).toString('hex');
-  const expectedBuffer = Buffer.from(expected, 'hex');
-  const actualBuffer = Buffer.from(actual, 'hex');
-  return expectedBuffer.length === actualBuffer.length
-    && crypto.timingSafeEqual(actualBuffer, expectedBuffer);
+  return argon2.verify(storedHash, password);
 }
 
 export function createSessionToken() {
@@ -37,7 +30,7 @@ export function publicUser(row) {
 
 export async function registerStudent({ db, email, password, profile }) {
   const user = await db.user.create({
-    data: { email, passwordHash: hashPassword(password), role: 'student' }
+    data: { email, passwordHash: await hashPassword(password), role: 'student' }
   });
   const studentProfile = await db.studentProfile.create({
     data: { userId: user.id, ...profile }
@@ -63,7 +56,7 @@ export async function registerInvitedProfile({ db, email, password, token, role,
   }
 
   const user = await db.user.create({
-    data: { email, passwordHash: hashPassword(password), role }
+    data: { email, passwordHash: await hashPassword(password), role }
   });
   const profileRecord = role === 'counselor'
     ? await db.counselorProfile.create({ data: { userId: user.id, ...profile } })
@@ -79,7 +72,7 @@ export async function authenticate({ db, email, password }) {
   const user = await db.user.findFirst({
     where: { email, isActive: true }
   });
-  if (!user || !user.passwordHash || !verifyPassword(password, user.passwordHash)) {
+  if (!user || !user.passwordHash || !(await verifyPassword(password, user.passwordHash))) {
     const error = new Error('Invalid email or password');
     error.status = 401;
     error.code = 'INVALID_CREDENTIALS';
@@ -136,7 +129,7 @@ export async function registerInvitedUser({ db, token, email, password }) {
 
   const user = await db.$transaction(async (transaction) => {
     const createdUser = await transaction.user.create({
-      data: { email, passwordHash: hashPassword(password), role: invitation.role }
+      data: { email, passwordHash: await hashPassword(password), role: invitation.role }
     });
     await transaction.invitation.update({
       where: { id: invitation.id },

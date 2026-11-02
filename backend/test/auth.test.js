@@ -100,7 +100,7 @@ describe('authentication API', () => {
     expect(response.status).toBe(201);
     expect(response.body.user).toMatchObject({ email: 'student@example.com', role: 'student' });
     expect(response.body.user.profile).toMatchObject({ schoolId: '2026-0001' });
-    expect(db.users[0].passwordHash).not.toContain('correct horse');
+    expect(db.users[0].passwordHash).toMatch(/^\$argon2id\$/);
   });
 
   it('logs in and uses an HttpOnly session cookie for /me', async () => {
@@ -166,7 +166,6 @@ describe('authentication API', () => {
 });
 
 it('creates password hashes that can be verified by the service', async () => {
-  const hash = hashPassword('correct horse battery staple');
-  expect(hash).not.toContain('correct horse');
-  expect(hash.split(':')).toHaveLength(2);
+  const hash = await hashPassword('correct horse battery staple');
+  expect(hash).toMatch(/^\$argon2id\$/);
 });

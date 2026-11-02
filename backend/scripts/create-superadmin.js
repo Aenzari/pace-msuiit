@@ -14,7 +14,7 @@ if (password.length < 8) {
 
 try {
   await db.user.create({
-    data: { email, passwordHash: hashPassword(password), role: 'superadmin' }
+    data: { email, passwordHash: await hashPassword(password), role: 'superadmin' }
   });
   console.log(`Created superadmin account for ${email}`);
 } finally {

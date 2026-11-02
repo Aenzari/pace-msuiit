@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "6.19.0",
+    "argon2": "^0.45.1",
     "cookie": "^1.0.2",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
