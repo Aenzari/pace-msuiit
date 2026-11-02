@@ -1,48 +1,19 @@
-// src/main.js
-import express from 'express';
-import cors from 'cors';
-import { ZodError } from 'zod';
-import { pool } from './database/client.js';
+import { createApp } from './app.js';
+import { getConfig } from './config.js';
+import { db } from './database/client.js';
 
-const app = express();
+const config = getConfig();
+const app = createApp({ db, config });
 
-app.use(cors());
-app.use(express.json()); // Parses incoming JSON requests
-
-// GET /api/health for service monitoring[cite: 1]
-app.get('/api/health', async (req, res, next) => {
-  try {
-    // Test the raw SQL connection
-    await pool.query('SELECT 1');
-    res.json({ 
-      status: 'ok', 
-      database: 'connected', 
-      timestamp: new Date().toISOString() 
-    });
-  } catch (error) {
-    next(error);
-  }
+const server = app.listen(config.port, '0.0.0.0', () => {
+  console.log(`Express server listening on http://localhost:${config.port}`);
 });
 
-// Centralized error handling[cite: 1]
-app.use((err, req, res, next) => {
-  if (err instanceof ZodError) {
-    return res.status(400).json({
-      error: 'Bad Request',
-      message: 'Validation failed',
-      issues: err.errors
-    });
-  }
-
-  console.error(err);
-  res.status(err.status || 500).json({
-    error: err.name || 'Internal Server Error',
-    message: err.message || 'An unexpected error occurred'
+function shutdown() {
+  server.close(() => {
+    db.$disconnect().finally(() => process.exit(0));
   });
-});
+}
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Express server listening on http://localhost:${PORT}`);
-});
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
