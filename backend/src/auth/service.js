@@ -29,13 +29,15 @@ export function publicUser(row) {
 }
 
 export async function registerStudent({ db, email, password, profile }) {
-  const user = await db.user.create({
-    data: { email, passwordHash: await hashPassword(password), role: 'student' }
+  return db.$transaction(async (transaction) => {
+    const user = await transaction.user.create({
+      data: { email, passwordHash: await hashPassword(password), role: 'student' }
+    });
+    const studentProfile = await transaction.studentProfile.create({
+      data: { userId: user.id, ...profile }
+    });
+    return { ...publicUser(user), profile: studentProfile };
   });
-  const studentProfile = await db.studentProfile.create({
-    data: { userId: user.id, ...profile }
-  });
-  return { ...publicUser(user), profile: studentProfile };
 }
 
 export async function registerInvitedProfile({ db, email, password, token, role, profile }) {
@@ -55,17 +57,19 @@ export async function registerInvitedProfile({ db, email, password, token, role,
     throw error;
   }
 
-  const user = await db.user.create({
-    data: { email, passwordHash: await hashPassword(password), role }
+  return db.$transaction(async (transaction) => {
+    const user = await transaction.user.create({
+      data: { email, passwordHash: await hashPassword(password), role }
+    });
+    const profileRecord = role === 'counselor'
+      ? await transaction.counselorProfile.create({ data: { userId: user.id, ...profile } })
+      : await transaction.recruiterProfile.create({ data: { userId: user.id, ...profile } });
+    await transaction.invitation.update({
+      where: { id: invitation.id },
+      data: { usedAt: new Date() }
+    });
+    return { ...publicUser(user), profile: profileRecord };
   });
-  const profileRecord = role === 'counselor'
-    ? await db.counselorProfile.create({ data: { userId: user.id, ...profile } })
-    : await db.recruiterProfile.create({ data: { userId: user.id, ...profile } });
-  await db.invitation.update({
-    where: { id: invitation.id },
-    data: { usedAt: new Date() }
-  });
-  return { ...publicUser(user), profile: profileRecord };
 }
 
 export async function authenticate({ db, email, password }) {

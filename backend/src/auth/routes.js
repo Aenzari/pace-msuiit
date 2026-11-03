@@ -64,6 +64,15 @@ function clearSessionCookie(res, secure) {
   }));
 }
 
+function mapUniqueConstraintError(error) {
+  if (error.code === '23505' || error.code === 'P2002') {
+    error.status = 409;
+    error.code = 'EMAIL_ALREADY_REGISTERED';
+    error.message = 'Email is already registered';
+  }
+  return error;
+}
+
 export function createAuthRouter({ db, config, auth }) {
   const router = Router();
 
@@ -78,11 +87,7 @@ export function createAuthRouter({ db, config, auth }) {
       });
       res.status(201).json({ user });
     } catch (error) {
-      if (error.code === '23505') {
-        error.status = 409;
-        error.code = 'EMAIL_ALREADY_REGISTERED';
-        error.message = 'Email is already registered';
-      }
+      mapUniqueConstraintError(error);
       next(error);
     }
   });
@@ -111,11 +116,7 @@ export function createAuthRouter({ db, config, auth }) {
       });
       res.status(201).json({ user });
     } catch (error) {
-      if (error.code === '23505') {
-        error.status = 409;
-        error.code = 'EMAIL_ALREADY_REGISTERED';
-        error.message = 'Email is already registered';
-      }
+      mapUniqueConstraintError(error);
       next(error);
     }
   });
@@ -132,11 +133,7 @@ export function createAuthRouter({ db, config, auth }) {
       });
       res.status(201).json({ user });
     } catch (error) {
-      if (error.code === '23505') {
-        error.status = 409;
-        error.code = 'EMAIL_ALREADY_REGISTERED';
-        error.message = 'Email is already registered';
-      }
+      mapUniqueConstraintError(error);
       next(error);
     }
   });

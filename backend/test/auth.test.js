@@ -14,6 +14,8 @@ function createFakeDb() {
   const sessions = new Map();
   const invitations = [];
   const studentProfiles = [];
+  const counselorProfiles = [];
+  const recruiterProfiles = [];
   const findUser = (where) => users.find((user) =>
     (!where.email || user.email === where.email)
     && (!where.isActive === undefined || user.isActive === where.isActive));
@@ -22,6 +24,8 @@ function createFakeDb() {
     sessions,
     invitations,
     studentProfiles,
+    counselorProfiles,
+    recruiterProfiles,
     $queryRaw: async () => [{ '?column?': 1 }],
     $disconnect: async () => {},
     user: {
@@ -44,6 +48,20 @@ function createFakeDb() {
         return profile;
       }
     },
+    counselorProfile: {
+      create: async ({ data }) => {
+        const profile = { id: `counselor-profile-${counselorProfiles.length + 1}`, ...data };
+        counselorProfiles.push(profile);
+        return profile;
+      }
+    },
+    recruiterProfile: {
+      create: async ({ data }) => {
+        const profile = { id: `recruiter-profile-${recruiterProfiles.length + 1}`, ...data };
+        recruiterProfiles.push(profile);
+        return profile;
+      }
+    },
     session: {
       create: async ({ data }) => {
         sessions.set(data.tokenHash, data);
@@ -59,14 +77,18 @@ function createFakeDb() {
     },
     invitation: {
       create: async ({ data }) => {
-        invitations.push({ id: `invitation-${invitations.length + 1}`, ...data });
+        invitations.push({ id: `invitation-${invitations.length + 1}`, usedAt: null, ...data });
       },
       findFirst: async ({ where }) => invitations.find((invitation) =>
         invitation.tokenHash === where.tokenHash
         && invitation.email === where.email
         && invitation.usedAt === null
         && new Date(invitation.expiresAt) > new Date()),
-      update: async () => {}
+      update: async ({ where, data }) => {
+        const invitation = invitations.find((candidate) => candidate.id === where.id);
+        Object.assign(invitation, data);
+        return invitation;
+      }
     },
     $transaction: async (callback) => callback(db)
   };
@@ -162,6 +184,46 @@ describe('authentication API', () => {
       .send({ email: 'staff@example.com', role: 'counselor' });
 
     expect(response.status).toBe(403);
+  });
+
+  it('registers an invited counselor and consumes the invitation transactionally', async () => {
+    const admin = await db.user.create({
+      data: {
+        email: 'admin@example.com',
+        passwordHash: await hashPassword('correct horse battery staple'),
+        role: 'admin'
+      }
+    });
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: admin.email, password: 'correct horse battery staple' });
+
+    const invitationResponse = await request(app)
+      .post('/api/auth/invitations')
+      .set('Cookie', login.headers['set-cookie'])
+      .send({ email: 'counselor@example.com', role: 'counselor' });
+
+    expect(invitationResponse.status).toBe(201);
+    const invitation = invitationResponse.body.invitation;
+    const registration = await request(app)
+      .post('/api/auth/register/counselor')
+      .send({
+        email: invitation.email,
+        password: 'correct horse battery staple',
+        token: invitation.token,
+        firstName: 'Maria',
+        lastName: 'Santos',
+        employeeId: 'EMP-001',
+        phone: '+63123456789'
+      });
+
+    expect(registration.status).toBe(201);
+    expect(registration.body.user).toMatchObject({
+      email: 'counselor@example.com',
+      role: 'counselor'
+    });
+    expect(db.counselorProfiles).toHaveLength(1);
+    expect(db.invitations[0].usedAt).toBeInstanceOf(Date);
   });
 });
 
