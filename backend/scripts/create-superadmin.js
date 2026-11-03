@@ -1,5 +1,5 @@
 import { db } from '../src/database/client.js';
-import { hashPassword } from '../src/auth/service.js';
+import { hashPassword } from '../src/services/auth.service.js';
 
 const email = process.env.SUPERADMIN_EMAIL?.toLowerCase();
 const password = process.env.SUPERADMIN_PASSWORD;

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { createApp } from '../src/app.js';
-import { hashPassword } from '../src/auth/service.js';
+import { hashPassword } from '../src/services/auth.service.js';
 
 const config = {
   sessionTtlMs: 60_000,
@@ -224,6 +224,69 @@ describe('authentication API', () => {
     });
     expect(db.counselorProfiles).toHaveLength(1);
     expect(db.invitations[0].usedAt).toBeInstanceOf(Date);
+  });
+
+  it('redeems admin invitations through the dedicated admin route', async () => {
+    const admin = await db.user.create({
+      data: {
+        email: 'superadmin@example.com',
+        passwordHash: await hashPassword('correct horse battery staple'),
+        role: 'superadmin'
+      }
+    });
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: admin.email, password: 'correct horse battery staple' });
+    const invitationResponse = await request(app)
+      .post('/api/auth/invitations')
+      .set('Cookie', login.headers['set-cookie'])
+      .send({ email: 'new-admin@example.com', role: 'admin' });
+
+    const invitation = invitationResponse.body.invitation;
+    const registration = await request(app)
+      .post('/api/auth/register/admin')
+      .send({
+        email: invitation.email,
+        password: 'correct horse battery staple',
+        token: invitation.token
+      });
+
+    expect(registration.status).toBe(201);
+    expect(registration.body.user).toMatchObject({
+      email: 'new-admin@example.com',
+      role: 'admin'
+    });
+  });
+
+  it('requires an allowed Origin for session-bearing production mutations', async () => {
+    const productionApp = createApp({
+      db,
+      config: { ...config, cookieSecure: true }
+    });
+    const admin = await db.user.create({
+      data: {
+        email: 'origin-admin@example.com',
+        passwordHash: await hashPassword('correct horse battery staple'),
+        role: 'admin'
+      }
+    });
+    const login = await request(productionApp)
+      .post('/api/auth/login')
+      .send({ email: admin.email, password: 'correct horse battery staple' });
+
+    const blocked = await request(productionApp)
+      .post('/api/auth/invitations')
+      .set('Cookie', login.headers['set-cookie'])
+      .send({ email: 'staff@example.com', role: 'counselor' });
+    expect(blocked.status).toBe(403);
+    expect(blocked.body.error).toBe('CSRF_VALIDATION_FAILED');
+
+    const allowed = await request(productionApp)
+      .post('/api/auth/invitations')
+      .set('Cookie', login.headers['set-cookie'])
+      .set('Origin', 'http://localhost:3001')
+      .send({ email: 'staff@example.com', role: 'counselor' });
+    expect(allowed.status).toBe(201);
   });
 });
 

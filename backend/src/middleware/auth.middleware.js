@@ -1,7 +1,24 @@
 import { parse } from 'cookie';
-import { getUserBySession } from './service.js';
+import { getUserBySession } from '../services/auth.service.js';
 
-export function createAuthMiddleware({ db }) {
+export function createAuthMiddleware({ db, config }) {
+  function csrfProtection(req, res, next) {
+    const isStateChanging = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
+    const hasSessionCookie = Boolean(parse(req.headers.cookie || '').pace_session);
+    if (!config.cookieSecure || !isStateChanging || !hasSessionCookie) {
+      return next();
+    }
+
+    const origin = req.headers.origin;
+    if (!origin || !config.allowedOrigins.includes(origin)) {
+      return res.status(403).json({
+        error: 'CSRF_VALIDATION_FAILED',
+        message: 'A valid request origin is required'
+      });
+    }
+    next();
+  }
+
   async function optionalAuth(req, res, next) {
     try {
       const token = parse(req.headers.cookie || '').pace_session;
@@ -29,5 +46,5 @@ export function createAuthMiddleware({ db }) {
     };
   }
 
-  return { optionalAuth, requireAuth, requireRole };
+  return { csrfProtection, optionalAuth, requireAuth, requireRole };
 }

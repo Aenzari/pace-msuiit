@@ -115,11 +115,12 @@ export async function createInvitation({ db, email, role, invitedBy, ttlMs }) {
   return { token, expiresAt, email, role };
 }
 
-export async function registerInvitedUser({ db, token, email, password }) {
+export async function registerInvitedUser({ db, token, email, password, role }) {
   const invitation = await db.invitation.findFirst({
     where: {
       tokenHash: hashSessionToken(token),
       email,
+      ...(role ? { role } : {}),
       expiresAt: { gt: new Date() },
       usedAt: null
     }

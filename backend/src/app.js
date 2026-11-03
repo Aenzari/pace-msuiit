@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { ZodError } from 'zod';
-import { createAuthRouter } from './auth/routes.js';
-import { createAuthMiddleware } from './auth/middleware.js';
+import { createAuthRouter } from './routes/auth.routes.js';
+import { createAuthMiddleware } from './middleware/auth.middleware.js';
 
 export function createApp({ db, config }) {
   const app = express();
@@ -18,6 +18,7 @@ export function createApp({ db, config }) {
     credentials: true
   }));
   app.use(express.json({ limit: '1mb' }));
+  app.use(auth.csrfProtection);
 
   app.get('/api/health', async (req, res, next) => {
     try {
