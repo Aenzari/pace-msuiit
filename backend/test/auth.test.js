@@ -46,6 +46,12 @@ function createFakeDb() {
         const profile = { id: `profile-${studentProfiles.length + 1}`, ...data };
         studentProfiles.push(profile);
         return profile;
+      },
+      findUnique: async ({ where }) => studentProfiles.find((profile) => profile.userId === where.userId),
+      update: async ({ where, data }) => {
+        const profile = studentProfiles.find((candidate) => candidate.userId === where.userId);
+        Object.assign(profile, data);
+        return profile;
       }
     },
     counselorProfile: {
@@ -116,12 +122,16 @@ describe('authentication API', () => {
         course: 'Computer Science',
         yearLevel: 3,
         phone: '+63123456789',
-        address: 'Iligan City'
+        address: 'Iligan City',
+        resumeUrl: 'https://storage.example.com/resumes/alex-reyes.pdf'
       });
 
     expect(response.status).toBe(201);
     expect(response.body.user).toMatchObject({ email: 'student@example.com', role: 'student' });
-    expect(response.body.user.profile).toMatchObject({ schoolId: '2026-0001' });
+    expect(response.body.user.profile).toMatchObject({
+      schoolId: '2026-0001',
+      resumeUrl: 'https://storage.example.com/resumes/alex-reyes.pdf'
+    });
     expect(db.users[0].passwordHash).toMatch(/^\$argon2id\$/);
   });
 
@@ -152,6 +162,72 @@ describe('authentication API', () => {
       .set('Cookie', login.headers['set-cookie']);
 
     expect(me.body.user).toMatchObject({ email: 'student@example.com', role: 'student' });
+  });
+
+  it('updates the authenticated student profile', async () => {
+    await request(app)
+      .post('/api/auth/register/student')
+      .send({
+        email: 'student@example.com',
+        password: 'correct horse battery staple',
+        firstName: 'Alex',
+        lastName: 'Reyes',
+        schoolId: '2026-0001',
+        course: 'Computer Science',
+        yearLevel: 3,
+        phone: '+63123456789',
+        address: 'Iligan City'
+      });
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'student@example.com', password: 'correct horse battery staple' });
+
+    const response = await request(app)
+      .patch('/api/students/me/profile')
+      .set('Cookie', login.headers['set-cookie'])
+      .send({
+        course: 'Information Technology',
+        yearLevel: 4,
+        resumeUrl: 'https://storage.example.com/resumes/alex-reyes-updated.pdf'
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.profile).toMatchObject({
+      course: 'Information Technology',
+      yearLevel: 4,
+      resumeUrl: 'https://storage.example.com/resumes/alex-reyes-updated.pdf',
+      firstName: 'Alex'
+    });
+  });
+
+  it('rejects student profile updates without authentication or fields', async () => {
+    const unauthenticated = await request(app)
+      .patch('/api/students/me/profile')
+      .send({ course: 'Information Technology' });
+    expect(unauthenticated.status).toBe(401);
+
+    await request(app)
+      .post('/api/auth/register/student')
+      .send({
+        email: 'student@example.com',
+        password: 'correct horse battery staple',
+        firstName: 'Alex',
+        lastName: 'Reyes',
+        schoolId: '2026-0001',
+        course: 'Computer Science',
+        yearLevel: 3,
+        phone: '+63123456789',
+        address: 'Iligan City'
+      });
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'student@example.com', password: 'correct horse battery staple' });
+    const invalid = await request(app)
+      .patch('/api/students/me/profile')
+      .set('Cookie', login.headers['set-cookie'])
+      .send({});
+
+    expect(invalid.status).toBe(400);
   });
 
   it('rejects invalid credentials and privileged routes', async () => {

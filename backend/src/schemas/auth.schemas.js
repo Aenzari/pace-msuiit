@@ -12,7 +12,8 @@ export const studentRegistrationSchema = credentialsSchema.extend({
   course: z.string().trim().min(1).max(150),
   yearLevel: z.number().int().min(1).max(10),
   phone: z.string().trim().min(7).max(30),
-  address: z.string().trim().min(1).max(300)
+  address: z.string().trim().min(1).max(300),
+  resumeUrl: z.string().trim().url().max(2048).nullable().optional()
 });
 
 export const counselorRegistrationSchema = credentialsSchema.extend({

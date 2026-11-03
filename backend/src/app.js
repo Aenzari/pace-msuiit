@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { ZodError } from 'zod';
 import { createAuthRouter } from './routes/auth.routes.js';
+import { createStudentRouter } from './routes/student.routes.js';
 import { createAuthMiddleware } from './middleware/auth.middleware.js';
 
 export function createApp({ db, config }) {
@@ -30,6 +31,7 @@ export function createApp({ db, config }) {
   });
 
   app.use('/api/auth', createAuthRouter({ db, config, auth }));
+  app.use('/api/students', createStudentRouter({ db, auth }));
 
   app.use((err, req, res, next) => {
     if (err instanceof ZodError) {

@@ -43,6 +43,7 @@ model StudentProfile {
   yearLevel Int      @map("year_level")
   phone     String
   address   String
+  resumeUrl String?  @map("resume_url")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

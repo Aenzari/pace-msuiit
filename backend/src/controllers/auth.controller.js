@@ -60,11 +60,21 @@ export function createAuthController({ db, config }) {
   async function registerStudent(req, res, next) {
     try {
       const input = studentRegistrationSchema.parse(req.body);
-      const { firstName, lastName, schoolId, course, yearLevel, phone, address, ...credentials } = input;
+      const {
+        firstName,
+        lastName,
+        schoolId,
+        course,
+        yearLevel,
+        phone,
+        address,
+        resumeUrl,
+        ...credentials
+      } = input;
       const user = await registerStudentRecord({
         db,
         ...credentials,
-        profile: { firstName, lastName, schoolId, course, yearLevel, phone, address }
+        profile: { firstName, lastName, schoolId, course, yearLevel, phone, address, resumeUrl }
       });
       res.status(201).json({ user });
     } catch (error) {
