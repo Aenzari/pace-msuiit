@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { createApp } from '../src/app.js';
-import { hashPassword } from '../src/services/auth.service.js';
+import { hashPassword, getUserBySession } from '../src/services/auth.service.js';
 
 const config = {
   sessionTtlMs: 60_000,
@@ -10,6 +10,13 @@ const config = {
 };
 
 function createFakeDb() {
+  const roles = [
+    { id: "role-student", name: "student" },
+    { id: "role-counselor", name: "counselor" },
+    { id: "role-recruiter", name: "recruiter" },
+    { id: "role-admin", name: "admin" },
+    { id: "role-superadmin", name: "superadmin" }
+  ];
   const users = [];
   const sessions = new Map();
   const invitations = [];
@@ -18,28 +25,40 @@ function createFakeDb() {
   const recruiterProfiles = [];
   const findUser = (where) => users.find((user) =>
     (!where.email || user.email === where.email)
-    && (!where.isActive === undefined || user.isActive === where.isActive));
+    && (where.isActive === undefined || user.isActive === where.isActive));
   const db = {
+    roles,
     users,
     sessions,
     invitations,
     studentProfiles,
     counselorProfiles,
     recruiterProfiles,
-    $queryRaw: async () => [{ '?column?': 1 }],
+    $queryRaw: async () => [{ "?column?": 1 }],
     $disconnect: async () => {},
     user: {
-      create: async ({ data }) => {
+      create: async ({ data, include }) => {
+        let roleName = typeof data.role === "string" ? data.role : data.role?.connect?.name;
+        if (!roleName && data.role?.connect?.id) {
+          const found = roles.find((r) => r.id === data.role.connect.id);
+          roleName = found ? found.name : "student";
+        }
+        const roleObj = roles.find((r) => r.name === (roleName || "student"));
         const user = {
           id: `user-${users.length + 1}`,
           ...data,
+          roleId: roleObj.id,
+          role: roleObj,
           createdAt: new Date().toISOString(),
           isActive: true
         };
         users.push(user);
         return user;
       },
-      findFirst: async ({ where }) => findUser(where)
+      findFirst: async ({ where, include }) => {
+        const user = findUser(where);
+        return user ? { ...user, role: user.role } : null;
+      }
     },
     studentProfile: {
       create: async ({ data }) => {
@@ -50,6 +69,11 @@ function createFakeDb() {
       findUnique: async ({ where }) => studentProfiles.find((profile) => profile.userId === where.userId),
       update: async ({ where, data }) => {
         const profile = studentProfiles.find((candidate) => candidate.userId === where.userId);
+        if (!profile) {
+          const err = new Error("Record not found");
+          err.code = "P2025";
+          throw err;
+        }
         Object.assign(profile, data);
         return profile;
       }
@@ -59,6 +83,17 @@ function createFakeDb() {
         const profile = { id: `counselor-profile-${counselorProfiles.length + 1}`, ...data };
         counselorProfiles.push(profile);
         return profile;
+      },
+      findUnique: async ({ where }) => counselorProfiles.find((profile) => profile.userId === where.userId),
+      update: async ({ where, data }) => {
+        const profile = counselorProfiles.find((candidate) => candidate.userId === where.userId);
+        if (!profile) {
+          const err = new Error("Record not found");
+          err.code = "P2025";
+          throw err;
+        }
+        Object.assign(profile, data);
+        return profile;
       }
     },
     recruiterProfile: {
@@ -66,30 +101,82 @@ function createFakeDb() {
         const profile = { id: `recruiter-profile-${recruiterProfiles.length + 1}`, ...data };
         recruiterProfiles.push(profile);
         return profile;
+      },
+      findUnique: async ({ where }) => recruiterProfiles.find((profile) => profile.userId === where.userId),
+      update: async ({ where, data }) => {
+        const profile = recruiterProfiles.find((candidate) => candidate.userId === where.userId);
+        if (!profile) {
+          const err = new Error("Record not found");
+          err.code = "P2025";
+          throw err;
+        }
+        Object.assign(profile, data);
+        return profile;
+      }
+    },
+    mentorProfile: {
+      create: async ({ data }) => {
+        const profile = { id: `mentor-profile-${counselorProfiles.length + 1}`, ...data };
+        return profile;
+      },
+      findUnique: async ({ where }) => null,
+      update: async ({ where, data }) => {
+        const err = new Error("Record not found");
+        err.code = "P2025";
+        throw err;
       }
     },
     session: {
       create: async ({ data }) => {
         sessions.set(data.tokenHash, data);
       },
-      findFirst: async ({ where, include }) => {
+      findFirst: async ({ where, include, select }) => {
         const session = sessions.get(where.tokenHash);
         const user = users.find((candidate) => candidate.id === session?.userId);
+        const userSelection = include?.user || select?.user;
         return session && new Date(session.expiresAt) > new Date() && user?.isActive
-          ? { ...session, user: include?.user ? user : undefined }
+          ? { ...session, user: userSelection ? { ...user, role: user.role } : undefined }
           : null;
       },
-      deleteMany: async ({ where }) => sessions.delete(where.tokenHash)
+      deleteMany: async ({ where }) => {
+        let count = 0;
+        if (where.tokenHash) {
+          if (sessions.delete(where.tokenHash)) count++;
+        } else if (where.expiresAt && where.expiresAt.lt) {
+          for (const [key, val] of sessions.entries()) {
+            if (new Date(val.expiresAt) < where.expiresAt.lt) {
+              sessions.delete(key);
+              count++;
+            }
+          }
+        }
+        return { count };
+      }
     },
     invitation: {
       create: async ({ data }) => {
-        invitations.push({ id: `invitation-${invitations.length + 1}`, usedAt: null, ...data });
+        const roleName = data.role?.connect?.name;
+        const roleObj = roles.find((r) => r.name === roleName);
+        const inv = {
+          id: `invitation-${invitations.length + 1}`,
+          usedAt: null,
+          ...data,
+          roleId: roleObj?.id,
+          role: roleObj
+        };
+        invitations.push(inv);
+        return inv;
       },
-      findFirst: async ({ where }) => invitations.find((invitation) =>
-        invitation.tokenHash === where.tokenHash
-        && invitation.email === where.email
-        && invitation.usedAt === null
-        && new Date(invitation.expiresAt) > new Date()),
+      findFirst: async ({ where }) => {
+        return invitations.find((invitation) => {
+          const matchToken = invitation.tokenHash === where.tokenHash;
+          const matchEmail = !where.email || invitation.email === where.email;
+          const matchRole = !where.role?.name || invitation.role?.name === where.role.name;
+          const notUsed = invitation.usedAt === null;
+          const notExpired = new Date(invitation.expiresAt) > new Date();
+          return matchToken && matchEmail && matchRole && notUsed && notExpired;
+        }) || null;
+      },
       update: async ({ where, data }) => {
         const invitation = invitations.find((candidate) => candidate.id === where.id);
         Object.assign(invitation, data);
@@ -118,20 +205,18 @@ describe('authentication API', () => {
         password: 'correct horse battery staple',
         firstName: 'Alex',
         lastName: 'Reyes',
-        schoolId: '2026-0001',
+        studentNumber: '2026-0001',
         course: 'Computer Science',
         yearLevel: 3,
         phone: '+63123456789',
         address: 'Iligan City',
-        resumeUrl: 'https://storage.example.com/resumes/alex-reyes.pdf'
-      });
+              });
 
     expect(response.status).toBe(201);
     expect(response.body.user).toMatchObject({ email: 'student@example.com', role: 'student' });
     expect(response.body.user.profile).toMatchObject({
-      schoolId: '2026-0001',
-      resumeUrl: 'https://storage.example.com/resumes/alex-reyes.pdf'
-    });
+      studentNumber: '2026-0001',
+          });
     expect(db.users[0].passwordHash).toMatch(/^\$argon2id\$/);
   });
 
@@ -143,7 +228,7 @@ describe('authentication API', () => {
         password: 'correct horse battery staple',
         firstName: 'Alex',
         lastName: 'Reyes',
-        schoolId: '2026-0001',
+        studentNumber: '2026-0001',
         course: 'Computer Science',
         yearLevel: 3,
         phone: '+63123456789',
@@ -172,7 +257,7 @@ describe('authentication API', () => {
         password: 'correct horse battery staple',
         firstName: 'Alex',
         lastName: 'Reyes',
-        schoolId: '2026-0001',
+        studentNumber: '2026-0001',
         course: 'Computer Science',
         yearLevel: 3,
         phone: '+63123456789',
@@ -190,7 +275,7 @@ describe('authentication API', () => {
     expect(response.body.profile).toMatchObject({
       firstName: 'Alex',
       lastName: 'Reyes',
-      schoolId: '2026-0001',
+      studentNumber: '2026-0001',
       course: 'Computer Science',
       yearLevel: 3
     });
@@ -209,7 +294,7 @@ describe('authentication API', () => {
         password: 'correct horse battery staple',
         firstName: 'Alex',
         lastName: 'Reyes',
-        schoolId: '2026-0001',
+        studentNumber: '2026-0001',
         course: 'Computer Science',
         yearLevel: 3,
         phone: '+63123456789',
@@ -224,15 +309,13 @@ describe('authentication API', () => {
       .set('Cookie', login.headers['set-cookie'])
       .send({
         course: 'Information Technology',
-        yearLevel: 4,
-        resumeUrl: 'https://storage.example.com/resumes/alex-reyes-updated.pdf'
+        yearLevel: 4
       });
 
     expect(response.status).toBe(200);
     expect(response.body.profile).toMatchObject({
       course: 'Information Technology',
       yearLevel: 4,
-      resumeUrl: 'https://storage.example.com/resumes/alex-reyes-updated.pdf',
       firstName: 'Alex'
     });
   });
@@ -250,7 +333,7 @@ describe('authentication API', () => {
         password: 'correct horse battery staple',
         firstName: 'Alex',
         lastName: 'Reyes',
-        schoolId: '2026-0001',
+        studentNumber: '2026-0001',
         course: 'Computer Science',
         yearLevel: 3,
         phone: '+63123456789',
@@ -275,7 +358,7 @@ describe('authentication API', () => {
         password: 'correct horse battery staple',
         firstName: 'Alex',
         lastName: 'Reyes',
-        schoolId: '2026-0001',
+        studentNumber: '2026-0001',
         course: 'Computer Science',
         yearLevel: 3,
         phone: '+63123456789',
@@ -324,11 +407,11 @@ describe('authentication API', () => {
         email: invitation.email,
         password: 'correct horse battery staple',
         token: invitation.token,
-        firstName: 'Maria',
-        lastName: 'Santos',
         employeeId: 'EMP-001',
+        department: 'Guidance and Counseling',
         phone: '+63123456789'
       });
+    if (registration.status !== 201) console.log("counselor reg response:", registration.status, registration.body);
 
     expect(registration.status).toBe(201);
     expect(registration.body.user).toMatchObject({
@@ -400,6 +483,29 @@ describe('authentication API', () => {
       .set('Origin', 'http://localhost:3001')
       .send({ email: 'staff@example.com', role: 'counselor' });
     expect(allowed.status).toBe(201);
+  });
+
+  it('does not poison session cache with negative null lookups', async () => {
+    let queryCount = 0;
+    const trackingDb = {
+      ...db,
+      session: {
+        ...db.session,
+        findFirst: async (...args) => {
+          queryCount++;
+          return db.session.findFirst(...args);
+        }
+      }
+    };
+
+    const firstLookup = await getUserBySession({ db: trackingDb, token: 'nonexistent-token-1' });
+    expect(firstLookup).toBeNull();
+    expect(queryCount).toBe(1);
+
+    const secondLookup = await getUserBySession({ db: trackingDb, token: 'nonexistent-token-1' });
+    expect(secondLookup).toBeNull();
+    // Because null is not cached, DB is queried again instead of cache poisoning
+    expect(queryCount).toBe(2);
   });
 });
 

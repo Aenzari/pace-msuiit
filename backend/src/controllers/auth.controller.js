@@ -1,4 +1,4 @@
-import { serialize } from 'cookie';
+import { serialize } from "cookie";
 import {
   authenticate as authenticateUser,
   createInvitation as createInvitationRecord,
@@ -7,7 +7,7 @@ import {
   registerInvitedProfile as registerInvitedUserProfile,
   registerInvitedUser as registerInvitedUserRecord,
   registerStudent as registerStudentRecord
-} from '../services/auth.service.js';
+} from "../services/auth.service.js";
 import {
   adminRegistrationSchema,
   counselorRegistrationSchema,
@@ -15,44 +15,44 @@ import {
   credentialsSchema,
   recruiterRegistrationSchema,
   studentRegistrationSchema
-} from '../schemas/auth.schemas.js';
+} from "../schemas/auth.schemas.js";
 
 function mapUniqueConstraintError(error) {
-  if (error.code !== '23505' && error.code !== 'P2002') return error;
+  if (error.code !== "23505" && error.code !== "P2002") return error;
 
   const target = Array.isArray(error.meta?.target)
-    ? error.meta.target.join(',')
-    : `${error.constraint || ''} ${error.detail || ''}`;
+    ? error.meta.target.join(",")
+    : `${error.constraint || ""} ${error.detail || ""}`;
   const duplicate = target.toLowerCase();
-  const field = duplicate.includes('email')
-    ? ['EMAIL_ALREADY_REGISTERED', 'Email is already registered']
-    : duplicate.includes('school_id') || duplicate.includes('schoolid')
-      ? ['SCHOOL_ID_ALREADY_REGISTERED', 'School ID is already registered']
-      : duplicate.includes('employee_id') || duplicate.includes('employeeid')
-        ? ['EMPLOYEE_ID_ALREADY_REGISTERED', 'Employee ID is already registered']
-        : ['DUPLICATE_RESOURCE', 'A resource with these details already exists'];
+  const field = duplicate.includes("email")
+    ? ["EMAIL_ALREADY_REGISTERED", "Email is already registered"]
+    : duplicate.includes("student_number") || duplicate.includes("studentnumber")
+      ? ["STUDENT_NUMBER_ALREADY_REGISTERED", "Student number is already registered"]
+      : duplicate.includes("employee_id") || duplicate.includes("employeeid")
+        ? ["EMPLOYEE_ID_ALREADY_REGISTERED", "Employee ID is already registered"]
+        : ["DUPLICATE_RESOURCE", "A resource with these details already exists"];
   error.status = 409;
   [error.code, error.message] = field;
   return error;
 }
 
 function setSessionCookie(res, token, expiresAt, secure) {
-  res.setHeader('Set-Cookie', serialize('pace_session', token, {
+  res.setHeader("Set-Cookie", serialize("pace_session", token, {
     httpOnly: true,
     secure,
-    sameSite: secure ? 'none' : 'lax',
+    sameSite: secure ? "none" : "lax",
     expires: expiresAt,
-    path: '/'
+    path: "/"
   }));
 }
 
 function clearSessionCookie(res, secure) {
-  res.setHeader('Set-Cookie', serialize('pace_session', '', {
+  res.setHeader("Set-Cookie", serialize("pace_session", "", {
     httpOnly: true,
     secure,
-    sameSite: secure ? 'none' : 'lax',
+    sameSite: secure ? "none" : "lax",
     expires: new Date(0),
-    path: '/'
+    path: "/"
   }));
 }
 
@@ -63,18 +63,17 @@ export function createAuthController({ db, config }) {
       const {
         firstName,
         lastName,
-        schoolId,
+        studentNumber,
         course,
         yearLevel,
         phone,
         address,
-        resumeUrl,
         ...credentials
       } = input;
       const user = await registerStudentRecord({
         db,
         ...credentials,
-        profile: { firstName, lastName, schoolId, course, yearLevel, phone, address, resumeUrl }
+        profile: { firstName, lastName, studentNumber, course, yearLevel, phone, address }
       });
       res.status(201).json({ user });
     } catch (error) {
@@ -112,7 +111,7 @@ export function createAuthController({ db, config }) {
   async function registerAdmin(req, res, next) {
     try {
       const input = adminRegistrationSchema.parse(req.body);
-      const user = await registerInvitedUserRecord({ db, ...input, role: 'admin' });
+      const user = await registerInvitedUserRecord({ db, ...input, role: "admin" });
       res.status(201).json({ user });
     } catch (error) {
       next(mapUniqueConstraintError(error));
@@ -156,14 +155,14 @@ export function createAuthController({ db, config }) {
     registerStudent,
     login,
     registerCounselor: createInvitedRegistration(
-      'counselor',
+      "counselor",
       counselorRegistrationSchema,
-      ['firstName', 'lastName', 'employeeId', 'phone']
+      ["employeeId", "department", "phone"]
     ),
     registerRecruiter: createInvitedRegistration(
-      'recruiter',
+      "recruiter",
       recruiterRegistrationSchema,
-      ['firstName', 'lastName', 'companyName', 'companyId', 'jobTitle', 'phone']
+      ["firstName", "lastName", "companyId", "jobTitle", "phone"]
     ),
     registerAdmin,
     logout,

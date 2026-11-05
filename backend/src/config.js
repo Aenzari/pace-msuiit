@@ -17,14 +17,20 @@ export function getConfig(env = process.env) {
     throw new Error('SESSION_TTL_MS must be a positive number');
   }
 
+  const defaultAllowedOrigins = `http://localhost:${port},http://127.0.0.1:${port},http://localhost:3001,http://127.0.0.1:3001`;
+  const allowedOrigins = (env.ALLOWED_ORIGINS || defaultAllowedOrigins)
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   return {
     port,
     databaseUrl: env.DATABASE_URL,
     sessionTtlMs,
     cookieSecure: env.NODE_ENV === 'production',
-    allowedOrigins: (env.ALLOWED_ORIGINS || 'http://localhost:3001')
-      .split(',')
-      .map((origin) => origin.trim())
-      .filter(Boolean)
+    allowedOrigins,
+    enableSwagger: env.ENABLE_SWAGGER !== undefined
+      ? env.ENABLE_SWAGGER === 'true'
+      : env.NODE_ENV !== 'production'
   };
 }

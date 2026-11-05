@@ -1,0 +1,1056 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PACE MSU-IIT API",
+    "version": "1.0.0",
+    "description": "API documentation and interactive test harness for MSU-IIT Placement, Assessment, and Career Ecosystem (PACE)."
+  },
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Service health checks"
+    },
+    {
+      "name": "Auth",
+      "description": "Authentication, user onboarding, and invitation management"
+    },
+    {
+      "name": "Students",
+      "description": "Student profile management"
+    },
+    {
+      "name": "Counselors",
+      "description": "Career counselor profile management"
+    },
+    {
+      "name": "Mentors",
+      "description": "Industry mentor profile management"
+    },
+    {
+      "name": "Recruiters",
+      "description": "Recruiter profile management"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "pace_session",
+        "description": "HttpOnly session cookie issued by POST /api/auth/login"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "example": "UNAUTHENTICATED" },
+          "message": { "type": "string", "example": "Authentication required" }
+        },
+        "required": ["error", "message"]
+      },
+      "ValidationErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "example": "Bad Request" },
+          "message": { "type": "string", "example": "Validation failed" },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "array", "items": { "type": "string" }, "example": ["email"] },
+                "message": { "type": "string", "example": "Invalid email address" }
+              }
+            }
+          }
+        },
+        "required": ["error", "message", "issues"]
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "ok" },
+          "database": { "type": "string", "example": "connected" },
+          "timestamp": { "type": "string", "format": "date-time", "example": "2026-11-05T10:30:00.000Z" }
+        },
+        "required": ["status", "database", "timestamp"]
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "example": "Logged out successfully" }
+        },
+        "required": ["message"]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "student@g.msuiit.edu.ph" },
+          "password": { "type": "string", "format": "password", "minLength": 8, "maxLength": 128, "example": "Password123!" }
+        },
+        "required": ["email", "password"]
+      },
+      "LoginSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "example": "Logged in successfully" },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "c1f7b6b2-0f7f-4f81-8761-001cbe905ec1" },
+              "email": { "type": "string", "format": "email", "example": "student@g.msuiit.edu.ph" },
+              "role": { "type": "string", "example": "student" }
+            },
+            "required": ["id", "email", "role"]
+          }
+        },
+        "required": ["message", "user"]
+      },
+      "StudentRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "juan.delacruz@g.msuiit.edu.ph" },
+          "password": { "type": "string", "format": "password", "minLength": 8, "maxLength": 128, "example": "Password123!" },
+          "firstName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Juan" },
+          "lastName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Dela Cruz" },
+          "studentNumber": { "type": "string", "minLength": 1, "maxLength": 50, "example": "2022-0001" },
+          "course": { "type": "string", "minLength": 1, "maxLength": 150, "example": "BS Computer Science" },
+          "yearLevel": { "type": "integer", "minimum": 1, "maximum": 10, "example": 3 },
+          "phone": { "type": "string", "minLength": 7, "maxLength": 30, "example": "+639171234567" },
+          "address": { "type": "string", "minLength": 1, "maxLength": 300, "example": "Iligan City, Lanao del Norte" }
+        },
+        "required": ["email", "password", "firstName", "lastName", "studentNumber", "course", "yearLevel", "phone", "address"]
+      },
+      "StudentProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "example": "e2f7b6b2-0f7f-4f81-8761-001cbe905ec2" },
+          "userId": { "type": "string", "format": "uuid", "example": "c1f7b6b2-0f7f-4f81-8761-001cbe905ec1" },
+          "firstName": { "type": "string", "example": "Juan" },
+          "lastName": { "type": "string", "example": "Dela Cruz" },
+          "studentNumber": { "type": "string", "example": "2022-0001" },
+          "course": { "type": "string", "example": "BS Computer Science" },
+          "yearLevel": { "type": "integer", "example": 3 },
+          "phone": { "type": "string", "example": "+639171234567" },
+          "address": { "type": "string", "example": "Iligan City, Lanao del Norte" },
+          "resumeUrl": { "type": "string", "nullable": true, "example": null },
+          "createdAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" }
+        },
+        "required": ["id", "userId", "firstName", "lastName", "studentNumber", "course", "yearLevel", "phone", "address", "createdAt", "updatedAt"]
+      },
+      "StudentProfileResponse": {
+        "type": "object",
+        "properties": {
+          "profile": { "$ref": "#/components/schemas/StudentProfile" }
+        },
+        "required": ["profile"]
+      },
+      "StudentAuthResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "c1f7b6b2-0f7f-4f81-8761-001cbe905ec1" },
+              "email": { "type": "string", "format": "email", "example": "juan.delacruz@g.msuiit.edu.ph" },
+              "role": { "type": "string", "example": "student" },
+              "profile": { "$ref": "#/components/schemas/StudentProfile" }
+            },
+            "required": ["id", "email", "role", "profile"]
+          }
+        },
+        "required": ["user"]
+      },
+      "CounselorRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "counselor@msuiit.edu.ph" },
+          "password": { "type": "string", "format": "password", "minLength": 8, "maxLength": 128, "example": "Password123!" },
+          "token": { "type": "string", "minLength": 20, "example": "d79860b0fcb88bfde0d7e4ea6a96ea5b10a26e85e92622fdbcf5ff5a004eb76f" },
+          "employeeId": { "type": "string", "minLength": 1, "maxLength": 50, "example": "EMP-2024-01" },
+          "department": { "type": "string", "minLength": 1, "maxLength": 150, "example": "Career & Guidance Office" },
+          "phone": { "type": "string", "minLength": 7, "maxLength": 30, "example": "+639170001122" }
+        },
+        "required": ["email", "password", "token", "employeeId", "department", "phone"]
+      },
+      "CounselorProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "example": "d2f7b6b2-0f7f-4f81-8761-001cbe905ec4" },
+          "userId": { "type": "string", "format": "uuid", "example": "b1f7b6b2-0f7f-4f81-8761-001cbe905ec3" },
+          "employeeId": { "type": "string", "example": "EMP-2024-01" },
+          "department": { "type": "string", "example": "Career & Guidance Office" },
+          "phone": { "type": "string", "example": "+639170001122" },
+          "isAvailable": { "type": "boolean", "example": true },
+          "createdAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" }
+        },
+        "required": ["id", "userId", "employeeId", "department", "phone", "isAvailable", "createdAt", "updatedAt"]
+      },
+      "CounselorProfileResponse": {
+        "type": "object",
+        "properties": {
+          "profile": { "$ref": "#/components/schemas/CounselorProfile" }
+        },
+        "required": ["profile"]
+      },
+      "CounselorAuthResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "b1f7b6b2-0f7f-4f81-8761-001cbe905ec3" },
+              "email": { "type": "string", "format": "email", "example": "counselor@msuiit.edu.ph" },
+              "role": { "type": "string", "example": "counselor" },
+              "profile": { "$ref": "#/components/schemas/CounselorProfile" }
+            },
+            "required": ["id", "email", "role", "profile"]
+          }
+        },
+        "required": ["user"]
+      },
+      "RecruiterRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "recruiter@partnercorp.com" },
+          "password": { "type": "string", "format": "password", "minLength": 8, "maxLength": 128, "example": "Password123!" },
+          "token": { "type": "string", "minLength": 20, "example": "d79860b0fcb88bfde0d7e4ea6a96ea5b10a26e85e92622fdbcf5ff5a004eb76f" },
+          "firstName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Maria" },
+          "lastName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Santos" },
+          "companyId": { "type": "string", "format": "uuid", "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11" },
+          "jobTitle": { "type": "string", "minLength": 1, "maxLength": 150, "example": "Technical Talent Acquisition Lead" },
+          "phone": { "type": "string", "minLength": 7, "maxLength": 30, "example": "+639189876543" }
+        },
+        "required": ["email", "password", "token", "firstName", "lastName", "companyId", "jobTitle", "phone"]
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11" },
+          "name": { "type": "string", "example": "Acme Innovations" },
+          "industry": { "type": "string", "nullable": true, "example": "Software Engineering" },
+          "website": { "type": "string", "nullable": true, "example": "https://acme.example.com" }
+        },
+        "required": ["id", "name"]
+      },
+      "RecruiterProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "example": "g2f7b6b2-0f7f-4f81-8761-001cbe905ec6" },
+          "userId": { "type": "string", "format": "uuid", "example": "f1f7b6b2-0f7f-4f81-8761-001cbe905ec5" },
+          "companyId": { "type": "string", "format": "uuid", "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11" },
+          "firstName": { "type": "string", "example": "Maria" },
+          "lastName": { "type": "string", "example": "Santos" },
+          "jobTitle": { "type": "string", "example": "Technical Talent Acquisition Lead" },
+          "phone": { "type": "string", "example": "+639189876543" },
+          "company": { "$ref": "#/components/schemas/Company" },
+          "createdAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" }
+        },
+        "required": ["id", "userId", "companyId", "firstName", "lastName", "jobTitle", "phone", "createdAt", "updatedAt"]
+      },
+      "RecruiterProfileResponse": {
+        "type": "object",
+        "properties": {
+          "profile": { "$ref": "#/components/schemas/RecruiterProfile" }
+        },
+        "required": ["profile"]
+      },
+      "RecruiterAuthResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "f1f7b6b2-0f7f-4f81-8761-001cbe905ec5" },
+              "email": { "type": "string", "format": "email", "example": "recruiter@partnercorp.com" },
+              "role": { "type": "string", "example": "recruiter" },
+              "profile": { "$ref": "#/components/schemas/RecruiterProfile" }
+            },
+            "required": ["id", "email", "role", "profile"]
+          }
+        },
+        "required": ["user"]
+      },
+      "AdminRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "admin@msuiit.edu.ph" },
+          "password": { "type": "string", "format": "password", "minLength": 8, "maxLength": 128, "example": "Password123!" },
+          "token": { "type": "string", "minLength": 20, "example": "d79860b0fcb88bfde0d7e4ea6a96ea5b10a26e85e92622fdbcf5ff5a004eb76f" }
+        },
+        "required": ["email", "password", "token"]
+      },
+      "AdminAuthResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "h1f7b6b2-0f7f-4f81-8761-001cbe905ec7" },
+              "email": { "type": "string", "format": "email", "example": "admin@msuiit.edu.ph" },
+              "role": { "type": "string", "example": "admin" }
+            },
+            "required": ["id", "email", "role"]
+          }
+        },
+        "required": ["user"]
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "c1f7b6b2-0f7f-4f81-8761-001cbe905ec1" },
+              "email": { "type": "string", "format": "email", "example": "juan.delacruz@g.msuiit.edu.ph" },
+              "role": { "type": "string", "example": "student" },
+              "profile": { "type": "object" }
+            },
+            "required": ["id", "email", "role"]
+          }
+        },
+        "required": ["user"]
+      },
+      "CreateInvitationRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "invitee@domain.com" },
+          "role": { "type": "string", "enum": ["counselor", "recruiter", "admin"], "example": "counselor" }
+        },
+        "required": ["email", "role"]
+      },
+      "InvitationResponse": {
+        "type": "object",
+        "properties": {
+          "invitation": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "j1f7b6b2-0f7f-4f81-8761-001cbe905ec8" },
+              "email": { "type": "string", "format": "email", "example": "counselor@msuiit.edu.ph" },
+              "role": { "type": "string", "example": "counselor" },
+              "token": { "type": "string", "example": "d79860b0fcb88bfde0d7e4ea6a96ea5b10a26e85e92622fdbcf5ff5a004eb76f" },
+              "expiresAt": { "type": "string", "format": "date-time", "example": "2026-11-12T10:30:00.000Z" }
+            },
+            "required": ["id", "email", "role", "token", "expiresAt"]
+          }
+        },
+        "required": ["invitation"]
+      },
+      "AdminCheckResponse": {
+        "type": "object",
+        "properties": {
+          "authorized": { "type": "boolean", "example": true },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid", "example": "h1f7b6b2-0f7f-4f81-8761-001cbe905ec7" },
+              "email": { "type": "string", "format": "email", "example": "admin@msuiit.edu.ph" },
+              "role": { "type": "string", "example": "admin" }
+            },
+            "required": ["id", "email", "role"]
+          }
+        },
+        "required": ["authorized", "user"]
+      },
+      "UpdateStudentProfileRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Juan" },
+          "lastName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Dela Cruz" },
+          "studentNumber": { "type": "string", "minLength": 1, "maxLength": 50, "example": "2022-0001" },
+          "course": { "type": "string", "minLength": 1, "maxLength": 150, "example": "BS Computer Science" },
+          "yearLevel": { "type": "integer", "minimum": 1, "maximum": 10, "example": 4 },
+          "phone": { "type": "string", "minLength": 7, "maxLength": 30, "example": "+639171234567" },
+          "address": { "type": "string", "minLength": 1, "maxLength": 300, "example": "Iligan City, Lanao del Norte" }
+        }
+      },
+      "UpdateCounselorProfileRequest": {
+        "type": "object",
+        "properties": {
+          "department": { "type": "string", "minLength": 1, "maxLength": 150, "example": "Career & Placement Center" },
+          "phone": { "type": "string", "minLength": 7, "maxLength": 30, "example": "+639170001122" },
+          "isAvailable": { "type": "boolean", "example": true }
+        }
+      },
+      "MentorProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "example": "m2f7b6b2-0f7f-4f81-8761-001cbe905ec9" },
+          "userId": { "type": "string", "format": "uuid", "example": "m1f7b6b2-0f7f-4f81-8761-001cbe905ec0" },
+          "firstName": { "type": "string", "example": "Alex" },
+          "lastName": { "type": "string", "example": "Rivera" },
+          "professionalTitle": { "type": "string", "example": "Senior Staff Software Engineer" },
+          "companyName": { "type": "string", "example": "Tech Labs Inc." },
+          "industry": { "type": "string", "example": "Information Technology" },
+          "biography": { "type": "string", "example": "10+ years in distributed systems engineering and career mentoring." },
+          "expertise": { "type": "string", "example": "Backend Architecture, Cloud, DevOps" },
+          "phone": { "type": "string", "example": "+639173334444" },
+          "maxMentees": { "type": "integer", "example": 5 },
+          "availabilityNotes": { "type": "string", "nullable": true, "example": "Available on Saturday mornings UTC+8." },
+          "createdAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "example": "2026-11-05T08:00:00.000Z" }
+        },
+        "required": ["id", "userId", "firstName", "lastName", "professionalTitle", "companyName", "industry", "biography", "expertise", "phone", "maxMentees", "createdAt", "updatedAt"]
+      },
+      "MentorProfileResponse": {
+        "type": "object",
+        "properties": {
+          "profile": { "$ref": "#/components/schemas/MentorProfile" }
+        },
+        "required": ["profile"]
+      },
+      "UpdateMentorProfileRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Alex" },
+          "lastName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Rivera" },
+          "professionalTitle": { "type": "string", "minLength": 1, "maxLength": 150, "example": "Senior Staff Software Engineer" },
+          "companyName": { "type": "string", "minLength": 1, "maxLength": 200, "example": "Tech Labs Inc." },
+          "industry": { "type": "string", "minLength": 1, "maxLength": 150, "example": "Information Technology" },
+          "biography": { "type": "string", "minLength": 1, "maxLength": 2000, "example": "10+ years in distributed systems engineering and career mentoring." },
+          "expertise": { "type": "string", "minLength": 1, "maxLength": 1000, "example": "Backend Architecture, Cloud, DevOps" },
+          "phone": { "type": "string", "minLength": 7, "maxLength": 30, "example": "+639173334444" },
+          "maxMentees": { "type": "integer", "minimum": 1, "maximum": 50, "example": 5 },
+          "availabilityNotes": { "type": "string", "nullable": true, "maxLength": 500, "example": "Available on Saturday mornings UTC+8." }
+        }
+      },
+      "UpdateRecruiterProfileRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Maria" },
+          "lastName": { "type": "string", "minLength": 1, "maxLength": 100, "example": "Santos" },
+          "jobTitle": { "type": "string", "minLength": 1, "maxLength": 150, "example": "Director of University Relations" },
+          "phone": { "type": "string", "minLength": 7, "maxLength": 30, "example": "+639189876543" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Check API and database health status",
+        "responses": {
+          "200": {
+            "description": "Service is operational and database connected",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Database or service error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register/student": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new student account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/StudentRegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Student successfully registered",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StudentAuthResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or email / student number already registered",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register/counselor": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a career counselor account using an invitation token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CounselorRegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Counselor successfully registered",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CounselorAuthResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid invitation token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register/recruiter": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a recruiter account using an invitation token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RecruiterRegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Recruiter successfully registered",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecruiterAuthResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid invitation token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register/admin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register an admin account using an invitation token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdminAuthResponse" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Admin successfully registered",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AdminAuthResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid invitation token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Log in with email and password",
+        "description": "Authenticates credentials and sets the HttpOnly `pace_session` cookie in the browser for subsequent requests.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful (sets `pace_session` cookie)",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "pace_session=s%3Axyz...; Path=/; HttpOnly; SameSite=Lax"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginSuccessResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Log out current user",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out and session cleared",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get authenticated user profile and session status",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Current user session object or null if unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CurrentUserResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/invitations": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Create an invitation token for staff roles (admin/superadmin only)",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateInvitationRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Invitation created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InvitationResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions (requires admin or superadmin)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/admin-check": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Verify active admin authorization (admin/superadmin only)",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Admin authorization confirmed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AdminCheckResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/students/me/profile": {
+      "get": {
+        "tags": ["Students"],
+        "summary": "Get authenticated student profile",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Student profile data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StudentProfileResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - student role required",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Students"],
+        "summary": "Update authenticated student profile",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateStudentProfileRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/StudentProfileResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or no fields supplied",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/counselors/me/profile": {
+      "get": {
+        "tags": ["Counselors"],
+        "summary": "Get authenticated counselor profile",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Counselor profile data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CounselorProfileResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - counselor role required",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Counselors"],
+        "summary": "Update authenticated counselor profile",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateCounselorProfileRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CounselorProfileResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or no fields supplied",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mentors/me/profile": {
+      "get": {
+        "tags": ["Mentors"],
+        "summary": "Get authenticated mentor profile",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Mentor profile data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MentorProfileResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - mentor role required",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Mentors"],
+        "summary": "Update authenticated mentor profile",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateMentorProfileRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MentorProfileResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or no fields supplied",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recruiters/me/profile": {
+      "get": {
+        "tags": ["Recruiters"],
+        "summary": "Get authenticated recruiter profile",
+        "security": [{ "cookieAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Recruiter profile data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecruiterProfileResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - recruiter role required",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Recruiters"],
+        "summary": "Update authenticated recruiter profile",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateRecruiterProfileRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecruiterProfileResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or no fields supplied",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ValidationErrorResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

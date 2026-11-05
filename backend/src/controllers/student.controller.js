@@ -1,19 +1,19 @@
 import {
   getStudentProfile as getStudentProfileRecord,
   updateStudentProfile as updateStudentProfileRecord
-} from '../services/student.service.js';
-import { updateStudentProfileSchema } from '../schemas/student.schemas.js';
+} from "../services/student.service.js";
+import { updateStudentProfileSchema } from "../schemas/student.schemas.js";
 
 function mapUniqueConstraintError(error) {
-  if (error.code !== '23505' && error.code !== 'P2002') return error;
+  if (error.code !== "23505" && error.code !== "P2002") return error;
 
   const target = Array.isArray(error.meta?.target)
-    ? error.meta.target.join(',')
-    : `${error.constraint || ''} ${error.detail || ''}`;
-  if (target.toLowerCase().includes('school_id') || target.toLowerCase().includes('schoolid')) {
+    ? error.meta.target.join(",")
+    : `${error.constraint || ""} ${error.detail || ""}`;
+  if (target.toLowerCase().includes("student_number") || target.toLowerCase().includes("studentnumber")) {
     error.status = 409;
-    error.code = 'SCHOOL_ID_ALREADY_REGISTERED';
-    error.message = 'School ID is already registered';
+    error.code = "STUDENT_NUMBER_ALREADY_REGISTERED";
+    error.message = "Student number is already registered";
   }
   return error;
 }

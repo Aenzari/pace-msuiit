@@ -41,6 +41,7 @@ model User {
   notifications           Notification[]
   activityLogs            ActivityLog[]
 
+  @@index([roleId])
   @@map("users")
 }
 
@@ -53,6 +54,7 @@ model OAuthIdentity {
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerSubject])
+  @@index([userId])
   @@map("oauth_identities")
 }
 
@@ -64,6 +66,7 @@ model Session {
   createdAt DateTime @default(now()) @map("created_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@index([expiresAt])
   @@map("sessions")
 }
@@ -81,6 +84,8 @@ model Invitation {
   invitedBy   User      @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: Restrict)
   role        Role      @relation(fields: [roleId], references: [id])
 
+  @@index([invitedById])
+  @@index([roleId])
   @@index([email, expiresAt])
   @@map("invitations")
 }
@@ -152,6 +157,7 @@ model MentorProfile {
   mentorships        Mentorship[]
   appointments       Appointment[]
 
+  @@index([approvalStatus])
   @@map("mentor_profiles")
 }
 
@@ -168,6 +174,7 @@ model Company {
   recruiterProfiles  RecruiterProfile[]
   jobs               Job[]
 
+  @@index([verificationStatus])
   @@map("companies")
 }
 
@@ -184,6 +191,7 @@ model RecruiterProfile {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   company        Company  @relation(fields: [companyId], references: [id], onDelete: Restrict)
 
+  @@index([approvalStatus])
   @@map("recruiter_profiles")
 }
 
@@ -204,6 +212,8 @@ model Resume {
   resumeReviews       ResumeReview[]
   jobApplications     JobApplication[]
 
+  @@index([studentId])
+  @@index([counselorId])
   @@map("resumes")
 }
 
@@ -219,6 +229,8 @@ model ResumeReview {
   resume      Resume           @relation(fields: [resumeId], references: [id], onDelete: Cascade)
   counselor   CounselorProfile @relation(fields: [counselorId], references: [id], onDelete: Cascade)
 
+  @@index([resumeId])
+  @@index([counselorId])
   @@map("resume_reviews")
 }
 
@@ -241,6 +253,9 @@ model Job {
   savedByStudents     SavedJob[]
   applications        JobApplication[]
 
+  @@index([companyId])
+  @@index([postedById])
+  @@index([status, postedAt])
   @@map("jobs")
 }
 
@@ -271,6 +286,8 @@ model JobApplication {
   resume      Resume?        @relation(fields: [resumeId], references: [id], onDelete: SetNull)
 
   @@unique([jobId, studentId])
+  @@index([studentId])
+  @@index([resumeId])
   @@map("job_applications")
 }
 
@@ -290,6 +307,9 @@ model MentorshipRequest {
   initiatedBy     User           @relation("InitiatedRequests", fields: [initiatedById], references: [id], onDelete: Cascade)
   mentorship      Mentorship?
 
+  @@index([studentId])
+  @@index([mentorId])
+  @@index([initiatedById])
   @@map("mentorship_requests")
 }
 
@@ -311,6 +331,8 @@ model Mentorship {
   mentor           MentorProfile     @relation(fields: [mentorId], references: [id], onDelete: Cascade)
   appointments     Appointment[]
 
+  @@index([studentId])
+  @@index([mentorId])
   @@map("mentorships")
 }
 
@@ -333,6 +355,11 @@ model Appointment {
   mentor          MentorProfile?    @relation(fields: [mentorId], references: [id], onDelete: SetNull)
   mentorship      Mentorship?       @relation(fields: [mentorshipId], references: [id], onDelete: SetNull)
 
+  @@index([studentId])
+  @@index([counselorId])
+  @@index([mentorId])
+  @@index([mentorshipId])
+  @@index([appointmentDate])
   @@map("appointments")
 }
 
@@ -346,6 +373,7 @@ model CounselorAvailability {
 
   counselor   CounselorProfile @relation(fields: [counselorId], references: [id], onDelete: Cascade)
 
+  @@index([counselorId])
   @@map("counselor_availability")
 }
 
@@ -361,6 +389,7 @@ model Conversation {
   messages       Message[]
 
   @@unique([participant1Id, participant2Id])
+  @@index([participant2Id])
   @@map("conversations")
 }
 
@@ -375,6 +404,8 @@ model Message {
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
+  @@index([conversationId, sentAt])
+  @@index([senderId])
   @@map("messages")
 }
 
@@ -391,6 +422,7 @@ model Notification {
 
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, isRead])
   @@map("notifications")
 }
 
@@ -405,5 +437,6 @@ model ActivityLog {
 
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, createdAt])
   @@map("activity_logs")
 }

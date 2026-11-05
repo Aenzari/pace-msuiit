@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const credentialsSchema = z.object({
   email: z.string().email().transform((value) => value.toLowerCase()),
@@ -8,19 +8,17 @@ export const credentialsSchema = z.object({
 export const studentRegistrationSchema = credentialsSchema.extend({
   firstName: z.string().trim().min(1).max(100),
   lastName: z.string().trim().min(1).max(100),
-  schoolId: z.string().trim().min(1).max(50),
+  studentNumber: z.string().trim().min(1).max(50),
   course: z.string().trim().min(1).max(150),
   yearLevel: z.number().int().min(1).max(10),
   phone: z.string().trim().min(7).max(30),
-  address: z.string().trim().min(1).max(300),
-  resumeUrl: z.string().trim().url().max(2048).nullable().optional()
+  address: z.string().trim().min(1).max(300)
 });
 
 export const counselorRegistrationSchema = credentialsSchema.extend({
   token: z.string().min(20),
-  firstName: z.string().trim().min(1).max(100),
-  lastName: z.string().trim().min(1).max(100),
   employeeId: z.string().trim().min(1).max(50),
+  department: z.string().trim().min(1).max(150),
   phone: z.string().trim().min(7).max(30)
 });
 
@@ -28,8 +26,7 @@ export const recruiterRegistrationSchema = credentialsSchema.extend({
   token: z.string().min(20),
   firstName: z.string().trim().min(1).max(100),
   lastName: z.string().trim().min(1).max(100),
-  companyName: z.string().trim().min(1).max(150),
-  companyId: z.string().trim().min(1).max(50),
+  companyId: z.string().uuid(),
   jobTitle: z.string().trim().min(1).max(150),
   phone: z.string().trim().min(7).max(30)
 });
@@ -40,5 +37,5 @@ export const adminRegistrationSchema = credentialsSchema.extend({
 
 export const createInvitationSchema = z.object({
   email: z.string().email().transform((value) => value.toLowerCase()),
-  role: z.enum(['counselor', 'recruiter', 'admin'])
+  role: z.enum(["counselor", "recruiter", "admin"])
 });
