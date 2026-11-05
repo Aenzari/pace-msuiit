@@ -1,4 +1,7 @@
-import { updateStudentProfile as updateStudentProfileRecord } from '../services/student.service.js';
+import {
+  getStudentProfile as getStudentProfileRecord,
+  updateStudentProfile as updateStudentProfileRecord
+} from '../services/student.service.js';
 import { updateStudentProfileSchema } from '../schemas/student.schemas.js';
 
 function mapUniqueConstraintError(error) {
@@ -16,6 +19,15 @@ function mapUniqueConstraintError(error) {
 }
 
 export function createStudentController({ db }) {
+  async function getProfile(req, res, next) {
+    try {
+      const profile = await getStudentProfileRecord({ db, userId: req.user.id });
+      res.json({ profile });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async function updateProfile(req, res, next) {
     try {
       const profile = updateStudentProfileSchema.parse(req.body);
@@ -30,5 +42,5 @@ export function createStudentController({ db }) {
     }
   }
 
-  return { updateProfile };
+  return { getProfile, updateProfile };
 }

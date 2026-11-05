@@ -164,6 +164,43 @@ describe('authentication API', () => {
     expect(me.body.user).toMatchObject({ email: 'student@example.com', role: 'student' });
   });
 
+  it('reads the authenticated student profile', async () => {
+    await request(app)
+      .post('/api/auth/register/student')
+      .send({
+        email: 'student@example.com',
+        password: 'correct horse battery staple',
+        firstName: 'Alex',
+        lastName: 'Reyes',
+        schoolId: '2026-0001',
+        course: 'Computer Science',
+        yearLevel: 3,
+        phone: '+63123456789',
+        address: 'Iligan City'
+      });
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'student@example.com', password: 'correct horse battery staple' });
+
+    const response = await request(app)
+      .get('/api/students/me/profile')
+      .set('Cookie', login.headers['set-cookie']);
+
+    expect(response.status).toBe(200);
+    expect(response.body.profile).toMatchObject({
+      firstName: 'Alex',
+      lastName: 'Reyes',
+      schoolId: '2026-0001',
+      course: 'Computer Science',
+      yearLevel: 3
+    });
+  });
+
+  it('rejects unauthenticated access to student profile', async () => {
+    const response = await request(app).get('/api/students/me/profile');
+    expect(response.status).toBe(401);
+  });
+
   it('updates the authenticated student profile', async () => {
     await request(app)
       .post('/api/auth/register/student')
