@@ -12,7 +12,7 @@ import { createRecruiterRouter } from './routes/recruiter.routes.js';
 import { createAuthMiddleware } from './middleware/auth.middleware.js';
 //swagger ui
 const openApiSpec = JSON.parse(
-  readFileSync(new URL('./docs/openapi.json', import.meta.url), 'utf-8')
+  readFileSync(new URL('./swaggerUI/openapi.json', import.meta.url), 'utf-8')
 );
 // Regex to match local origins (e.g. http://localhost:3000 or http://127.0.0.1:5173) with any port.
 const LOCALHOST_ORIGIN_REGEX = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
