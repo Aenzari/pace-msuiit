@@ -26,9 +26,8 @@ export default function PaceLogo({
         <div className="flex flex-col text-left leading-none">
           <div className="flex items-center gap-1.5">
             <span
-              className={`font-black tracking-tight text-lg sm:text-xl ${
-                isDark ? "text-white" : "text-[#0F172A]"
-              }`}
+              className={`font-black tracking-tight text-lg sm:text-xl ${isDark ? "text-white" : "text-[#0F172A]"
+                }`}
             >
               P.A.C.E.
             </span>
@@ -37,11 +36,10 @@ export default function PaceLogo({
             </span>
           </div>
           <span
-            className={`text-[10px] font-medium tracking-wide mt-1 uppercase ${
-              isDark ? "text-stone-300" : "text-[#64748B]"
-            }`}
+            className={`text-[10px] font-medium tracking-wide mt-1 uppercase ${isDark ? "text-stone-300" : "text-[#64748B]"
+              }`}
           >
-            Career Ecosystem
+            Career Enhancement
           </span>
         </div>
       )}

@@ -86,13 +86,13 @@ export default function IntegratedMyIITLandingPage() {
           2. HERO SECTION WITH RICH TEXTS & CAMPUS PHOTOGRAPHY
           ───────────────────────────────────────────────────────────── */}
       <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 space-y-8">
-        
+
         {/* Main Hero Card with Side Photography */}
         <div className="myiit-card p-6 sm:p-8 border-l-4 border-l-[#7A0016] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white">
           <div className="lg:col-span-7 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF3D6] border border-[#F5A623]/60 text-xs font-bold text-[#7A0016] font-mono">
               <span className="w-2 h-2 rounded-full bg-[#7A0016]"></span>
-              Official MSU-IIT Career Center Ecosystem
+              Official MSU-IIT Career Enhancement Gateway
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight leading-tight">
@@ -182,13 +182,12 @@ export default function IntegratedMyIITLandingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            
+
             {/* Student Card */}
             <div
               onClick={() => setSelectedRole("student")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${
-                selectedRole === "student" ? "active" : ""
-              }`}
+              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "student" ? "active" : ""
+                }`}
             >
               <div>
                 <div className="h-28 bg-slate-100 relative overflow-hidden">
@@ -221,9 +220,8 @@ export default function IntegratedMyIITLandingPage() {
             {/* Counselor Card */}
             <div
               onClick={() => setSelectedRole("counselor")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${
-                selectedRole === "counselor" ? "active" : ""
-              }`}
+              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "counselor" ? "active" : ""
+                }`}
             >
               <div>
                 <div className="h-28 bg-slate-100 relative overflow-hidden">
@@ -256,9 +254,8 @@ export default function IntegratedMyIITLandingPage() {
             {/* Recruiter Card */}
             <div
               onClick={() => setSelectedRole("recruiter")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${
-                selectedRole === "recruiter" ? "active" : ""
-              }`}
+              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "recruiter" ? "active" : ""
+                }`}
             >
               <div>
                 <div className="h-28 bg-slate-100 relative overflow-hidden">
@@ -291,9 +288,8 @@ export default function IntegratedMyIITLandingPage() {
             {/* Superadmin Card */}
             <div
               onClick={() => setSelectedRole("superadmin")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${
-                selectedRole === "superadmin" ? "active" : ""
-              }`}
+              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "superadmin" ? "active" : ""
+                }`}
             >
               <div>
                 <div className="h-28 bg-slate-100 relative overflow-hidden">

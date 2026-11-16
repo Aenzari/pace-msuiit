@@ -59,7 +59,7 @@ interface RecruiterItem {
 
 export default function SuperadminDashboardPage() {
   const [activeTab, setActiveTab] = useState<"overview" | "counselors" | "recruiters" | "analytics" | "settings">("overview");
-  
+
   // Counselor State
   const [counselors, setCounselors] = useState<CounselorItem[]>([
     { id: "c1", name: "Dr. Maria Santos", email: "maria.santos@g.msuiit.edu.ph", department: "College of Computer Studies", activeStudents: 48, appointmentsToday: 6, status: "active", quotaMax: 10, rating: 4.9 },
@@ -154,7 +154,7 @@ export default function SuperadminDashboardPage() {
             System Node: <span className="font-mono text-amber-400">iligan-main-dc1</span>
           </div>
 
-          <button 
+          <button
             onClick={() => { setShowAlertToast(true); setTimeout(() => setShowAlertToast(false), 3000); }}
             className="relative p-2 rounded-xl bg-stone-900 border border-stone-800 text-stone-300 hover:text-white hover:border-[#F5A623]/50 transition-colors"
           >
@@ -189,11 +189,10 @@ export default function SuperadminDashboardPage() {
               <nav className="space-y-1">
                 <button
                   onClick={() => setActiveTab("overview")}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                    activeTab === "overview"
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${activeTab === "overview"
                       ? "bg-gradient-to-r from-[#7A0016] to-[#5C0011] text-amber-300 border border-[#F5A623]/30 shadow-md shadow-[#7A0016]/20"
                       : "text-stone-400 hover:text-stone-200 hover:bg-stone-900/60"
-                  }`}
+                    }`}
                 >
                   <BarChart3 className="w-4 h-4" />
                   Executive Overview
@@ -201,11 +200,10 @@ export default function SuperadminDashboardPage() {
 
                 <button
                   onClick={() => setActiveTab("counselors")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                    activeTab === "counselors"
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${activeTab === "counselors"
                       ? "bg-gradient-to-r from-[#7A0016] to-[#5C0011] text-amber-300 border border-[#F5A623]/30 shadow-md shadow-[#7A0016]/20"
                       : "text-stone-400 hover:text-stone-200 hover:bg-stone-900/60"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Users className="w-4 h-4" />
@@ -218,11 +216,10 @@ export default function SuperadminDashboardPage() {
 
                 <button
                   onClick={() => setActiveTab("recruiters")}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                    activeTab === "recruiters"
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${activeTab === "recruiters"
                       ? "bg-gradient-to-r from-[#7A0016] to-[#5C0011] text-amber-300 border border-[#F5A623]/30 shadow-md shadow-[#7A0016]/20"
                       : "text-stone-400 hover:text-stone-200 hover:bg-stone-900/60"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Briefcase className="w-4 h-4" />
@@ -235,11 +232,10 @@ export default function SuperadminDashboardPage() {
 
                 <button
                   onClick={() => setActiveTab("analytics")}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                    activeTab === "analytics"
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${activeTab === "analytics"
                       ? "bg-gradient-to-r from-[#7A0016] to-[#5C0011] text-amber-300 border border-[#F5A623]/30 shadow-md shadow-[#7A0016]/20"
                       : "text-stone-400 hover:text-stone-200 hover:bg-stone-900/60"
-                  }`}
+                    }`}
                 >
                   <TrendingUp className="w-4 h-4" />
                   Institutional Analytics
@@ -247,11 +243,10 @@ export default function SuperadminDashboardPage() {
 
                 <button
                   onClick={() => setActiveTab("settings")}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
-                    activeTab === "settings"
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${activeTab === "settings"
                       ? "bg-gradient-to-r from-[#7A0016] to-[#5C0011] text-amber-300 border border-[#F5A623]/30 shadow-md shadow-[#7A0016]/20"
                       : "text-stone-400 hover:text-stone-200 hover:bg-stone-900/60"
-                  }`}
+                    }`}
                 >
                   <Settings className="w-4 h-4" />
                   Governance & Tokens
@@ -310,9 +305,8 @@ export default function SuperadminDashboardPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap capitalize ${
-                  activeTab === tab ? "bg-[#7A0016] text-amber-300 border border-[#F5A623]/40" : "bg-stone-900 text-stone-400"
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap capitalize ${activeTab === tab ? "bg-[#7A0016] text-amber-300 border border-[#F5A623]/40" : "bg-stone-900 text-stone-400"
+                  }`}
               >
                 {tab}
               </button>
@@ -346,13 +340,13 @@ export default function SuperadminDashboardPage() {
                 <div className="relative z-10 max-w-2xl space-y-3">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur border border-amber-400/30 text-[11px] text-amber-300 font-mono">
                     <Sparkles className="w-3 h-3 text-[#FFD700]" />
-                    MSU-IIT Career Advancement Ecosystem v2.4
+                    MSU-IIT Professional Advancement & Career Enhancement v2.4
                   </div>
                   <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
                     Welcome back, Executive Director.
                   </h1>
                   <p className="text-sm text-stone-300 leading-relaxed">
-                    Platform synchronization is operating at <span className="text-[#FFD700] font-semibold">99.98% uptime</span>. 
+                    Platform synchronization is operating at <span className="text-[#FFD700] font-semibold">99.98% uptime</span>.
                     Career counseling turnaround average has improved to <span className="text-emerald-400 font-semibold">18.4 hours</span> across all collegiate branches.
                   </p>
                   <div className="flex flex-wrap gap-3 pt-2">
@@ -503,17 +497,15 @@ export default function SuperadminDashboardPage() {
                         <td className="p-3.5 text-stone-300">{c.department}</td>
                         <td className="p-3.5 text-center font-mono font-bold text-amber-400">{c.activeStudents}</td>
                         <td className="p-3.5 text-center">
-                          <span className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-bold ${
-                            c.appointmentsToday >= c.quotaMax ? "bg-rose-500/20 text-rose-300 border border-rose-500/40" : "bg-stone-800 text-stone-300"
-                          }`}>
+                          <span className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-bold ${c.appointmentsToday >= c.quotaMax ? "bg-rose-500/20 text-rose-300 border border-rose-500/40" : "bg-stone-800 text-stone-300"
+                            }`}>
                             {c.appointmentsToday} / {c.quotaMax} max
                           </span>
                         </td>
                         <td className="p-3.5 text-center font-mono text-amber-300">★ {c.rating}</td>
                         <td className="p-3.5 text-center">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${
-                            c.status === "active" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-stone-800 text-stone-500"
-                          }`}>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${c.status === "active" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-stone-800 text-stone-500"
+                            }`}>
                             {c.status}
                           </span>
                         </td>
@@ -641,11 +633,10 @@ export default function SuperadminDashboardPage() {
                       <div className="space-y-2">
                         <div className="flex items-start justify-between">
                           <h3 className="font-bold text-white text-sm">{r.company}</h3>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${
-                            r.status === "approved" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" :
-                            r.status === "pending" ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" :
-                            "bg-rose-500/20 text-rose-400 border border-rose-500/30"
-                          }`}>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${r.status === "approved" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" :
+                              r.status === "pending" ? "bg-amber-500/20 text-amber-300 border border-amber-500/30" :
+                                "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+                            }`}>
                             {r.status}
                           </span>
                         </div>
@@ -664,9 +655,8 @@ export default function SuperadminDashboardPage() {
                           </span>
                           <button
                             onClick={() => handleRecruiterAction(r.id, "toggleToken")}
-                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                              r.tokenAccess ? "bg-emerald-950 text-emerald-300 border border-emerald-800" : "bg-stone-950 text-stone-500"
-                            }`}
+                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${r.tokenAccess ? "bg-emerald-950 text-emerald-300 border border-emerald-800" : "bg-stone-950 text-stone-500"
+                              }`}
                           >
                             {r.tokenAccess ? "ACTIVE" : "REVOKED"}
                           </button>
@@ -759,7 +749,7 @@ export default function SuperadminDashboardPage() {
                   <h3 className="text-xs font-bold text-stone-200 uppercase tracking-wider">
                     Counseling Focus Areas (Total: 1,842 Sessions)
                   </h3>
-                  
+
                   <div className="grid grid-cols-2 gap-4 items-center pt-2">
                     {/* Visual Donut representation with SVG */}
                     <div className="relative flex items-center justify-center">
@@ -813,7 +803,7 @@ export default function SuperadminDashboardPage() {
                   <h3 className="text-xs font-bold text-stone-200 uppercase tracking-wider">
                     IITian Graduate Distribution by Industry Sector
                   </h3>
-                  
+
                   <div className="space-y-3 pt-2">
                     {[
                       { industry: "Fintech, Cloud Platforms & Distributed Systems", pct: 42, count: "1,195 hired", color: "bg-rose-500" },

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "P.A.C.E. — Professional Advancement & Career Ecosystem | MSU-IIT",
+  title: "P.A.C.E. — Professional Advancement & Career Enhancement | MSU-IIT",
   description:
     "Empowering IITian Futures through intelligent career development, recruiter networking, and counselor support. The official career platform of Mindanao State University – Iligan Institute of Technology.",
 };
