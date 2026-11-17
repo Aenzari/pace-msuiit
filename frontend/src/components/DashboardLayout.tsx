@@ -32,6 +32,7 @@ function roleForPath(pathname: string): BackendRole | null {
   if (pathname.startsWith('/dashboard/student')) return 'student';
   if (pathname.startsWith('/dashboard/counselor')) return 'counselor';
   if (pathname.startsWith('/dashboard/recruiter')) return 'recruiter';
+  if (pathname.startsWith('/dashboard/mentor')) return 'mentor';
   if (pathname.startsWith('/dashboard/superadmin')) return 'superadmin';
   return null;
 }
