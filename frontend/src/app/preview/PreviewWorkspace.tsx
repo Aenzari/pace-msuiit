@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Activity, ArrowDownRight, ArrowUpRight, Bell, BriefcaseBusiness,
+  Activity, ArrowUpRight, Bell, BriefcaseBusiness,
   CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight,
   CircleHelp, Clock3, FileText, Filter, GraduationCap, Handshake,
   LayoutDashboard, MessageCircle, MoreHorizontal, Plus, Search,
@@ -179,8 +179,6 @@ function Overview({ role, onNavigate }: { role: Role; onNavigate: (id: string) =
 function ModuleContent({ role, active, notify }: { role: Role; active: string; notify: (text: string) => void }) {
   const [search, setSearch] = useState("");
   const [mentorChoice, setMentorChoice] = useState<"opt-in" | "later" | "declined">("later");
-  const [checked, setChecked] = useState<string[]>([]);
-  const [filter, setFilter] = useState("All");
   const [jobState, setJobState] = useState<Record<string, string>>({});
   const [savedJobs, setSavedJobs] = useState<string[]>([]);
   const [accountDecisions, setAccountDecisions] = useState<Record<string, string>>({});
@@ -224,7 +222,6 @@ function ModuleContent({ role, active, notify }: { role: Role; active: string; n
   const titles: Record<string, string> = {
     appointments: "Upcoming and recent appointments", students: "Connected student caseload", reviews: "Pending resume reviews", applicants: "Recent candidate activity", jobs: "Partner opportunities", graduates: "Graduate outcomes follow-up", accounts: "Account review queue", partners: "Approved partner directory", followups: "Your follow-up schedule", messages: "Recent conversations", endorsements: "Endorsement activity", pipeline: "Candidate stage overview", audit: "Recent administrative actions",
   };
-  const isTableModule = Boolean(rows[active]);
   return (
     <div className="space-y-5">
       {active === "mentorship" && role === "alumni" ? (
@@ -334,7 +331,6 @@ export default function PreviewWorkspace() {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [showRoleMenu, setShowRoleMenu] = useState(false);
   const config = roleConfig[role];
-  const activeModule = modules[role].find((m) => m.id === active) || modules[role][0];
   const copy = sectionCopy[active] || sectionCopy.overview;
   const notify = (text: string) => {
     const id = Date.now();
