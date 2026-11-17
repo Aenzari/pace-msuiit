@@ -19,6 +19,10 @@ Set `NEXT_PUBLIC_API_BASE_URL` to the backend **origin** (no trailing slash and 
 | POST | `/api/auth/login` | Sign in with `email` and `password` |
 | POST | `/api/auth/logout` | End the current session |
 | GET | `/api/auth/me` | Resolve the current session |
+| GET / PATCH | `/api/students/me/profile` | Read/update the authenticated student profile |
+| GET / PATCH | `/api/counselors/me/profile` | Read/update the authenticated counselor profile |
+| GET / PATCH | `/api/recruiters/me/profile` | Read/update the authenticated recruiter profile |
+| GET / PATCH | `/api/mentors/me/profile` | Read/update the authenticated mentor profile (no mentor dashboard in the current frontend) |
 | POST | `/api/auth/register/student` | Public student registration |
 | POST | `/api/auth/register/counselor` | Invitation-based counselor registration |
 | POST | `/api/auth/register/recruiter` | Invitation-based recruiter registration |
@@ -37,6 +41,15 @@ All registration requests include `email` and `password`.
 **Recruiter** additionally sends `token`, `firstName`, `lastName`, `companyId` (UUID), `jobTitle`, and `phone`.
 
 Counselor and recruiter registration require an invitation token. Recruiter registration requires an existing company UUID; the UI must not manufacture one. Administrator registration is not exposed as public self-registration.
+
+## Profile field contracts already implemented
+
+- Student profile: `firstName`, `lastName`, `studentNumber`, `course`, `yearLevel` (integer), `phone`, and `address`.
+- Counselor profile: `department`, `phone`, and `isAvailable`.
+- Recruiter profile: `firstName`, `lastName`, `jobTitle`, and `phone`; the GET response also includes the linked `company` record.
+- Mentor profile: `firstName`, `lastName`, `professionalTitle`, `companyName`, `industry`, `biography`, `expertise`, `phone`, `maxMentees`, and nullable `availabilityNotes`.
+
+The current frontend now reads and updates the student profile, reads the recruiter profile and linked company, and reads the counselor profile. The company record itself is read-only because the existing recruiter PATCH schema does not expose company fields.
 
 ## Role identifiers
 
