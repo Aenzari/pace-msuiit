@@ -162,7 +162,7 @@ export default function RecruiterDashboard() {
 
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <button
-                  onClick={() => alert("Modal opened: Create and publish a new job opportunity for MSU-IIT students.")}
+                  onClick={() => alert("Preview only: job creation and publishing are not connected to the recruiter service yet.")}
                   className="px-4 py-2 rounded-lg bg-[#7A0016] hover:bg-[#9B0020] text-white text-xs font-bold shadow-xs btn-press flex items-center gap-1.5 whitespace-nowrap"
                 >
                   <Plus size={14} />
@@ -272,13 +272,13 @@ export default function RecruiterDashboard() {
                   {/* Actions */}
                   <div className="flex gap-2 pt-2">
                     <button
-                      onClick={() => alert(`Reviewing candidate pipeline for ${selectedJob.title}`)}
+                      onClick={() => alert(`Preview only: the ${selectedJob.title} candidate pipeline is sample data and is not connected to live applications.`)}
                       className="px-5 py-2 rounded-lg bg-[#7A0016] hover:bg-[#9B0020] text-white text-xs font-bold shadow-xs btn-press"
                     >
                       View Candidate Applications ({selectedJob.applicants})
                     </button>
                     <button
-                      onClick={() => alert(`Job link copied to clipboard!`)}
+                      onClick={() => alert("Preview only: shareable job links are not available until job publishing is connected.")}
                       className="px-3.5 py-2 rounded-lg border border-[#CBD5E1] text-[#334155] hover:bg-slate-50 text-xs font-bold flex items-center gap-1.5"
                     >
                       <Share2 size={14} />
@@ -413,7 +413,7 @@ export default function RecruiterDashboard() {
                     <p className="text-[#64748B]">This CV is available for viewing because the student has completed proper career counseling and received a counselor verification.</p>
                     <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-[10px]"><CheckCircle size={12} /> COUNSELOR-VERIFIED RESUME</span>
                   </div>
-                  <div className="flex gap-2"><button onClick={() => alert(`Opening ${selectedCandidate}'s counselor-verified resume preview.`)} className="flex-1 px-3 py-2 rounded-lg bg-[#7A0016] text-white text-xs font-bold">Preview CV</button><button onClick={() => setSelectedCandidate(null)} className="px-4 py-2 rounded-lg border border-[#CBD5E1] text-[#334155] text-xs font-bold">Close</button></div>
+                  <div className="flex gap-2"><button onClick={() => alert(`Preview only: ${selectedCandidate}'s resume preview is not connected to candidate records yet.`)} className="flex-1 px-3 py-2 rounded-lg bg-[#7A0016] text-white text-xs font-bold">Preview CV</button><button onClick={() => setSelectedCandidate(null)} className="px-4 py-2 rounded-lg border border-[#CBD5E1] text-[#334155] text-xs font-bold">Close</button></div>
                 </div>
               </div>
             )}
