@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Activity, ArrowDownRight, ArrowUpRight, Bell, BriefcaseBusiness,
@@ -175,7 +175,7 @@ function Overview({ role, onNavigate }: { role: Role; onNavigate: (id: string) =
 
 function ModuleContent({ role, active, notify }: { role: Role; active: string; notify: (text: string) => void }) {
   const [search, setSearch] = useState("");
-  const [mentorChoice, setMentorChoice] = useState<"opt-in" | "later" | "declined">("opt-in");
+  const [mentorChoice, setMentorChoice] = useState<"opt-in" | "later" | "declined">("later");
   const [checked, setChecked] = useState<string[]>([]);
   const [filter, setFilter] = useState("All");
   const rows: Record<string, string[]> = {
@@ -251,7 +251,7 @@ export default function PreviewWorkspace() {
     setActive("overview");
     setShowRoleMenu(false);
   };
-  const today = useMemo(() => new Intl.DateTimeFormat("en-PH", { weekday: "long", month: "long", day: "numeric" }).format(new Date()), []);
+  const today = "Career Center workspace";
   return (
     <div className="min-h-screen bg-[#F4F5F7] text-slate-900">
       <div className="sticky top-0 z-40 border-b border-amber-200 bg-[#FFF8E8] px-4 py-2.5 text-center text-[11px] font-medium text-amber-950 sm:text-xs">
