@@ -62,3 +62,83 @@ export interface RecruiterRegistrationPayload extends LoginPayload {
   jobTitle: string;
   phone: string;
 }
+
+export interface StudentProfile {
+  id: string;
+  userId: string;
+  studentNumber: string;
+  firstName: string;
+  lastName: string;
+  course: string;
+  yearLevel: number;
+  gpa?: string | number | null;
+  phone: string;
+  address: string;
+  bio?: string | null;
+  location?: string | null;
+  careerStatus?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type StudentProfileUpdate = Partial<Pick<
+  StudentProfile,
+  "firstName" | "lastName" | "studentNumber" | "course" | "yearLevel" | "phone" | "address"
+>>;
+
+export interface CounselorProfile {
+  id: string;
+  userId: string;
+  employeeId: string;
+  department: string;
+  phone: string;
+  isAvailable: boolean;
+}
+
+export type CounselorProfileUpdate = Partial<Pick<
+  CounselorProfile,
+  "department" | "phone" | "isAvailable"
+>>;
+
+export interface CompanyProfile {
+  id: string;
+  name: string;
+  industry: string;
+  description?: string | null;
+  website?: string | null;
+  location?: string | null;
+  verificationStatus: string;
+  createdAt?: string;
+}
+
+export interface RecruiterProfile {
+  id: string;
+  userId: string;
+  companyId: string;
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  phone: string;
+  approvalStatus: string;
+  company: CompanyProfile;
+}
+
+export type RecruiterProfileUpdate = Partial<Pick<
+  RecruiterProfile,
+  "firstName" | "lastName" | "jobTitle" | "phone"
+>>;
+
+export interface MentorProfile {
+  id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  professionalTitle: string;
+  companyName: string;
+  industry: string;
+  biography: string;
+  expertise: string;
+  phone: string;
+  maxMentees: number;
+  availabilityNotes?: string | null;
+}
