@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  Bell, ChevronLeft, ChevronRight, Menu, X, LogOut, User,
+  ChevronLeft, ChevronRight, Menu, X, LogOut, User,
   LoaderCircle, ShieldCheck, AlertCircle, RefreshCw
 } from 'lucide-react';
 import PaceLogo from './PaceLogo';
