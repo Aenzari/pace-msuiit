@@ -4,6 +4,8 @@
 
 The role preview is a **development-only UI sandbox** for reviewing the approved PACE experience without creating real accounts or touching university records.
 
+**Role-modeling note:** Alumni is a lifecycle workspace shown in this preview, not a newly created backend role or authorization grant. Existing backend role IDs remain unchanged. The existing Industry Mentor (`mentor`) account type is separate from Alumni and is not represented by the five-role preview switcher.
+
 ## Start the preview
 
 1. Clone or update the repository:
