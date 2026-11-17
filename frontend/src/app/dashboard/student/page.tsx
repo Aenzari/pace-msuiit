@@ -261,26 +261,6 @@ export default function StudentDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-[#0F172A]">Alexandra Reyes</h2>
-                <span className="px-2 py-0.5 rounded-full bg-[#FFF3D6] text-[#7A0016] text-[10px] font-bold border border-[#F5A623]/60">
-                  ★ DEAN'S LISTER
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
-                  QR VERIFIED
-                </span>
-              </div>
-              <p className="text-xs text-[#64748B]">BS Information Technology • 4th Year Standing • Student ID: 2021-0142</p>
-              <div className="flex items-center gap-4 text-[11px] pt-1">
-                <span className="text-[#7A0016] font-bold">Cumulative GPA: 1.45</span>
-                <span>•</span>
-                <span className="text-[#64748B]">College of Computer Studies (CCS)</span>
-                <span>•</span>
-                <span className="text-emerald-700 font-semibold font-mono">Status: Ready for Placement</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveTab("appointments")}
               className="px-3.5 py-2 rounded-lg bg-[#FFF3D6] hover:bg-[#FFE5A3] text-[#7A0016] text-xs font-bold border border-[#F5A623]/60 flex items-center gap-1.5 transition-colors btn-press shadow-xs"
