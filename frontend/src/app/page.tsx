@@ -27,6 +27,7 @@ import {
   useTransform,
 } from "framer-motion";
 import PaceLogo from "@/components/PaceLogo";
+import "./landing.css";
 
 const audiences = [
   {
