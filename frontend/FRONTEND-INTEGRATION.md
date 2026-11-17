@@ -22,7 +22,7 @@ Set `NEXT_PUBLIC_API_BASE_URL` to the backend **origin** (no trailing slash and 
 | GET / PATCH | `/api/students/me/profile` | Read/update the authenticated student profile |
 | GET / PATCH | `/api/counselors/me/profile` | Read/update the authenticated counselor profile |
 | GET / PATCH | `/api/recruiters/me/profile` | Read/update the authenticated recruiter profile |
-| GET / PATCH | `/api/mentors/me/profile` | Read/update the authenticated mentor profile (no mentor dashboard in the current frontend) |
+| GET / PATCH | `/api/mentors/me/profile` | Read/update the authenticated mentor profile from the Industry Mentor workspace |
 | POST | `/api/auth/register/student` | Public student registration |
 | POST | `/api/auth/register/counselor` | Invitation-based counselor registration |
 | POST | `/api/auth/register/recruiter` | Invitation-based recruiter registration |
@@ -40,7 +40,7 @@ All registration requests include `email` and `password`.
 
 **Recruiter** additionally sends `token`, `firstName`, `lastName`, `companyId` (UUID), `jobTitle`, and `phone`.
 
-Counselor and recruiter registration require an invitation token. Recruiter registration requires an existing company UUID; the UI must not manufacture one. Administrator registration is not exposed as public self-registration.
+Counselor and recruiter registration require an invitation token. Recruiter registration requires an existing company UUID; the UI must not manufacture one. Administrator registration is not exposed as public self-registration. The current backend does not expose a mentor registration endpoint, so mentor accounts must be provisioned through the backend's approved process before sign-in.
 
 ## Profile field contracts already implemented
 
@@ -53,7 +53,7 @@ The current frontend reads and updates the student profile, reads and updates th
 
 ## Role identifiers
 
-Use the backend values exactly: `student`, `counselor`, `recruiter`, `admin`, and `superadmin`. UI labels such as “Career Counselor” are presentation only. Never authorize access based on a client-side role selector; the backend session and protected API routes remain authoritative.
+Use the backend values exactly: `student`, `counselor`, `recruiter`, `mentor`, `admin`, and `superadmin`. UI labels such as “Career Counselor” are presentation only. Never authorize access based on a client-side role selector; the backend session and protected API routes remain authoritative.
 
 ## Current limitations / integration checklist
 
