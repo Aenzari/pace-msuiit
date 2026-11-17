@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import DashboardAuthGuard from "@/components/DashboardAuthGuard";
+import { authApi } from "@/lib/api/client";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -200,10 +202,11 @@ const INITIAL_WALK_IN_SCHEDULE: Record<string, { start: string; end: string }> =
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function CounselorDashboard() {
+function CounselorDashboardContent() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
 
   // Appointments
   const [appointments, setAppointments] = useState<PendingAppointment[]>(PENDING_APPOINTMENTS_INIT);
@@ -269,9 +272,15 @@ export default function CounselorDashboard() {
     setChatInput("");
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setSidebarOpen(false);
-    router.push("/auth/login");
+    setSignOutError("");
+    try {
+      await authApi.logout();
+      router.replace("/auth/login");
+    } catch {
+      setSignOutError("Unable to confirm sign out. Please try again.");
+    }
   };
 
   useEffect(() => {
@@ -461,6 +470,8 @@ export default function CounselorDashboard() {
           </div>
         </div>
       </aside>
+
+      {signOutError && <div role="alert" className="fixed bottom-4 right-4 z-[100] rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700 shadow-lg">{signOutError}</div>}
 
       {/* ── Main ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -995,5 +1006,13 @@ export default function CounselorDashboard() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function CounselorDashboard() {
+  return (
+    <DashboardAuthGuard allowedRoles={["counselor"]}>
+      <CounselorDashboardContent />
+    </DashboardAuthGuard>
   );
 }
