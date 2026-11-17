@@ -1,402 +1,194 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  GraduationCap,
-  Compass,
-  Briefcase,
-  ShieldCheck,
-  CheckCircle2,
-  Lock,
-  ChevronRight,
+  ArrowUpRight,
+  BookOpenCheck,
+  BriefcaseBusiness,
   Building2,
-  FileText,
-  MapPin,
-  ExternalLink,
-  Award,
-  BookOpen,
-  Calendar,
+  Compass,
+  GraduationCap,
+  Handshake,
+  ShieldCheck,
   Sparkles,
-  AlertCircle
+  Target,
 } from "lucide-react";
 import PaceLogo from "@/components/PaceLogo";
 
-export default function IntegratedMyIITLandingPage() {
-  const [selectedRole, setSelectedRole] = useState<"student" | "counselor" | "recruiter" | "superadmin">("student");
+const audiences = [
+  {
+    icon: GraduationCap,
+    eyebrow: "FOR IITIANS",
+    title: "Build your next move.",
+    description: "Discover opportunities, prepare your professional profile, and take confident steps from campus to career.",
+  },
+  {
+    icon: Compass,
+    eyebrow: "FOR CAREER COUNSELORS",
+    title: "Make guidance go further.",
+    description: "Support student growth with a more connected view of career readiness, advising, and development.",
+  },
+  {
+    icon: BriefcaseBusiness,
+    eyebrow: "FOR INDUSTRY PARTNERS",
+    title: "Meet emerging talent.",
+    description: "Connect with motivated candidates and strengthen your relationship with the MSU-IIT community.",
+  },
+];
 
+const pillars = [
+  { icon: Target, number: "01", title: "Discover direction", text: "Understand strengths, explore pathways, and make informed career decisions." },
+  { icon: BookOpenCheck, number: "02", title: "Develop readiness", text: "Build the skills, experiences, and professional materials needed for what comes next." },
+  { icon: Handshake, number: "03", title: "Create connections", text: "Bring students, career support, and industry opportunities closer together." },
+];
+
+export default function PaceLandingPage() {
   return (
-    <div className="min-h-screen bg-[#EEF2F6] text-[#1E293B] flex flex-col font-sans selection:bg-[#F5A623] selection:text-white">
-      {/* ─────────────────────────────────────────────────────────────
-          1. OFFICIAL MY.IIT MAROON & GOLD REGALIA HEADER
-          ───────────────────────────────────────────────────────────── */}
-      <div className="myiit-header-gradient text-white px-4 sm:px-8 py-3.5 shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-lg bg-white p-1 shadow-sm flex items-center justify-center shrink-0">
-              <PaceLogo size={40} showText={false} />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold tracking-wide text-white text-base sm:text-lg">
-                  P.A.C.E. MSU-IIT
-                </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#F5A623] text-[#0F172A] uppercase font-mono tracking-wider">
-                  Career Center Portal
-                </span>
-              </div>
-              <p className="text-xs text-stone-200">
-                Mindanao State University – Iligan Institute of Technology
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-xs">
-            <span className="text-stone-200 hidden md:inline">
-              "All your study and work in one portal."
-            </span>
-            <Link
-              href="/auth/login"
-              className="btn-myiit-gold px-4 py-1.5 rounded text-xs flex items-center gap-1.5 shadow-sm"
-            >
-              <Lock size={13} className="text-[#0F172A]" />
-              <span>Portal Sign In</span>
-            </Link>
-          </div>
+    <main className="min-h-screen overflow-hidden bg-[#F7F6F3] text-slate-900">
+      <header className="relative z-20 border-b border-white/10 bg-[#4C0010] text-white">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
+          <Link href="/" aria-label="PACE MSU-IIT home" className="flex items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-300">
+            <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-white p-1.5"><PaceLogo size={36} showText={false} /></span>
+            <span><span className="block text-sm font-bold tracking-[0.18em]">P.A.C.E.</span><span className="mt-0.5 block text-[9px] tracking-[0.17em] text-white/60">MSU–IIT</span></span>
+          </Link>
+          <nav aria-label="Main navigation" className="hidden items-center gap-8 text-xs font-medium text-white/75 md:flex">
+            <a href="#about" className="transition hover:text-white">About PACE</a>
+            <a href="#experience" className="transition hover:text-white">The experience</a>
+            <a href="#community" className="transition hover:text-white">Our community</a>
+          </nav>
+          <Link href="/auth/login" className="inline-flex items-center gap-2 rounded-lg bg-[#F5A623] px-4 py-2.5 text-xs font-bold text-[#3B000B] transition hover:bg-[#FFD27A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+            Portal sign in <ArrowUpRight size={15} />
+          </Link>
         </div>
-      </div>
+      </header>
 
-      {/* Sub-Header Status Line */}
-      <div className="bg-white border-b border-[#D1D5DB] px-4 sm:px-8 py-2 text-xs text-[#64748B] shadow-xs">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-[#0F172A]">Home</span>
-            <span>/</span>
-            <span>Career Advancement Gateway (AY 2026-2027)</span>
-          </div>
-          <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-700">
-            <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-            <span>My.IIT Network Active</span>
-          </div>
+      <section className="relative isolate overflow-hidden bg-[#4C0010] text-white">
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute -right-48 -top-64 h-[52rem] w-[52rem] rounded-full border border-white/[0.08]" />
+          <div className="absolute -right-20 -top-32 h-[39rem] w-[39rem] rounded-full border border-white/[0.1]" />
+          <div className="absolute right-[12%] top-[18%] h-[25rem] w-[25rem] rounded-full bg-[#9B0020]/35 blur-3xl" />
+          <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_42%,rgba(245,166,35,0.07)_100%)]" />
+          <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-amber-300/50 to-transparent" />
         </div>
-      </div>
 
-      {/* ─────────────────────────────────────────────────────────────
-          2. HERO SECTION WITH RICH TEXTS & CAMPUS PHOTOGRAPHY
-          ───────────────────────────────────────────────────────────── */}
-      <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 space-y-8">
-
-        {/* Main Hero Card with Side Photography */}
-        <div className="myiit-card p-6 sm:p-8 border-l-4 border-l-[#7A0016] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white">
-          <div className="lg:col-span-7 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF3D6] border border-[#F5A623]/60 text-xs font-bold text-[#7A0016] font-mono">
-              <span className="w-2 h-2 rounded-full bg-[#7A0016]"></span>
-              Official MSU-IIT Career Enhancement Gateway
-            </div>
-
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight leading-tight">
-              Connecting <span className="text-[#7A0016]">IITian Students</span>, Faculty Counselors, and Industry Leaders.
+        <div className="relative mx-auto grid min-h-[650px] max-w-[1440px] items-center gap-14 px-5 py-20 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:px-12 lg:py-28">
+          <div className="max-w-3xl">
+            <p className="mb-7 inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.23em] text-amber-300 sm:text-xs">
+              <span className="h-px w-8 bg-amber-300" /> Mindanao State University – Iligan Institute of Technology
+            </p>
+            <h1 className="max-w-3xl text-[clamp(3.25rem,7vw,6.5rem)] font-semibold leading-[0.98] tracking-[-0.055em]">
+              Your future is a journey. <span className="font-serif font-normal italic text-amber-300">Make it yours.</span>
             </h1>
-
-            <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
-              Welcome to P.A.C.E., the official career advancement bridge integrated directly with your My.IIT institutional identity. Access personalized career mentoring, upload and get faculty feedback on resumes, and explore verified employment opportunities from top partner companies.
+            <p className="mt-8 max-w-xl text-base leading-8 text-white/70 sm:text-lg">
+              Professional Advancement & Career Enhancement brings the MSU-IIT
+              community together around one purpose: helping every IITian move
+              forward with clarity, capability, and connection.
             </p>
-
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="/dashboard/student"
-                className="btn-myiit-primary px-5 py-2.5 rounded text-xs flex items-center gap-2 shadow-sm"
-              >
-                <span>Launch Student Dashboard</span>
-                <ArrowRight size={14} className="text-[#FFD700]" />
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Link href="/auth/login" className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg bg-[#F5A623] px-6 text-sm font-bold text-[#3B000B] shadow-xl shadow-black/10 transition hover:-translate-y-0.5 hover:bg-[#FFD27A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                Enter the PACE portal <ArrowRight size={17} />
               </Link>
-              <Link
-                href="/auth/login"
-                className="px-4 py-2.5 rounded bg-white hover:bg-slate-50 text-[#334155] text-xs font-bold border border-[#D1D5DB] transition-all"
-              >
-                Sign In with @g.msuiit.edu.ph
-              </Link>
+              <a href="#about" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/20 px-6 text-sm font-semibold text-white transition hover:border-white/50 hover:bg-white/[0.06]">
+                Explore the platform
+              </a>
             </div>
-
-            <div className="pt-3 grid grid-cols-3 gap-2 border-t border-[#E2E8F0] text-xs text-[#64748B]">
-              <div>✓ Verified Resume Versioning</div>
-              <div>✓ Standardized Mock Rubrics</div>
-              <div>✓ Gymnasium Career Fair Pass</div>
+            <div className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-white/15 pt-6 text-[11px] text-white/55">
+              <span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-amber-300" /> University-centered experience</span>
+              <span className="inline-flex items-center gap-2"><Sparkles size={15} className="text-amber-300" /> Built around career growth</span>
             </div>
           </div>
 
-          {/* Campus Photography Showcase */}
-          <div className="lg:col-span-5 space-y-3">
-            <div className="myiit-card overflow-hidden border border-[#D1D5DB] shadow-sm">
-              <div className="relative h-52 bg-slate-800">
-                <img
-                  src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80"
-                  alt="MSU-IIT Campus Grounds"
-                  className="w-full h-full object-cover brightness-95"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/85 via-[#0F172A]/30 to-transparent"></div>
-                <div className="absolute top-3 left-3 bg-[#7A0016] text-[#FFD700] text-[10px] font-bold px-2 py-0.5 rounded shadow border border-[#F5A623]">
-                  MSU-IIT Main Campus • Iligan City
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 text-white">
-                  <p className="text-[10px] font-mono text-[#FFD700] uppercase font-bold">Center of Excellence</p>
-                  <p className="text-xs font-bold">College of Computer Studies & College of Engineering</p>
-                </div>
+          <div className="relative mx-auto hidden w-full max-w-[520px] lg:block">
+            <div className="absolute -inset-8 rounded-[2rem] border border-white/[0.08] rotate-6" />
+            <div className="absolute -inset-3 rounded-[2rem] border border-amber-300/20 -rotate-3" />
+            <div className="relative overflow-hidden rounded-[1.6rem] border border-white/15 bg-gradient-to-br from-[#7A0016] via-[#5C0011] to-[#31000A] p-7 shadow-2xl shadow-black/30">
+              <div className="flex items-center justify-between border-b border-white/15 pb-5">
+                <div><p className="text-[9px] font-bold uppercase tracking-[0.2em] text-amber-300">The PACE framework</p><p className="mt-1 text-sm font-semibold">One connected career journey</p></div>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-amber-300"><Sparkles size={19} /></span>
               </div>
-
-              {/* Data Strip */}
-              <div className="p-3 bg-white grid grid-cols-3 divide-x divide-[#E2E8F0] text-center">
-                <div>
-                  <div className="text-base font-black text-[#7A0016] font-mono-num">2,847</div>
-                  <div className="text-[9px] text-[#64748B] font-bold uppercase">Graduates Hired</div>
-                </div>
-                <div>
-                  <div className="text-base font-black text-[#0F172A] font-mono-num">156</div>
-                  <div className="text-[9px] text-[#64748B] font-bold uppercase">Partner Corps</div>
-                </div>
-                <div>
-                  <div className="text-base font-black text-[#D97706] font-mono-num">489</div>
-                  <div className="text-[9px] text-[#64748B] font-bold uppercase">Mentorships</div>
-                </div>
+              <div className="space-y-3 py-7">
+                {pillars.map(({ icon: Icon, number, title, text }) => (
+                  <div key={number} className="group flex gap-4 rounded-xl border border-white/10 bg-white/[0.045] p-4 transition hover:border-amber-300/40 hover:bg-white/[0.08]">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-300/10 text-amber-300"><Icon size={19} /></span>
+                    <div className="min-w-0"><div className="flex items-center gap-2"><span className="font-mono text-[9px] text-amber-300/70">{number}</span><p className="text-sm font-semibold">{title}</p></div><p className="mt-1 text-xs leading-5 text-white/55">{text}</p></div>
+                  </div>
+                ))}
               </div>
+              <div className="flex items-center justify-between border-t border-white/15 pt-5 text-[10px] text-white/45"><span>MSU–IIT · Iligan City</span><span>Professional growth, connected.</span></div>
             </div>
-
-            <div className="p-3 rounded bg-[#FFFBEB] border border-[#FDE68A] text-xs text-[#92400E] flex items-start gap-2">
-              <AlertCircle size={15} className="text-[#D97706] shrink-0 mt-0.5" />
-              <span><strong>Notice:</strong> Annual On-Campus Job Fair schedule is live. Reserve interview booth slots in the student portal.</span>
+            <div className="absolute -bottom-7 -left-10 rounded-xl border border-white/10 bg-[#F5A623] px-5 py-4 text-[#3B000B] shadow-xl">
+              <p className="text-[9px] font-bold uppercase tracking-[0.16em]">Move forward</p><p className="mt-1 text-lg font-semibold">With purpose.</p>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* ─────────────────────────────────────────────────────────────
-            3. MY.IIT AFFILIATION GATEWAY SELECTORS (Cards with Photos)
-            ───────────────────────────────────────────────────────────── */}
-        <div className="space-y-3">
-          <div className="flex justify-between items-center border-b border-[#D1D5DB] pb-2">
-            <div>
-              <span className="text-xs font-bold text-[#7A0016] uppercase tracking-wider font-mono">My.IIT Role Segmentation</span>
-              <h2 className="text-lg font-bold text-[#0F172A]">Choose Your User Affiliation to Proceed:</h2>
-            </div>
-            <span className="text-xs text-[#64748B]">Single Sign-On Enabled</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-            {/* Student Card */}
-            <div
-              onClick={() => setSelectedRole("student")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "student" ? "active" : ""
-                }`}
-            >
-              <div>
-                <div className="h-28 bg-slate-100 relative overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=400&q=80"
-                    alt="IITian College Students"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <span className="absolute bottom-2 left-2 text-[10px] font-bold bg-[#7A0016] text-[#FFD700] px-2 py-0.5 rounded font-mono">
-                    BSIT / Undergrad
-                  </span>
-                </div>
-                <div className="p-4 space-y-1">
-                  <h3 className="text-sm font-bold text-[#0F172A]">I'm a College / Graduate Student</h3>
-                  <p className="text-xs text-[#64748B]">Upload resumes, view counselor badges, and reserve interview booth passes.</p>
-                </div>
-              </div>
-              <div className="p-4 pt-0">
-                <Link
-                  href="/dashboard/student"
-                  className="btn-myiit-primary w-full py-2 rounded text-xs flex items-center justify-center gap-1 shadow-xs"
-                >
-                  <span>Student Portal</span>
-                  <ChevronRight size={14} />
-                </Link>
-              </div>
-            </div>
-
-            {/* Counselor Card */}
-            <div
-              onClick={() => setSelectedRole("counselor")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "counselor" ? "active" : ""
-                }`}
-            >
-              <div>
-                <div className="h-28 bg-slate-100 relative overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80"
-                    alt="Career Counselor"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <span className="absolute bottom-2 left-2 text-[10px] font-bold bg-[#5C0011] text-[#FFD700] px-2 py-0.5 rounded font-mono">
-                    Faculty Guidance
-                  </span>
-                </div>
-                <div className="p-4 space-y-1">
-                  <h3 className="text-sm font-bold text-[#0F172A]">I'm a Career Guidance Counselor</h3>
-                  <p className="text-xs text-[#64748B]">Grade mock technical evaluations with rubrics and manage appointment queues.</p>
-                </div>
-              </div>
-              <div className="p-4 pt-0">
-                <Link
-                  href="/dashboard/counselor"
-                  className="w-full py-2 rounded bg-slate-100 hover:bg-[#7A0016] hover:text-white text-[#334155] text-xs font-bold flex items-center justify-center gap-1 transition-colors border border-[#D1D5DB]"
-                >
-                  <span>Counselor Suite</span>
-                  <ChevronRight size={14} />
-                </Link>
-              </div>
-            </div>
-
-            {/* Recruiter Card */}
-            <div
-              onClick={() => setSelectedRole("recruiter")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "recruiter" ? "active" : ""
-                }`}
-            >
-              <div>
-                <div className="h-28 bg-slate-100 relative overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=400&q=80"
-                    alt="Corporate Recruiter"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <span className="absolute bottom-2 left-2 text-[10px] font-bold bg-[#F5A623] text-[#0F172A] px-2 py-0.5 rounded font-mono">
-                    Corporate Partner
-                  </span>
-                </div>
-                <div className="p-4 space-y-1">
-                  <h3 className="text-sm font-bold text-[#0F172A]">I'm a Corporate Recruiter</h3>
-                  <p className="text-xs text-[#64748B]">Discover verified student talent filtered by major, GPA, and technical skills.</p>
-                </div>
-              </div>
-              <div className="p-4 pt-0">
-                <Link
-                  href="/dashboard/recruiter"
-                  className="w-full py-2 rounded bg-slate-100 hover:bg-[#7A0016] hover:text-white text-[#334155] text-xs font-bold flex items-center justify-center gap-1 transition-colors border border-[#D1D5DB]"
-                >
-                  <span>Recruiter Hub</span>
-                  <ChevronRight size={14} />
-                </Link>
-              </div>
-            </div>
-
-            {/* Superadmin Card */}
-            <div
-              onClick={() => setSelectedRole("superadmin")}
-              className={`myiit-gate overflow-hidden flex flex-col justify-between ${selectedRole === "superadmin" ? "active" : ""
-                }`}
-            >
-              <div>
-                <div className="h-28 bg-slate-100 relative overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=400&q=80"
-                    alt="Executive Dean"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <span className="absolute bottom-2 left-2 text-[10px] font-bold bg-[#334155] text-white px-2 py-0.5 rounded font-mono">
-                    Executive Office
-                  </span>
-                </div>
-                <div className="p-4 space-y-1">
-                  <h3 className="text-sm font-bold text-[#0F172A]">I'm a Career Center Admin</h3>
-                  <p className="text-xs text-[#64748B]">Oversee counselor workload balancing, partner tokens, and CHED metrics.</p>
-                </div>
-              </div>
-              <div className="p-4 pt-0">
-                <Link
-                  href="/dashboard/superadmin"
-                  className="w-full py-2 rounded bg-slate-100 hover:bg-[#7A0016] hover:text-white text-[#334155] text-xs font-bold flex items-center justify-center gap-1 transition-colors border border-[#D1D5DB]"
-                >
-                  <span>Admin Console</span>
-                  <ChevronRight size={14} />
-                </Link>
-              </div>
-            </div>
-
+      <section id="about" className="mx-auto grid max-w-[1440px] gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:px-12 lg:py-28">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9A6A20]">About the platform</p>
+          <h2 className="mt-5 max-w-md text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">Career growth, <span className="font-serif italic text-[#7A0016]">connected.</span></h2>
+        </div>
+        <div className="max-w-3xl">
+          <p className="text-lg leading-8 text-slate-600">PACE is designed as a shared digital space for career development at MSU-IIT. It brings together the people and experiences that help students prepare for meaningful work and lifelong professional growth.</p>
+          <div className="mt-9 grid gap-6 border-t border-slate-200 pt-7 sm:grid-cols-3">
+            <div><p className="text-2xl font-semibold text-[#7A0016]">Students</p><p className="mt-2 text-xs leading-5 text-slate-500">A clearer path from academic experience to professional opportunity.</p></div>
+            <div><p className="text-2xl font-semibold text-[#7A0016]">Counselors</p><p className="mt-2 text-xs leading-5 text-slate-500">A connected way to support guidance and career readiness.</p></div>
+            <div><p className="text-2xl font-semibold text-[#7A0016]">Employers</p><p className="mt-2 text-xs leading-5 text-slate-500">A meaningful bridge to emerging talent and university partnership.</p></div>
           </div>
         </div>
+      </section>
 
-        {/* ─────────────────────────────────────────────────────────────
-            4. COLLEGIATE CAREER PIPELINES (College Showcase with Emblems)
-            ───────────────────────────────────────────────────────────── */}
-        <div className="myiit-card p-6 space-y-4">
-          <div className="border-b border-[#E2E8F0] pb-2 flex justify-between items-center">
-            <h3 className="text-sm font-bold text-[#0F172A] uppercase">Collegiate Career Pipelines Participating</h3>
-            <span className="text-xs font-mono text-[#7A0016]">Accredited Programs</span>
+      <section id="experience" className="bg-white py-20 lg:py-24">
+        <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
+          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9A6A20]">A purposeful experience</p><h2 className="mt-4 max-w-xl text-4xl font-semibold tracking-tight sm:text-5xl">From potential to <span className="font-serif italic text-[#7A0016]">possibility.</span></h2></div>
+            <p className="max-w-md text-sm leading-7 text-slate-500">A thoughtful career journey is more than a job search. It is the continuous work of discovering, developing, and connecting.</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded bg-[#7A0016] text-[#FFD700] font-bold text-sm flex items-center justify-center shadow-xs">
-                  CCS
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-[#0F172A]">College of Computer Studies</h4>
-                  <span className="text-[10px] font-mono text-[#7A0016] font-bold">CHED Center of Excellence</span>
-                </div>
-              </div>
-              <p className="text-[11px] text-[#64748B] leading-relaxed">
-                BSIT, BSCS, BSIS programs specializing in cloud engineering, distributed architectures, and machine learning.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded bg-[#0F172A] text-[#FFD700] font-bold text-sm flex items-center justify-center shadow-xs">
-                  COET
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-[#0F172A]">College of Engineering & Tech</h4>
-                  <span className="text-[10px] font-mono text-[#0284C7] font-bold">ABET Accredited Programs</span>
-                </div>
-              </div>
-              <p className="text-[11px] text-[#64748B] leading-relaxed">
-                BSECE, BSME, BSCE, BSEE with direct hardware prototyping in collaboration with FabLab Mindanao.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded bg-[#D97706] text-white font-bold text-sm flex items-center justify-center shadow-xs">
-                  CSM
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-[#0F172A]">College of Science & Math</h4>
-                  <span className="text-[10px] font-mono text-[#D97706] font-bold">AACCUP Level IV Status</span>
-                </div>
-              </div>
-              <p className="text-[11px] text-[#64748B] leading-relaxed">
-                BS Mathematics, BS Statistics, BS Physics providing data science and quantitative modeling talent.
-              </p>
-            </div>
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {pillars.map(({ icon: Icon, number, title, text }) => (
+              <article key={number} className="group rounded-2xl border border-slate-200 bg-[#FAFAF8] p-7 transition duration-300 hover:-translate-y-1 hover:border-[#7A0016]/30 hover:shadow-xl hover:shadow-slate-900/[0.05]">
+                <div className="flex items-center justify-between"><span className="font-mono text-xs text-slate-400">{number} / 03</span><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#7A0016]/[0.07] text-[#7A0016] transition group-hover:bg-[#7A0016] group-hover:text-white"><Icon size={20} /></span></div>
+                <h3 className="mt-12 text-xl font-semibold tracking-tight">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-500">{text}</p>
+              </article>
+            ))}
           </div>
         </div>
+      </section>
 
-      </main>
+      <section id="community" className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <div className="max-w-2xl"><p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9A6A20]">A platform for the community</p><h2 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Different roles. <span className="font-serif italic text-[#7A0016]">One shared direction.</span></h2></div>
+        <div className="mt-10 grid gap-4 lg:grid-cols-3">
+          {audiences.map(({ icon: Icon, eyebrow, title, description }) => (
+            <article key={eyebrow} className="flex min-h-[250px] flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+              <div className="flex items-center justify-between"><span className="text-[9px] font-bold tracking-[0.18em] text-[#9A6A20]">{eyebrow}</span><Icon size={21} className="text-[#7A0016]" /></div>
+              <h3 className="mt-9 text-2xl font-semibold tracking-tight">{title}</h3>
+              <p className="mt-3 flex-1 text-sm leading-7 text-slate-500">{description}</p>
+              <Link href="/auth/login" className="mt-7 inline-flex w-fit items-center gap-2 text-xs font-bold text-[#7A0016] hover:gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#7A0016]">Continue to portal <ArrowRight size={15} /></Link>
+            </article>
+          ))}
+        </div>
+      </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          5. AUTHENTIC MY.IIT FOOTER
-          ───────────────────────────────────────────────────────────── */}
-      <footer className="mt-auto bg-[#1E293B] text-white border-t-4 border-[#7A0016] py-8 px-4 sm:px-8 text-xs">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1 text-center sm:text-left">
-            <p className="font-bold text-[#FFD700]">Mindanao State University – Iligan Institute of Technology</p>
-            <p className="text-stone-300 text-[11px]">
-              Andres Bonifacio Ave, Tibanga, Iligan City 9200 | P.A.C.E. Career Platform
-            </p>
+      <section className="px-5 pb-20 sm:px-8 lg:px-12">
+        <div className="relative mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] bg-[#4C0010] px-7 py-14 text-white sm:px-12 lg:px-16 lg:py-16">
+          <div className="absolute -right-16 -top-36 h-96 w-96 rounded-full border border-white/10" />
+          <div className="absolute -right-2 -top-20 h-72 w-72 rounded-full border border-amber-300/20" />
+          <div className="relative flex flex-col justify-between gap-8 md:flex-row md:items-center">
+            <div className="max-w-2xl"><p className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300">Your next step</p><h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Make your potential count.</h2><p className="mt-3 text-sm leading-7 text-white/65">Sign in to continue your PACE journey and access the tools available to your account.</p></div>
+            <Link href="/auth/login" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-3 rounded-lg bg-[#F5A623] px-6 text-sm font-bold text-[#3B000B] transition hover:bg-[#FFD27A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Access PACE <ArrowRight size={17} /></Link>
           </div>
-          <div className="text-[11px] text-stone-300 font-mono text-center sm:text-right">
-            Official Regalia: Maroon & Gold | Version 2.4 My.IIT Specification
-          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-slate-200 bg-[#F1F0EC]">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-5 py-8 text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
+          <div className="flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white p-1"><PaceLogo size={30} showText={false} /></span><span><span className="block font-bold tracking-[0.14em] text-slate-800">P.A.C.E. · MSU–IIT</span><span className="text-[10px]">Professional Advancement & Career Enhancement</span></span></div>
+          <p>Mindanao State University – Iligan Institute of Technology</p>
+          <Link href="/auth/login" className="font-semibold text-[#7A0016] hover:underline">Portal sign in</Link>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }
