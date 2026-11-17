@@ -251,3 +251,62 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #7A0016;
 }
+
+
+/* PACE experience foundations — shared across public, auth, and portal routes. */
+:root {
+  color-scheme: light;
+  --pace-maroon: #7a0016;
+  --pace-maroon-deep: #4c0010;
+  --pace-gold: #f5a623;
+  --pace-canvas: #f7f6f3;
+  --pace-ink: #0f172a;
+  --pace-muted: #64748b;
+  --pace-border: #e2e8f0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  min-width: 320px;
+  background: var(--pace-canvas);
+  color: var(--pace-ink);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  color: #fff;
+  background: var(--pace-maroon);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pace-maroon);
+  outline-offset: 3px;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
