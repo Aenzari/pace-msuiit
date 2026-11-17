@@ -905,7 +905,7 @@ function SuperadminDashboardContent() {
                       />
                     </div>
                     <button
-                      onClick={() => alert("Global banner updated across all Student and Recruiter views.")}
+                      onClick={() => alert("Preview only: global announcements are not connected to the live platform yet.")}
                       className="px-4 py-2 rounded-xl bg-[#7A0016] text-amber-300 font-bold border border-[#F5A623]/30 hover:bg-[#9B0020] transition-colors"
                     >
                       Broadcast to Portals
