@@ -20,6 +20,7 @@ import {
 import PaceLogo from "@/components/PaceLogo";
 import { authApi, ApiError } from "@/lib/api/client";
 import type { BackendRole } from "@/lib/api/types";
+import { ROLE_DASHBOARD_PATHS } from "@/lib/constants/roles";
 
 const roleOptions = [
   { id: "student", label: "Student", detail: "Explore your career pathway", icon: GraduationCap },
@@ -27,14 +28,6 @@ const roleOptions = [
   { id: "recruiter", label: "Recruiter", detail: "Connect with emerging talent", icon: BriefcaseBusiness },
   { id: "superadmin", label: "Administrator", detail: "Manage the platform", icon: ShieldCheck },
 ] as const;
-
-const dashboardByRole: Record<BackendRole, string> = {
-  student: "/dashboard/student",
-  counselor: "/dashboard/counselor",
-  recruiter: "/dashboard/recruiter",
-  admin: "/dashboard/superadmin",
-  superadmin: "/dashboard/superadmin",
-};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -54,7 +47,7 @@ export default function LoginPage() {
       const { user } = await authApi.login({ email: email.trim(), password });
       // The backend role is authoritative. The selected card is only a visual
       // aid and is never used to grant access or decide the destination.
-      router.replace(dashboardByRole[user.role] || "/");
+      router.replace(ROLE_DASHBOARD_PATHS[user.role] || "/");
     } catch (error) {
       if (error instanceof ApiError) {
         setAuthError(
