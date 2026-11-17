@@ -8,6 +8,7 @@ import {
   LoaderCircle, ShieldCheck, AlertCircle, RefreshCw
 } from 'lucide-react';
 import PaceLogo from './PaceLogo';
+import { ROLE_DASHBOARD_PATHS } from '@/lib/constants/roles';
 import { ApiError, authApi } from '@/lib/api/client';
 import type { AuthUser, BackendRole } from '@/lib/api/types';
 
