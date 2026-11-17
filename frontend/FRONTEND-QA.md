@@ -41,8 +41,9 @@ Those workflows need their corresponding existing backend routes, request/respon
 ## Validation status
 
 - Repository comparison confirms this delivery changes frontend files plus the frontend validation workflow only; no backend files were changed.
-- A GitHub Actions workflow now runs `npm ci --legacy-peer-deps`, `npm run typecheck`, and `npm run build` for frontend changes.
-- A successful build/typecheck has not been asserted in this document; the workflow result must be checked after GitHub Actions finishes.
+- GitHub Actions successfully completed dependency installation, TypeScript validation, and the Next.js production build for commit `fb107f7b083fa9f323380caf6204aeb0537615d5`.
+- The workflow now also checks production dependencies for high/critical npm advisories before type checking and building; the result for the updated workflow is pending.
+- The successful build confirms compilation and static generation, not browser-level end-to-end behavior or a live backend deployment.
 - The pre-existing `lint` script still points to `next lint`, while this repository uses Next.js 16 and ESLint 8 with an ESLint 9 peer requirement in `eslint-config-next`. Align the ESLint major version, lockfile, and flat config before treating lint as a reliable CI gate.
 
 ## Suggested next integration sequence
