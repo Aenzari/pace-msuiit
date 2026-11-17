@@ -142,3 +142,9 @@ export interface MentorProfile {
   maxMentees: number;
   availabilityNotes?: string | null;
 }
+
+export type MentorProfileUpdate = Partial<Pick<
+  MentorProfile,
+  "firstName" | "lastName" | "professionalTitle" | "companyName" | "industry" |
+  "biography" | "expertise" | "phone" | "maxMentees" | "availabilityNotes"
+>>;
