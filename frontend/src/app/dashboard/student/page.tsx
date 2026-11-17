@@ -35,6 +35,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import DashboardLayout, { NavItem } from "@/components/DashboardLayout";
+import StudentProfilePanel from "@/components/student/StudentProfilePanel";
 
 const navItems: NavItem[] = [
   { id: "overview", label: "Overview", icon: <LayoutDashboard size={18} /> },
@@ -533,16 +534,8 @@ export default function StudentDashboard() {
           </div>
         )}
 
-        {activeTab === "profile" && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-xs"><p className="text-[11px] font-bold uppercase tracking-wider text-[#7A0016]">Student Account</p><h2 className="text-xl font-black text-[#0F172A] mt-1">My career profile</h2><p className="text-xs text-[#64748B] mt-1">Keep your information current so your counselor can provide relevant guidance.</p></div>
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 shadow-xs space-y-4"><div className="flex items-center gap-4"><div className="w-16 h-16 rounded-full bg-[#F8FAFC] border-2 border-[#D1D5DB] flex items-center justify-center text-[#94A3B8]"><User size={30} /></div><div><h3 className="text-lg font-bold text-[#0F172A]">Alexandra Reyes</h3><p className="text-xs text-[#64748B]">BS Information Technology • 4th Year</p></div></div><div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"><div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]"><span className="text-[10px] uppercase font-bold text-[#64748B]">Student ID</span><p className="font-semibold text-[#334155] mt-1">2021-0142</p></div><div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0]"><span className="text-[10px] uppercase font-bold text-[#64748B]">Email</span><p className="font-semibold text-[#334155] mt-1">alexandra.reyes@g.msuiit.edu.ph</p></div></div><button onClick={() => alert("Preview only: profile editing is not connected to the student account service yet.")} className="px-4 py-2 rounded-lg border border-[#7A0016] text-[#7A0016] text-xs font-bold hover:bg-[#FFF3D6]">Edit profile</button></div>
-          </div>
-        )}
+        {activeTab === "profile" && <StudentProfilePanel />}
 
-        {/* ─────────────────────────────────────────────────────────────
-            LEGACY FEATURE VIEWS
-            ───────────────────────────────────────────────────────────── */}
         {activeTab === "legacy-overview" && (
           <div className="space-y-6">
             {/* Quick Metrics */}
