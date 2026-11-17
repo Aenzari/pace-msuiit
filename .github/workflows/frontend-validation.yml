@@ -15,6 +15,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: frontend-validation-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     name: Typecheck and production build
