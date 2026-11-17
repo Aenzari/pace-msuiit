@@ -195,6 +195,15 @@ function ModuleContent({ role, active, notify }: { role: Role; active: string; n
   const [resumeDraft, setResumeDraft] = useState("");
   const [reviewRating, setReviewRating] = useState(4);
   const [reviewFeedback, setReviewFeedback] = useState("Strengthen project impact statements with measurable outcomes. Keep bullet points concise and action-oriented.");
+  const [jobTitleDraft, setJobTitleDraft] = useState("");
+  const [jobTypeDraft, setJobTypeDraft] = useState("Full-time");
+  const [jobDescriptionDraft, setJobDescriptionDraft] = useState("");
+  const [createdJobs, setCreatedJobs] = useState<string[]>([]);
+  const [employmentStatus, setEmploymentStatus] = useState("Employed");
+  const [employerName, setEmployerName] = useState("Northstar Digital");
+  const [positionName, setPositionName] = useState("Associate Software Engineer");
+  const [generalLocation, setGeneralLocation] = useState("Iligan City");
+  const [followupUpdate, setFollowupUpdate] = useState("Employed");
   const rows: Record<string, string[]> = {
     appointments: ["Career consultation · Dr. Maria Santos · Thu, 10:00 AM", "Resume discussion · Dr. Maria Santos · Mon, 2:00 PM", "Career planning · Prof. Roberto Gomez · Completed"],
     students: ["Alexandra Reyes · BS Computer Science · Active case", "Daniel Cruz · BS Information Systems · Follow-up due", "Mika Tan · BS Computer Science · Resume improvement"],
