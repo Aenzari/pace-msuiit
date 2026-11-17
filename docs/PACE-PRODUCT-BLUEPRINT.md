@@ -45,7 +45,7 @@ PACE is not merely a job board or appointment scheduler. It is the shared workfl
 
 ### SuperAdmin
 - Reserved for the Career Center Head Officer / authorized head administrator.
-- Manages counselor and recruiter account approval, activation, suspension, and deactivation.
+- Manages counselor and recruiter account approval, activation, suspension, deactivation, and policy-governed deletion/anonymization when legally and institutionally appropriate. Prefer reversible deactivation for routine access removal; retain required audit records.
 - Oversees institutional analytics, service utilization, graduate outcomes, partner activity, and audit logs.
 - Does not need routine access to private counseling notes or full resume feedback conversations to perform administrative duties.
 
@@ -92,7 +92,7 @@ The repository currently has a separate backend role identifier `mentor`. Do not
 - Appointment type configuration, availability calendar, capacity, requests, status changes, and follow-up reminders.
 - Scoped messaging with connected students and authorized recruiters.
 - Resume review queue, version viewer, structured rubric, feedback, rating, review history.
-- Career-readiness assessments and improvement recommendations.
+- Career-readiness assessments, structured student ratings, and improvement recommendations. Ratings must use an approved rubric, be explainable, and must not be exposed to recruiters by default.
 - Endorsement creation, student-consent workflow, recruiter delivery, and endorsement history.
 - Graduate follow-up and outcomes view with scoped access.
 - Partner job portal for endorsement and recruiter coordination.
@@ -172,7 +172,7 @@ The repository currently has a separate backend role identifier `mentor`. Do not
 4. Alumni separately chooses mentorship: opt in, maybe later, or decline.
 5. Alumni can update employment, further studies, career progression, and voluntarily provided general whereabouts.
 6. Career Center sends scheduled follow-ups (proposed: graduation, 3, 6, and 12 months; timing requires approval).
-7. Counselors and SuperAdmin access records according to assigned permissions; recruiters have no access to graduate tracking.
+7. Graduate tracking records are visible only to Career Center Counselors and SuperAdmin. Alumni can view and update their own information. Recruiters have no access to graduate tracking records.
 8. Record source and freshness are visible: self-reported, verified, last updated, and verified date.
 
 ### Mentorship workflow
