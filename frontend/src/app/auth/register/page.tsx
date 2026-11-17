@@ -1,805 +1,241 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-  GraduationCap,
-  UserCog,
-  Briefcase,
-  ShieldCheck,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  User,
-  Building2,
-  Hash,
-  ChevronLeft,
-  ArrowRight,
-  Sparkles,
-  BookOpen,
-  Layers,
-  Globe,
-  Phone,
-} from "lucide-react";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-import Badge from "@/components/ui/Badge";
-import PaceLogo from "@/components/PaceLogo";
+import { useState } from "react";
 import Link from "next/link";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  CheckCircle2,
+  Compass,
+  GraduationCap,
+  LockKeyhole,
+  Mail,
+  UserRound,
+  AlertCircle,
+  LoaderCircle,
+} from "lucide-react";
+import PaceLogo from "@/components/PaceLogo";
+import { ApiError, authApi } from "@/lib/api/client";
 
-/* ─── Types ─────────────────────────────────────────────── */
-interface SelectOption { value: string; label: string; }
-
-/* ─── Constants ──────────────────────────────────────────── */
-const PROGRAMS: SelectOption[] = [
-  { value: "bsit", label: "BSIT — Information Technology" },
-  { value: "bscs", label: "BSCS — Computer Science" },
-  { value: "bsece", label: "BSECE — Electronics & Communications Eng." },
-  { value: "bsee", label: "BSEE — Electrical Engineering" },
-  { value: "bsme", label: "BSME — Mechanical Engineering" },
-  { value: "bsce", label: "BSCE — Civil Engineering" },
-  { value: "bschem", label: "BSChem — Chemistry" },
-  { value: "bsmath", label: "BSMath — Mathematics" },
-  { value: "bsphys", label: "BSPhys — Physics" },
-  { value: "bsba", label: "BSBA — Business Administration" },
-];
-
-const YEAR_LEVELS: SelectOption[] = [
-  { value: "1", label: "1st Year" },
-  { value: "2", label: "2nd Year" },
-  { value: "3", label: "3rd Year" },
-  { value: "4", label: "4th Year" },
-  { value: "5", label: "5th Year" },
-  { value: "grad", label: "Graduate / Alumni" },
-];
-
-const DEPARTMENTS: SelectOption[] = [
-  { value: "cics", label: "College of Information Technology and Computing Sciences" },
-  { value: "coe", label: "College of Engineering" },
-  { value: "cns", label: "College of Natural Sciences & Mathematics" },
-  { value: "cba", label: "College of Business & Economics" },
-  { value: "osa", label: "Office of Student Affairs" },
-  { value: "career", label: "Career Development & Placement Office" },
-];
-
-const INDUSTRIES: SelectOption[] = [
-  { value: "technology", label: "Technology & Software" },
-  { value: "finance", label: "Banking & Finance" },
-  { value: "bpo", label: "BPO / Customer Service" },
-  { value: "engineering", label: "Engineering & Construction" },
-  { value: "healthcare", label: "Healthcare & Pharmaceuticals" },
-  { value: "education", label: "Education & Training" },
-  { value: "government", label: "Government & Public Sector" },
-  { value: "manufacturing", label: "Manufacturing & Industry" },
-  { value: "retail", label: "Retail & E-Commerce" },
-  { value: "media", label: "Media & Communications" },
-  { value: "other", label: "Other" },
-];
-
-const ROLES = [
-  {
-    id: "student",
-    label: "Student",
-    icon: <GraduationCap className="w-5 h-5" />,
-    description: "MSU-IIT student or recent graduate",
-  },
-  {
-    id: "counselor",
-    label: "Counselor",
-    icon: <UserCog className="w-5 h-5" />,
-    description: "Faculty or staff career advisor",
-  },
-  {
-    id: "recruiter",
-    label: "Recruiter",
-    icon: <Briefcase className="w-5 h-5" />,
-    description: "Company HR or hiring manager",
-  },
-];
-
-/* ─── Select Input ───────────────────────────────────────── */
-function SelectInput({
-  label,
-  value,
-  onChange,
-  options,
-  error,
-  icon,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  options: SelectOption[];
-  error?: string;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-sm font-medium text-white/70">{label}</label>
-      <div className="relative">
-        {icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">{icon}</div>
-        )}
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all duration-300 appearance-none ${
-            icon ? "pl-10" : ""
-          } ${
-            error
-              ? "border-red-500/60 focus:ring-red-500/20"
-              : "border-white/15 focus:border-[#F5A623]/60 focus:ring-[#F5A623]/20"
-          }`}
-          style={{ colorScheme: "light" }}
-        >
-          <option value="" disabled className="bg-white text-[#0F172A]">
-            Select {label}
-          </option>
-          {options.map((o) => (
-            <option key={o.value} value={o.value} className="bg-white text-[#0F172A]">
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M8 10.5L3 5.5h10L8 10.5z" />
-          </svg>
-        </div>
-      </div>
-      {error && <p className="text-red-400 text-xs">{error}</p>}
-    </div>
-  );
-}
-
-/* ─── Student Fields ─────────────────────────────────────── */
-interface StudentForm {
-  firstName: string;
-  lastName: string;
-  studentId: string;
-  program: string;
-  yearLevel: string;
+type RegistrationRole = "student" | "counselor" | "recruiter";
+type FormValues = {
   email: string;
   password: string;
   confirmPassword: string;
-}
-
-function StudentFields({
-  form,
-  setForm,
-  errors,
-  showPassword,
-  setShowPassword,
-  showConfirmPassword,
-  setShowConfirmPassword,
-}: {
-  form: StudentForm;
-  setForm: React.Dispatch<React.SetStateAction<StudentForm>>;
-  errors: Partial<StudentForm>;
-  showPassword: boolean;
-  setShowPassword: (v: boolean) => void;
-  showConfirmPassword: boolean;
-  setShowConfirmPassword: (v: boolean) => void;
-}) {
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          label="First Name"
-          placeholder="Juan"
-          value={form.firstName}
-          onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
-          error={errors.firstName}
-          icon={<User className="w-4 h-4" />}
-        />
-        <Input
-          label="Last Name"
-          placeholder="dela Cruz"
-          value={form.lastName}
-          onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
-          error={errors.lastName}
-          icon={<User className="w-4 h-4" />}
-        />
-      </div>
-      <Input
-        label="Student ID"
-        placeholder="2021-1234"
-        value={form.studentId}
-        onChange={(e) => setForm((f) => ({ ...f, studentId: e.target.value }))}
-        error={errors.studentId}
-        icon={<Hash className="w-4 h-4" />}
-        hint="Format: YYYY-XXXX"
-      />
-      <SelectInput
-        label="Program"
-        value={form.program}
-        onChange={(v) => setForm((f) => ({ ...f, program: v }))}
-        options={PROGRAMS}
-        error={errors.program}
-        icon={<BookOpen className="w-4 h-4" />}
-      />
-      <SelectInput
-        label="Year Level"
-        value={form.yearLevel}
-        onChange={(v) => setForm((f) => ({ ...f, yearLevel: v }))}
-        options={YEAR_LEVELS}
-        error={errors.yearLevel}
-        icon={<Layers className="w-4 h-4" />}
-      />
-      <Input
-        label="MSU-IIT Email"
-        type="email"
-        placeholder="juandelacruz@g.msuiit.edu.ph"
-        value={form.email}
-        onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        error={errors.email}
-        icon={<Mail className="w-4 h-4" />}
-        hint="Must end with @g.msuiit.edu.ph"
-      />
-      <Input
-        label="Password"
-        type={showPassword ? "text" : "password"}
-        placeholder="Create a strong password"
-        value={form.password}
-        onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-        error={errors.password}
-        icon={<Lock className="w-4 h-4" />}
-        hint="At least 8 characters"
-        rightElement={
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="text-white/40 hover:text-white/70 transition-colors"
-          >
-            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        }
-      />
-      <Input
-        label="Confirm Password"
-        type={showConfirmPassword ? "text" : "password"}
-        placeholder="Repeat your password"
-        value={form.confirmPassword}
-        onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-        error={errors.confirmPassword}
-        icon={<Lock className="w-4 h-4" />}
-        rightElement={
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="text-white/40 hover:text-white/70 transition-colors"
-          >
-            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        }
-      />
-    </div>
-  );
-}
-
-/* ─── Counselor Fields ───────────────────────────────────── */
-interface CounselorForm {
   firstName: string;
   lastName: string;
+  studentNumber: string;
+  course: string;
+  yearLevel: string;
+  phone: string;
+  address: string;
+  token: string;
   employeeId: string;
   department: string;
-  specialization: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+  companyId: string;
+  jobTitle: string;
+};
 
-function CounselorFields({
-  form,
-  setForm,
-  errors,
-  showPassword,
-  setShowPassword,
-  showConfirmPassword,
-  setShowConfirmPassword,
-}: {
-  form: CounselorForm;
-  setForm: React.Dispatch<React.SetStateAction<CounselorForm>>;
-  errors: Partial<CounselorForm>;
-  showPassword: boolean;
-  setShowPassword: (v: boolean) => void;
-  showConfirmPassword: boolean;
-  setShowConfirmPassword: (v: boolean) => void;
+const initialValues: FormValues = {
+  email: "", password: "", confirmPassword: "", firstName: "", lastName: "",
+  studentNumber: "", course: "", yearLevel: "1", phone: "", address: "",
+  token: "", employeeId: "", department: "", companyId: "", jobTitle: "",
+};
+
+const roles = [
+  { id: "student" as const, label: "Student", description: "MSU-IIT student or eligible graduate", icon: GraduationCap },
+  { id: "counselor" as const, label: "Counselor", description: "Invited faculty or career staff", icon: Compass },
+  { id: "recruiter" as const, label: "Recruiter", description: "Invited industry partner", icon: BriefcaseBusiness },
+];
+
+const inputClass = "h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#7A0016] focus:ring-4 focus:ring-[#7A0016]/[0.07]";
+const labelClass = "mb-1.5 block text-xs font-semibold text-slate-700";
+
+function Field({ label, name, value, onChange, type = "text", placeholder, required = true, autoComplete }: {
+  label: string; name: string; value: string; onChange: (value: string) => void;
+  type?: string; placeholder?: string; required?: boolean; autoComplete?: string;
 }) {
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          label="First Name"
-          placeholder="Maria"
-          value={form.firstName}
-          onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
-          error={errors.firstName}
-          icon={<User className="w-4 h-4" />}
-        />
-        <Input
-          label="Last Name"
-          placeholder="Santos"
-          value={form.lastName}
-          onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
-          error={errors.lastName}
-          icon={<User className="w-4 h-4" />}
-        />
-      </div>
-      <Input
-        label="Employee ID"
-        placeholder="MSU-EMP-0001"
-        value={form.employeeId}
-        onChange={(e) => setForm((f) => ({ ...f, employeeId: e.target.value }))}
-        error={errors.employeeId}
-        icon={<Hash className="w-4 h-4" />}
-      />
-      <SelectInput
-        label="Department / College"
-        value={form.department}
-        onChange={(v) => setForm((f) => ({ ...f, department: v }))}
-        options={DEPARTMENTS}
-        error={errors.department}
-        icon={<Building2 className="w-4 h-4" />}
-      />
-      <Input
-        label="Specialization / Expertise"
-        placeholder="e.g. Career Counseling, IT Careers, Engineering"
-        value={form.specialization}
-        onChange={(e) => setForm((f) => ({ ...f, specialization: e.target.value }))}
-        error={errors.specialization}
-        icon={<BookOpen className="w-4 h-4" />}
-      />
-      <Input
-        label="Institutional Email"
-        type="email"
-        placeholder="name@msuiit.edu.ph"
-        value={form.email}
-        onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-        error={errors.email}
-        icon={<Mail className="w-4 h-4" />}
-        hint="Must be an @msuiit.edu.ph address"
-      />
-      <Input
-        label="Password"
-        type={showPassword ? "text" : "password"}
-        placeholder="Create a strong password"
-        value={form.password}
-        onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-        error={errors.password}
-        icon={<Lock className="w-4 h-4" />}
-        rightElement={
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="text-white/40 hover:text-white/70 transition-colors"
-          >
-            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        }
-      />
-      <Input
-        label="Confirm Password"
-        type={showConfirmPassword ? "text" : "password"}
-        placeholder="Repeat your password"
-        value={form.confirmPassword}
-        onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-        error={errors.confirmPassword}
-        icon={<Lock className="w-4 h-4" />}
-        rightElement={
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="text-white/40 hover:text-white/70 transition-colors"
-          >
-            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        }
-      />
+    <div>
+      <label htmlFor={name} className={labelClass}>{label}</label>
+      <input id={name} name={name} type={type} value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} required={required} autoComplete={autoComplete} className={inputClass} />
     </div>
   );
 }
 
-/* ─── Recruiter Fields ───────────────────────────────────── */
-interface RecruiterForm {
-  firstName: string;
-  lastName: string;
-  companyName: string;
-  position: string;
-  companyEmail: string;
-  industry: string;
-  phone: string;
-  password: string;
-  confirmPassword: string;
-}
-
-function RecruiterFields({
-  form,
-  setForm,
-  errors,
-  showPassword,
-  setShowPassword,
-  showConfirmPassword,
-  setShowConfirmPassword,
-}: {
-  form: RecruiterForm;
-  setForm: React.Dispatch<React.SetStateAction<RecruiterForm>>;
-  errors: Partial<RecruiterForm>;
-  showPassword: boolean;
-  setShowPassword: (v: boolean) => void;
-  showConfirmPassword: boolean;
-  setShowConfirmPassword: (v: boolean) => void;
-}) {
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          label="First Name"
-          placeholder="Carlo"
-          value={form.firstName}
-          onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
-          error={errors.firstName}
-          icon={<User className="w-4 h-4" />}
-        />
-        <Input
-          label="Last Name"
-          placeholder="Reyes"
-          value={form.lastName}
-          onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
-          error={errors.lastName}
-          icon={<User className="w-4 h-4" />}
-        />
-      </div>
-      <Input
-        label="Company Name"
-        placeholder="TechCorp Philippines Inc."
-        value={form.companyName}
-        onChange={(e) => setForm((f) => ({ ...f, companyName: e.target.value }))}
-        error={errors.companyName}
-        icon={<Building2 className="w-4 h-4" />}
-      />
-      <Input
-        label="Your Position / Role"
-        placeholder="HR Manager / Senior Recruiter"
-        value={form.position}
-        onChange={(e) => setForm((f) => ({ ...f, position: e.target.value }))}
-        error={errors.position}
-        icon={<Briefcase className="w-4 h-4" />}
-      />
-      <Input
-        label="Company Email"
-        type="email"
-        placeholder="hr@techcorp.com.ph"
-        value={form.companyEmail}
-        onChange={(e) => setForm((f) => ({ ...f, companyEmail: e.target.value }))}
-        error={errors.companyEmail}
-        icon={<Mail className="w-4 h-4" />}
-        hint="Use your official company email"
-      />
-      <SelectInput
-        label="Industry"
-        value={form.industry}
-        onChange={(v) => setForm((f) => ({ ...f, industry: v }))}
-        options={INDUSTRIES}
-        error={errors.industry}
-        icon={<Globe className="w-4 h-4" />}
-      />
-      <Input
-        label="Phone Number (Optional)"
-        type="tel"
-        placeholder="+63 9XX XXX XXXX"
-        value={form.phone}
-        onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-        icon={<Phone className="w-4 h-4" />}
-      />
-      <Input
-        label="Password"
-        type={showPassword ? "text" : "password"}
-        placeholder="Create a strong password"
-        value={form.password}
-        onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-        error={errors.password}
-        icon={<Lock className="w-4 h-4" />}
-        rightElement={
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="text-white/40 hover:text-white/70 transition-colors"
-          >
-            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        }
-      />
-      <Input
-        label="Confirm Password"
-        type={showConfirmPassword ? "text" : "password"}
-        placeholder="Repeat your password"
-        value={form.confirmPassword}
-        onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-        error={errors.confirmPassword}
-        icon={<Lock className="w-4 h-4" />}
-        rightElement={
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="text-white/40 hover:text-white/70 transition-colors"
-          >
-            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        }
-      />
-    </div>
-  );
-}
-
-/* ─── Register Page ──────────────────────────────────────── */
 export default function RegisterPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const roleParam = searchParams.get("role");
-
-  const [activeRole, setActiveRole] = useState<string>(
-    ROLES.find((r) => r.id === roleParam)?.id ?? "student"
-  );
+  const [role, setRole] = useState<RegistrationRole>("student");
+  const [values, setValues] = useState<FormValues>(initialValues);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
-  // Student form state
-  const [studentForm, setStudentForm] = useState<StudentForm>({
-    firstName: "", lastName: "", studentId: "", program: "",
-    yearLevel: "", email: "", password: "", confirmPassword: "",
-  });
-  const [studentErrors, setStudentErrors] = useState<Partial<StudentForm>>({});
+  function update<K extends keyof FormValues>(key: K, value: FormValues[K]) {
+    setValues((current) => ({ ...current, [key]: value }));
+    setError("");
+  }
 
-  // Counselor form state
-  const [counselorForm, setCounselorForm] = useState<CounselorForm>({
-    firstName: "", lastName: "", employeeId: "", department: "",
-    specialization: "", email: "", password: "", confirmPassword: "",
-  });
-  const [counselorErrors, setCounselorErrors] = useState<Partial<CounselorForm>>({});
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
 
-  // Recruiter form state
-  const [recruiterForm, setRecruiterForm] = useState<RecruiterForm>({
-    firstName: "", lastName: "", companyName: "", position: "",
-    companyEmail: "", industry: "", phone: "", password: "", confirmPassword: "",
-  });
-  const [recruiterErrors, setRecruiterErrors] = useState<Partial<RecruiterForm>>({});
+    if (values.password.length < 8) {
+      setError("Your password must contain at least 8 characters.");
+      return;
+    }
+    if (values.password !== values.confirmPassword) {
+      setError("Your passwords do not match.");
+      return;
+    }
 
-  useEffect(() => {
-    setStudentErrors({});
-    setCounselorErrors({});
-    setRecruiterErrors({});
-  }, [activeRole]);
-
-  const validateStudent = (): boolean => {
-    const errors: Partial<StudentForm> = {};
-    if (!studentForm.firstName) errors.firstName = "Required";
-    if (!studentForm.lastName) errors.lastName = "Required";
-    if (!studentForm.studentId) errors.studentId = "Student ID is required";
-    else if (!/^\d{4}-\d{4,}$/.test(studentForm.studentId)) errors.studentId = "Format: YYYY-XXXX";
-    if (!studentForm.program) errors.program = "Select a program";
-    if (!studentForm.yearLevel) errors.yearLevel = "Select year level";
-    if (!studentForm.email) errors.email = "Email is required";
-    else if (!studentForm.email.endsWith("@g.msuiit.edu.ph")) errors.email = "Must be @g.msuiit.edu.ph";
-    if (!studentForm.password) errors.password = "Password is required";
-    else if (studentForm.password.length < 8) errors.password = "At least 8 characters";
-    if (studentForm.confirmPassword !== studentForm.password) errors.confirmPassword = "Passwords do not match";
-    setStudentErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const validateCounselor = (): boolean => {
-    const errors: Partial<CounselorForm> = {};
-    if (!counselorForm.firstName) errors.firstName = "Required";
-    if (!counselorForm.lastName) errors.lastName = "Required";
-    if (!counselorForm.employeeId) errors.employeeId = "Employee ID is required";
-    if (!counselorForm.department) errors.department = "Select a department";
-    if (!counselorForm.specialization) errors.specialization = "Specialization is required";
-    if (!counselorForm.email) errors.email = "Email is required";
-    else if (!counselorForm.email.endsWith("@msuiit.edu.ph")) errors.email = "Must be @msuiit.edu.ph";
-    if (!counselorForm.password) errors.password = "Password is required";
-    else if (counselorForm.password.length < 8) errors.password = "At least 8 characters";
-    if (counselorForm.confirmPassword !== counselorForm.password) errors.confirmPassword = "Passwords do not match";
-    setCounselorErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const validateRecruiter = (): boolean => {
-    const errors: Partial<RecruiterForm> = {};
-    if (!recruiterForm.firstName) errors.firstName = "Required";
-    if (!recruiterForm.lastName) errors.lastName = "Required";
-    if (!recruiterForm.companyName) errors.companyName = "Company name is required";
-    if (!recruiterForm.position) errors.position = "Position is required";
-    if (!recruiterForm.companyEmail) errors.companyEmail = "Company email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recruiterForm.companyEmail)) errors.companyEmail = "Invalid email";
-    if (!recruiterForm.industry) errors.industry = "Select an industry";
-    if (!recruiterForm.password) errors.password = "Password is required";
-    else if (recruiterForm.password.length < 8) errors.password = "At least 8 characters";
-    if (recruiterForm.confirmPassword !== recruiterForm.password) errors.confirmPassword = "Passwords do not match";
-    setRecruiterErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    let valid = false;
-    if (activeRole === "student") valid = validateStudent();
-    else if (activeRole === "counselor") valid = validateCounselor();
-    else if (activeRole === "recruiter") valid = validateRecruiter();
-
-    if (!valid) return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1800));
-    setIsLoading(false);
-    router.push(`/auth/login?role=${activeRole}&registered=true`);
-  };
+    try {
+      if (role === "student") {
+        await authApi.registerStudent({
+          email: values.email.trim(),
+          password: values.password,
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          studentNumber: values.studentNumber.trim(),
+          course: values.course.trim(),
+          yearLevel: Number(values.yearLevel),
+          phone: values.phone.trim(),
+          address: values.address.trim(),
+        });
+      } else if (role === "counselor") {
+        await authApi.registerCounselor({
+          email: values.email.trim(),
+          password: values.password,
+          token: values.token.trim(),
+          employeeId: values.employeeId.trim(),
+          department: values.department.trim(),
+          phone: values.phone.trim(),
+        });
+      } else {
+        await authApi.registerRecruiter({
+          email: values.email.trim(),
+          password: values.password,
+          token: values.token.trim(),
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          companyId: values.companyId.trim(),
+          jobTitle: values.jobTitle.trim(),
+          phone: values.phone.trim(),
+        });
+      }
+      // Registration creates the profile but does not create a session in the
+      // current backend controller. The user must sign in separately.
+      setSuccess(true);
+    } catch (requestError) {
+      if (requestError instanceof ApiError) {
+        const issue = requestError.issues?.[0]?.message;
+        setError(issue || requestError.message);
+      } else {
+        setError("We couldn't submit your registration. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
-  const currentRole = ROLES.find((r) => r.id === activeRole)!;
+  if (success) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#F7F6F3] px-5 py-12">
+        <section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xl shadow-slate-900/[0.04] sm:p-10">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><CheckCircle2 size={27} /></span>
+          <p className="mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9A6A20]">Registration submitted</p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight">You’re on your way.</h1>
+          <p className="mt-3 text-sm leading-7 text-slate-500">Your {role} account has been created. Sign in using the email address you registered with to continue to PACE.</p>
+          <Link href="/auth/login" className="mt-8 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#7A0016] text-sm font-semibold text-white transition hover:bg-[#5C0011]">Continue to sign in <ArrowRight size={16} /></Link>
+          <p className="mt-5 text-[11px] text-slate-400">If your organization requires further verification, follow the instructions provided by the PACE team.</p>
+        </section>
+      </main>
+    );
+  }
 
   return (
-    <div className="register-page min-h-screen relative flex items-center justify-center overflow-hidden bg-[#EEF2F6] text-[#0F172A]">
-      {/* Background */}
-    <div className="myiit-header-gradient absolute inset-x-0 top-0 h-20" />
+    <main className="min-h-screen bg-[#F7F6F3] text-slate-900">
+      <header className="bg-[#4C0010] px-5 py-4 text-white sm:px-8">
+        <div className="mx-auto flex max-w-6xl items-center justify-between">
+          <Link href="/" className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white p-1"><PaceLogo size={32} showText={false} /></span><span><span className="block text-sm font-bold tracking-[0.16em]">P.A.C.E.</span><span className="text-[9px] tracking-[0.14em] text-white/60">MSU–IIT</span></span></Link>
+          <Link href="/auth/login" className="text-xs font-semibold text-white/80 transition hover:text-amber-300">Already registered? Sign in <ArrowRight size={13} className="ml-1 inline" /></Link>
+        </div>
+      </header>
 
-      {/* Back */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="absolute top-6 left-4 sm:left-8 z-20"
-      >
-        <Link
-          href="/auth/login"
-          className="flex items-center gap-2 text-stone-200 hover:text-white text-xs font-bold transition-colors group"
-        >
-          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Sign In
-        </Link>
-      </motion.div>
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-16 lg:py-16">
+        <aside className="lg:sticky lg:top-10 lg:self-start">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9A6A20]">Join the community</p>
+          <h1 className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">Start your <span className="font-serif italic text-[#7A0016]">PACE</span> journey.</h1>
+          <p className="mt-5 max-w-sm text-sm leading-7 text-slate-500">Create your account to access the career development experience designed for the MSU-IIT community and its partners.</p>
+          <div className="mt-9 hidden border-t border-slate-200 pt-6 lg:block">
+            <div className="flex items-start gap-3"><span className="mt-0.5 text-[#7A0016]"><LockKeyhole size={17} /></span><div><p className="text-xs font-semibold">Account security</p><p className="mt-1 text-xs leading-5 text-slate-500">Your password is transmitted to the PACE authentication service over your configured API connection. Never share your password or invitation token.</p></div></div>
+          </div>
+        </aside>
 
-      {/* Logo */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20"
-      >
-        <PaceLogo size={42} variant="dark" />
-      </motion.div>
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-900/[0.04] sm:p-8">
+          <div className="mb-7"><h2 className="text-xl font-semibold tracking-tight">Create an account</h2><p className="mt-1 text-xs text-slate-500">Select the account type that applies to you.</p></div>
 
-      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 py-28 sm:py-32">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="text-center mb-8 space-y-2">
-            <Badge variant="gold" className="flex items-center gap-2 mx-auto w-fit">
-              <Sparkles className="w-3.5 h-3.5" />
-              Create Account
-            </Badge>
-            <h1 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
-              Create your <span className="text-[#7A0016]">PACE</span> account
-            </h1>
-            <p className="text-[#64748B] text-sm">
-              Register as {currentRole.label} — {currentRole.description}
-            </p>
+          <div className="mb-8 grid gap-2 sm:grid-cols-3">
+            {roles.map(({ id, label, description, icon: Icon }) => {
+              const active = role === id;
+              return <button key={id} type="button" onClick={() => { setRole(id); setError(""); }} aria-pressed={active} className={`rounded-xl border p-3 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7A0016] ${active ? "border-[#7A0016] bg-[#7A0016]/[0.04] ring-1 ring-[#7A0016]/15" : "border-slate-200 hover:border-slate-300"}`}>
+                <Icon size={19} className={active ? "text-[#7A0016]" : "text-slate-400"} />
+                <span className="mt-3 block text-xs font-semibold">{label}</span>
+                <span className="mt-1 block text-[10px] leading-4 text-slate-500">{description}</span>
+              </button>;
+            })}
           </div>
 
-          <div className="myiit-card p-6 sm:p-8 space-y-6">
-            {/* Role Tabs (no superadmin for self-registration) */}
-            <div>
-              <div className="text-xs text-white/40 uppercase tracking-widest mb-3">
-                I am a...
+          {(role === "counselor" || role === "recruiter") && <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900"><strong>Invitation required.</strong> {role === "counselor" ? "Use the invitation token provided by your PACE administrator." : "Use your organization invitation token and the company ID supplied by PACE."}</div>}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="First name" name="firstName" value={values.firstName} onChange={(v) => update("firstName", v)} placeholder="First name" autoComplete="given-name" />
+              <Field label="Last name" name="lastName" value={values.lastName} onChange={(v) => update("lastName", v)} placeholder="Last name" autoComplete="family-name" />
+            </div>
+            <Field label="Email address" name="email" type="email" value={values.email} onChange={(v) => update("email", v)} placeholder="you@example.com" autoComplete="email" />
+
+            {role === "student" && <>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Student number" name="studentNumber" value={values.studentNumber} onChange={(v) => update("studentNumber", v)} placeholder="Student number" />
+                <div><label htmlFor="yearLevel" className={labelClass}>Year level</label><select id="yearLevel" value={values.yearLevel} onChange={(e) => update("yearLevel", e.target.value)} className={inputClass}>{Array.from({ length: 10 }, (_, i) => <option key={i + 1} value={String(i + 1)}>{i + 1}{i === 0 ? "st" : i === 1 ? "nd" : i === 2 ? "rd" : "th"} year / level</option>)}</select></div>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                {ROLES.map((role) => (
-                  <button
-                    key={role.id}
-                    type="button"
-                    onClick={() => setActiveRole(role.id)}
-                    className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl text-xs font-medium transition-all duration-300 border ${
-                      activeRole === role.id
-                        ? "bg-[#7A0016] text-white border-[#9B0020] shadow-lg shadow-[#7A0016]/20"
-                        : "text-[#475569] border-[#D1D5DB] bg-[#F8FAFC] hover:border-[#9B0020] hover:text-[#7A0016] hover:bg-white"
-                    }`}
-                  >
-                    {role.icon}
-                    <span>{role.label}</span>
-                  </button>
-                ))}
+              <Field label="Course / program" name="course" value={values.course} onChange={(v) => update("course", v)} placeholder="e.g. BS Information Technology" />
+              <Field label="Complete address" name="address" value={values.address} onChange={(v) => update("address", v)} placeholder="Street, barangay, city, province" autoComplete="street-address" />
+            </>}
+
+            {role === "counselor" && <>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Employee ID" name="employeeId" value={values.employeeId} onChange={(v) => update("employeeId", v)} placeholder="Employee ID" />
+                <Field label="Department" name="department" value={values.department} onChange={(v) => update("department", v)} placeholder="Department / office" />
               </div>
+              <Field label="Invitation token" name="token" value={values.token} onChange={(v) => update("token", v)} placeholder="Paste your invitation token" />
+            </>}
+
+            {role === "recruiter" && <>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Job title" name="jobTitle" value={values.jobTitle} onChange={(v) => update("jobTitle", v)} placeholder="e.g. Talent Acquisition Lead" />
+                <Field label="Company ID (UUID)" name="companyId" value={values.companyId} onChange={(v) => update("companyId", v)} placeholder="Provided by PACE" />
+              </div>
+              <Field label="Invitation token" name="token" value={values.token} onChange={(v) => update("token", v)} placeholder="Paste your invitation token" />
+            </>}
+
+            <Field label="Contact number" name="phone" type="tel" value={values.phone} onChange={(v) => update("phone", v)} placeholder="+63 9XX XXX XXXX" autoComplete="tel" />
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Create password" name="password" type="password" value={values.password} onChange={(v) => update("password", v)} placeholder="At least 8 characters" autoComplete="new-password" />
+              <Field label="Confirm password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={(v) => update("confirmPassword", v)} placeholder="Re-enter password" autoComplete="new-password" />
             </div>
 
-            {/* Dynamic Fields */}
-            <AnimatePresence mode="wait">
-              <motion.form
-                key={activeRole}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.25 }}
-                onSubmit={handleSubmit}
-                className="space-y-4"
-              >
-                {activeRole === "student" && (
-                  <StudentFields
-                    form={studentForm}
-                    setForm={setStudentForm}
-                    errors={studentErrors}
-                    showPassword={showPassword}
-                    setShowPassword={setShowPassword}
-                    showConfirmPassword={showConfirmPassword}
-                    setShowConfirmPassword={setShowConfirmPassword}
-                  />
-                )}
-                {activeRole === "counselor" && (
-                  <CounselorFields
-                    form={counselorForm}
-                    setForm={setCounselorForm}
-                    errors={counselorErrors}
-                    showPassword={showPassword}
-                    setShowPassword={setShowPassword}
-                    showConfirmPassword={showConfirmPassword}
-                    setShowConfirmPassword={setShowConfirmPassword}
-                  />
-                )}
-                {activeRole === "recruiter" && (
-                  <RecruiterFields
-                    form={recruiterForm}
-                    setForm={setRecruiterForm}
-                    errors={recruiterErrors}
-                    showPassword={showPassword}
-                    setShowPassword={setShowPassword}
-                    showConfirmPassword={showConfirmPassword}
-                    setShowConfirmPassword={setShowConfirmPassword}
-                  />
-                )}
+            {error && <div role="alert" className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3.5 py-3 text-xs leading-5 text-red-700"><AlertCircle size={16} className="mt-0.5 shrink-0" />{error}</div>}
 
-                {/* Terms */}
-                <p className="text-xs text-white/35 text-center">
-                  By registering, you agree to the{" "}
-                  <a href="#" className="text-[#F5A623] hover:underline">Terms of Use</a>{" "}
-                  and{" "}
-                  <a href="#" className="text-[#F5A623] hover:underline">Privacy Policy</a>{" "}
-                  of PACE MSU-IIT.
-                </p>
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  disabled={isLoading}
-                  className="w-full flex items-center justify-center gap-2 group"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Creating Account...
-                    </div>
-                  ) : (
-                    <>
-                      Create {currentRole.label} Account
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </Button>
-              </motion.form>
-            </AnimatePresence>
-
-            <div className="text-center text-sm text-white/50">
-              Already have an account?{" "}
-              <Link
-                href={`/auth/login?role=${activeRole}`}
-                className="text-[#F5A623] hover:text-[#FFD700] font-medium transition-colors"
-              >
-                Sign In
-              </Link>
-            </div>
-          </div>
-        </motion.div>
+            <button type="submit" disabled={isLoading} className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#7A0016] px-5 text-sm font-semibold text-white transition hover:bg-[#5C0011] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7A0016] disabled:cursor-not-allowed disabled:opacity-60">
+              {isLoading ? <><LoaderCircle size={17} className="animate-spin" /> Submitting registration…</> : <>Create {role} account <ArrowRight size={16} /></>}
+            </button>
+            <p className="text-center text-[10px] leading-5 text-slate-400">By creating an account, you acknowledge that your information will be processed by the PACE platform in accordance with applicable university policies.</p>
+          </form>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
