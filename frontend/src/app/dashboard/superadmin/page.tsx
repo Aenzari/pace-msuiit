@@ -274,12 +274,12 @@ function SuperadminDashboardContent() {
               </nav>
             </div>
 
-            {/* Quick Switcher for Testing other portals */}
+            {/* Portal route references — access remains role-restricted */}
             <div className="p-3.5 rounded-2xl bg-stone-950/80 border border-stone-800/80 space-y-2">
               <div className="flex items-center gap-2 text-[11px] font-bold text-amber-400 uppercase tracking-wider">
-                <Layers className="w-3.5 h-3.5" /> Portal Jumper
+                <Layers className="w-3.5 h-3.5" /> Portal routes
               </div>
-              <p className="text-[11px] text-stone-400">Jump straight into testing other authenticated roles:</p>
+              <p className="text-[11px] text-stone-400">Open a portal route. A matching role-specific account is required to enter:</p>
               <div className="grid grid-cols-1 gap-1 text-[11px]">
                 <Link href="/dashboard/student" className="flex items-center justify-between p-1.5 rounded-lg text-stone-300 hover:bg-stone-900 hover:text-amber-300 transition-colors">
                   <span>Student View</span>
@@ -291,6 +291,10 @@ function SuperadminDashboardContent() {
                 </Link>
                 <Link href="/dashboard/recruiter" className="flex items-center justify-between p-1.5 rounded-lg text-stone-300 hover:bg-stone-900 hover:text-amber-300 transition-colors">
                   <span>Recruiter Hub</span>
+                  <ChevronRight className="w-3 h-3 text-stone-500" />
+                </Link>
+                <Link href="/dashboard/mentor" className="flex items-center justify-between p-1.5 rounded-lg text-stone-300 hover:bg-stone-900 hover:text-amber-300 transition-colors">
+                  <span>Industry Mentor</span>
                   <ChevronRight className="w-3 h-3 text-stone-500" />
                 </Link>
               </div>
