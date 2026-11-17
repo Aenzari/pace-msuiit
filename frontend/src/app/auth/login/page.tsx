@@ -7,6 +7,7 @@ import Link from "next/link";
 import {
   ArrowRight,
   BriefcaseBusiness,
+  Handshake,
   Eye,
   EyeOff,
   GraduationCap,
@@ -25,6 +26,7 @@ const roleOptions = [
   { id: "student", label: "Student", detail: "Explore your career pathway", icon: GraduationCap },
   { id: "counselor", label: "Counselor", detail: "Guide student development", icon: Compass },
   { id: "recruiter", label: "Recruiter", detail: "Connect with emerging talent", icon: BriefcaseBusiness },
+  { id: "mentor", label: "Industry mentor", detail: "Share experience and guide talent", icon: Handshake },
   { id: "superadmin", label: "Administrator", detail: "Manage the platform", icon: ShieldCheck },
 ] as const;
 
