@@ -6,14 +6,7 @@ import { useRouter } from "next/navigation";
 import { AlertCircle, LoaderCircle, RefreshCw } from "lucide-react";
 import { ApiError, authApi } from "@/lib/api/client";
 import type { AuthUser, BackendRole } from "@/lib/api/types";
-
-const dashboardByRole: Record<BackendRole, string> = {
-  student: "/dashboard/student",
-  counselor: "/dashboard/counselor",
-  recruiter: "/dashboard/recruiter",
-  admin: "/dashboard/superadmin",
-  superadmin: "/dashboard/superadmin",
-};
+import { ROLE_DASHBOARD_PATHS } from "@/lib/constants/roles";
 
 export default function DashboardAuthGuard({ children, allowedRoles }: {
   children: ReactNode;
@@ -38,7 +31,7 @@ export default function DashboardAuthGuard({ children, allowedRoles }: {
           return;
         }
         if (!allowedRoleKey.split("|").includes(currentUser.role)) {
-          router.replace(dashboardByRole[currentUser.role]);
+          router.replace(ROLE_DASHBOARD_PATHS[currentUser.role]);
           return;
         }
         setUser(currentUser);
