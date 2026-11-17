@@ -182,6 +182,7 @@ export default function LoginPage() {
             </form>
 
             <p className="mt-7 text-center text-xs text-slate-500">New to PACE? <Link href="/auth/register" className="font-semibold text-[#7A0016] hover:underline">Create an account</Link></p>
+            {process.env.NODE_ENV === "development" && <p className="mt-4 text-center text-xs text-slate-500">Just exploring? <Link href="/preview" className="font-semibold text-[#7A0016] hover:underline">Open the PACE role preview</Link></p>}
             <div className="mt-10 border-t border-slate-200 pt-5 text-center text-[10px] leading-5 text-slate-400">
               <p>Protected university platform · MSU–IIT</p>
               <p>For account assistance, please contact the Career Development and Placement Office.</p>
