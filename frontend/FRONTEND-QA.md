@@ -19,6 +19,7 @@
 - Added global focus, selection, and reduced-motion foundations.
 - Added environment setup and backend hand-off documentation.
 - Added a GitHub Actions workflow for frontend type checking and production builds.
+- Removed 477 tracked generated Next.js/build-cache files (approximately 296 MB) and the generated TypeScript build-info file; the frontend ignore rules now prevent these artifacts from being re-added.
 
 ## Important boundary: dashboards are not yet live data products
 
