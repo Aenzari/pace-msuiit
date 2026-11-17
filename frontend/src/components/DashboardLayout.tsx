@@ -28,14 +28,6 @@ interface DashboardLayoutProps {
   breadcrumb: string;
 }
 
-const dashboardByRole: Record<BackendRole, string> = {
-  student: '/dashboard/student',
-  counselor: '/dashboard/counselor',
-  recruiter: '/dashboard/recruiter',
-  admin: '/dashboard/superadmin',
-  superadmin: '/dashboard/superadmin',
-};
-
 function roleForPath(pathname: string): BackendRole | null {
   if (pathname.startsWith('/dashboard/student')) return 'student';
   if (pathname.startsWith('/dashboard/counselor')) return 'counselor';
@@ -84,7 +76,7 @@ export default function DashboardLayout({
           || (expectedRole === 'superadmin' && user.role === 'admin');
 
         if (!isAuthorized) {
-          router.replace(dashboardByRole[user.role]);
+          router.replace(ROLE_DASHBOARD_PATHS[user.role]);
           return;
         }
 
