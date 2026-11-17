@@ -205,3 +205,58 @@
 @media (prefers-reduced-motion: reduce) {
   #pace-preview *, #pace-preview *::before, #pace-preview *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* The page title becomes a calm editorial hero rather than another flat heading row. */
+#pace-preview main > div:last-child > div:first-child {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 142px;
+  align-items: center;
+  padding: 25px 29px;
+  border: 1px solid rgba(255,255,255,.92);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 88% 18%,rgba(232,183,90,.22),transparent 13rem),
+    linear-gradient(112deg,rgba(255,255,255,.94),rgba(255,249,245,.9)) !important;
+  box-shadow: 0 12px 30px rgba(57,25,34,.045),inset 0 1px 0 #fff;
+}
+#pace-preview main > div:last-child > div:first-child::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 220px;
+  height: 220px;
+  right: -72px;
+  top: -128px;
+  border: 1px solid rgba(164,103,57,.12);
+  border-radius: 50%;
+  box-shadow: 0 0 0 22px rgba(164,103,57,.025),0 0 0 46px rgba(164,103,57,.018);
+  pointer-events: none;
+}
+#pace-preview main > div:last-child > div:first-child > div:first-child { position: relative; z-index: 1; }
+#pace-preview main > div:last-child > div:first-child > div:last-child {
+  position: relative;
+  z-index: 1;
+  border-color: #eee2dc !important;
+  background: rgba(255,255,255,.78) !important;
+  box-shadow: 0 4px 12px rgba(57,25,34,.035);
+}
+#pace-preview main > div:last-child > div:first-child h1 { font-size: clamp(1.8rem,3vw,2.45rem); line-height: 1.1; }
+#pace-preview main > div:last-child > div:first-child h1 + p { margin-top: 9px; }
+#pace-preview main > div:last-child > div:first-child [class*="border-amber-200"] {
+  background: #fff5df !important;
+  border-color: #f1d8a8 !important;
+  color: #80541e !important;
+}
+#pace-preview main > div:last-child > div:first-child [class*="border-amber-200"] > span { background: #d39a3f !important; }
+#pace-preview section h3 + p { line-height: 1.65; }
+#pace-preview section [class*="rounded-xl"][class*="p-4"]:hover,
+#pace-preview section [class*="rounded-xl"][class*="p-3"]:hover { transition: background .2s ease,border-color .2s ease,transform .2s ease; }
+#pace-preview section [class*="rounded-xl"][class*="p-4"]:hover { border-color: #e4d0c9; }
+#pace-preview main > div:nth-child(2) > div { scrollbar-width: none; }
+#pace-preview main > div:nth-child(2) > div::-webkit-scrollbar { display: none; }
+@media (max-width: 640px) {
+  #pace-preview main > div:last-child > div:first-child { min-height: 0; padding: 20px 17px; border-radius: 18px; }
+  #pace-preview main > div:last-child > div:first-child h1 { font-size: 1.8rem; }
+}
