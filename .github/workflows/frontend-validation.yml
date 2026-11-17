@@ -1,6 +1,7 @@
 name: Frontend validation
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
