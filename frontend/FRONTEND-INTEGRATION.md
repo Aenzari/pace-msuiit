@@ -49,7 +49,7 @@ Counselor and recruiter registration require an invitation token. Recruiter regi
 - Recruiter profile: `firstName`, `lastName`, `jobTitle`, and `phone`; the GET response also includes the linked `company` record.
 - Mentor profile: `firstName`, `lastName`, `professionalTitle`, `companyName`, `industry`, `biography`, `expertise`, `phone`, `maxMentees`, and nullable `availabilityNotes`.
 
-The current frontend reads and updates the student profile, reads and updates the counselor availability flag, and reads the recruiter profile and linked company. The recruiter contact fields are editable; the company record itself is read-only because the existing recruiter PATCH schema does not expose company fields.
+The current frontend reads and updates the student profile, reads and updates the counselor availability flag, reads and updates the mentor profile, and reads the recruiter profile and linked company. Recruiter contact fields are editable; the company record itself is read-only because the existing recruiter PATCH schema does not expose company fields.
 
 ## Role identifiers
 
