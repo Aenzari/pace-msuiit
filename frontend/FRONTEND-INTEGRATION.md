@@ -74,3 +74,8 @@ Use the backend values exactly: `student`, `counselor`, `recruiter`, `mentor`, `
 - `backend/src/config.js`
 - `frontend/src/lib/api/types.ts`
 - `frontend/src/lib/api/client.ts`
+
+
+## Expanded PACE workflow hand-off
+
+For the complete feature-to-service matrix, suggested state transitions, server-side authorization rules, privacy requirements, and integration acceptance checklist, see [PACE Backend Integration Matrix](../docs/PACE-BACKEND-INTEGRATION-MATRIX.md). All proposed service operations in that matrix are explicitly not existing API contracts; confirm them with the backend owner before wiring frontend calls.
