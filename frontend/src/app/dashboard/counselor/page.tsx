@@ -491,6 +491,7 @@ function CounselorDashboardContent() {
                 <span className={`h-1.5 w-1.5 rounded-full ${counselorProfile.isAvailable ? "bg-emerald-400" : "bg-slate-400"}`} />
                 {availabilitySaving ? "Updating…" : counselorProfile.isAvailable ? "Available for advising" : "Not available"}
               </button>}
+              {counselorProfileError && <p role="alert" className="mt-1 text-[10px] leading-4 text-red-200">{counselorProfileError}</p>}
             </div>
             <button
               type="button"
