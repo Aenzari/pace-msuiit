@@ -54,3 +54,17 @@ Those workflows need their corresponding existing backend routes, request/respon
 4. Add mentor matching, mentoring sessions, and mentor communications only after the backend exposes those workflows.
 5. Connect administrator management and analytics only after confirming the backend's admin endpoints and permissions.
 6. Add browser-level integration tests for cookie-based login, role redirects, logout, invitation registration, and each live workflow.
+
+
+## PACE product blueprint and role preview
+
+- Added the approved product scope, user-role boundaries, workflows, Alumni transition/mentorship rules, privacy requirements, and backend integration dependencies in `../docs/PACE-PRODUCT-BLUEPRINT.md`.
+- Added a development-only role preview at `/preview` for Student, Counselor, Recruiter, SuperAdmin, and Alumni workspaces.
+- The preview uses fictional data and local simulated interactions only. It does not create accounts, authenticate users, call backend workflow APIs, or persist records.
+- The Alumni mentorship preference starts at “Maybe later”; opting in, declining, and deciding later are separate choices, and none removes Alumni access.
+- Local setup and limitations are documented in `PACE-PREVIEW.md`.
+- The preview route is guarded by `NODE_ENV === "development"` and is not exposed in production builds.
+
+### Important boundary remains
+
+This addition does not change backend source, Prisma schema, migrations, database records, role identifiers, authentication, or API contracts. The role preview is a safe way to inspect proposed experiences while the backend developer implements and confirms the missing services.
