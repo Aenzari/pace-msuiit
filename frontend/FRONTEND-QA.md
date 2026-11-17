@@ -41,8 +41,8 @@ Those workflows need their corresponding existing backend routes, request/respon
 ## Validation status
 
 - Repository comparison confirms this delivery changes frontend files plus the frontend validation workflow only; no backend files were changed.
-- GitHub Actions successfully completed dependency installation, TypeScript validation, and the Next.js production build for commit `fb107f7b083fa9f323380caf6204aeb0537615d5`.
-- The workflow now also checks production dependencies for high/critical npm advisories before type checking and building; the result for the updated workflow is pending.
+- GitHub Actions successfully completed dependency installation, the production dependency security gate, TypeScript validation, and the Next.js production build for commit `127a595b6ab38a6aa917ac7c0d407a82337d3345` ([workflow run](https://github.com/Aenzari/pace-msuiit/actions/runs/44008297951)).
+- The production dependency gate (`npm audit --omit=dev --audit-level=high`) passed. `npm ci` still reports 8 moderate advisories across the full dependency tree; review and schedule dependency updates rather than applying unreviewed automatic fixes.
 - The successful build confirms compilation and static generation, not browser-level end-to-end behavior or a live backend deployment.
 - The pre-existing `lint` script still points to `next lint`, while this repository uses Next.js 16 and ESLint 8 with an ESLint 9 peer requirement in `eslint-config-next`. Align the ESLint major version, lockfile, and flat config before treating lint as a reliable CI gate.
 
