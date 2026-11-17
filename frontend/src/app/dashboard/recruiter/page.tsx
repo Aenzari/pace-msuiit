@@ -9,6 +9,7 @@ import {
   Share2, MapPin, DollarSign, Calendar
 } from 'lucide-react';
 import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
+import RecruiterProfilePanel from '@/components/recruiter/RecruiterProfilePanel';
 
 const navItems: NavItem[] = [
   { id: 'jobs', label: 'Job Portal & Feed', icon: <Briefcase size={18} /> },
@@ -471,27 +472,7 @@ export default function RecruiterDashboard() {
         {/* ─────────────────────────────────────────────────────────────
             TAB 4: COMPANY PROFILE
             ───────────────────────────────────────────────────────────── */}
-        {activeTab === 'company' && (
-          <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-xs p-6 max-w-2xl space-y-4">
-            <h3 className="text-base font-bold text-[#0F172A]">Corporate Partner Profile</h3>
-            <p className="text-xs text-[#64748B]">Showcased on the MSU-IIT student portal directory</p>
-
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="block font-bold text-[#334155] mb-1">Company Name</label>
-                <input type="text" value="TechCorp Philippines" readOnly className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] bg-slate-50 text-[#0F172A] font-semibold" />
-              </div>
-              <div>
-                <label className="block font-bold text-[#334155] mb-1">Industry Sector</label>
-                <input type="text" value="Fintech, Distributed Systems & Cloud Infrastructure" readOnly className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] bg-slate-50 text-[#0F172A]" />
-              </div>
-              <div>
-                <label className="block font-bold text-[#334155] mb-1">Corporate Headquarters / Office</label>
-                <input type="text" value="Cebu IT Park / Iligan Liaison Hub" readOnly className="w-full px-3 py-2 rounded-lg border border-[#CBD5E1] bg-slate-50 text-[#0F172A]" />
-              </div>
-            </div>
-          </div>
-        )}
+        {activeTab === 'company' && <RecruiterProfilePanel />}
 
       </div>
     </DashboardLayout>
