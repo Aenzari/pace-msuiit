@@ -36,14 +36,15 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   let response: Response;
 
   try {
+    const headers = new Headers(init.headers);
+    headers.set("Accept", "application/json");
+    if (init.body && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
+    }
     response = await fetch(`${API_ORIGIN}${API_PREFIX}${path}`, {
       ...init,
       credentials: "include",
-      headers: {
-        Accept: "application/json",
-        ...(init.body ? { "Content-Type": "application/json" } : {}),
-        ...init.headers,
-      },
+      headers,
     });
   } catch {
     throw new ApiError(
