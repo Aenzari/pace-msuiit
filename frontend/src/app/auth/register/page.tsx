@@ -189,10 +189,10 @@ export default function RegisterPage() {
           {(role === "counselor" || role === "recruiter") && <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900"><strong>Invitation required.</strong> {role === "counselor" ? "Use the invitation token provided by your PACE administrator." : "Use your organization invitation token and the company ID supplied by PACE."}</div>}
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
+            {role !== "counselor" && <div className="grid gap-4 sm:grid-cols-2">
               <Field label="First name" name="firstName" value={values.firstName} onChange={(v) => update("firstName", v)} placeholder="First name" autoComplete="given-name" />
               <Field label="Last name" name="lastName" value={values.lastName} onChange={(v) => update("lastName", v)} placeholder="Last name" autoComplete="family-name" />
-            </div>
+            </div>}
             <Field label="Email address" name="email" type="email" value={values.email} onChange={(v) => update("email", v)} placeholder="you@example.com" autoComplete="email" />
 
             {role === "student" && <>
