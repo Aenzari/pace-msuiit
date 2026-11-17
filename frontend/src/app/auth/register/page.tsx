@@ -10,7 +10,6 @@ import {
   Compass,
   GraduationCap,
   LockKeyhole,
-  Mail,
   AlertCircle,
   LoaderCircle,
 } from "lucide-react";
