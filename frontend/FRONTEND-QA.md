@@ -68,3 +68,27 @@ Those workflows need their corresponding existing backend routes, request/respon
 ### Important boundary remains
 
 This addition does not change backend source, Prisma schema, migrations, database records, role identifiers, authentication, or API contracts. The role preview is a safe way to inspect proposed experiences while the backend developer implements and confirms the missing services.
+
+
+## Expanded PACE role-preview interactions
+
+The development-only preview now includes local, non-persistent interactions for:
+- Student: counselor selection, appointment request details, resume file selection, AI-style sample draft, counselor feedback display, scoped messages, partner job saving/Quick Apply, resources, events, and profile review.
+- Counselor: connected-student caseload, appointment service/availability controls, resume feedback text and 1–5 rating, endorsement draft with student-sharing choice, and graduate outcome follow-up.
+- Recruiter: local job-posting drafts, eligible applicant review, recruitment pipeline, scoped messages, and company profile.
+- SuperAdmin: account approval/decline/deactivation simulations, illustrative impact analytics, partner oversight, and audit-log preview.
+- Alumni: editable sample employment/outcome fields, graduate follow-up response, and three separate mentorship choices. The default is undecided; declining mentorship does not remove Alumni access.
+
+### Manual browser QA checklist
+
+- [ ] Run the frontend in development and open `/preview`.
+- [ ] Switch through all five workspaces; verify each workspace has only its own navigation.
+- [ ] Try the student appointment, resume, messaging, job, resource, and event interactions.
+- [ ] Try counselor availability, feedback/rating, endorsement, and graduate tracking interactions.
+- [ ] Try recruiter job draft, applicant, pipeline, message, and company profile interactions.
+- [ ] Try SuperAdmin account decisions, partner directory, analytics, and audit-log screens.
+- [ ] Try all three Alumni mentorship choices and verify Alumni access messaging remains unchanged.
+- [ ] Confirm all preview notices are explicit and no live university data or backend mutations occur.
+- [ ] Check desktop and mobile navigation and reduced-motion settings.
+
+**Validation boundary:** The last confirmed successful CI run documented above predates the latest role-preview interaction additions. The current environment could not execute npm installation/build locally, and the GitHub connector did not expose a push-triggered run result for the latest commit. Do not treat the new preview additions as build-verified until the repository's GitHub Actions workflow reports success. Browser-level end-to-end testing against a configured backend also remains outstanding.
