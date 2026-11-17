@@ -13,6 +13,7 @@ import type {
   RecruiterProfile,
   RecruiterProfileUpdate,
   MentorProfile,
+  MentorProfileUpdate,
 } from "./types";
 
 /**
@@ -137,5 +138,10 @@ export const authApi = {
   },
   mentorProfile() {
     return request<{ profile: MentorProfile }>("/mentors/me/profile");
+  },
+  updateMentorProfile(payload: MentorProfileUpdate) {
+    return request<{ profile: MentorProfile }>("/mentors/me/profile", {
+      method: "PATCH", body: JSON.stringify(payload),
+    });
   },
 };
