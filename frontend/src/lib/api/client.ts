@@ -15,7 +15,7 @@ import type {
  * Next.js frontend commonly runs on port 3001. Set
  * NEXT_PUBLIC_API_BASE_URL to the deployed backend origin in each environment.
  */
-const API_ORIGIN = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
+const API_ORIGIN = (process.env.NEXT_PUBLIC_API_BASE_URL || (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "")).replace(/\/$/, "");
 const API_PREFIX = "/api";
 
 export class ApiError extends Error {
