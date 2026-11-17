@@ -15,7 +15,7 @@
 - Added an authenticated Industry Mentor workspace using the backend's existing mentor profile GET/PATCH endpoints and exposed the mentor portal on the sign-in screen.
 - Preserved backend payload field names and role identifiers in shared TypeScript contracts.
 - Centralized role-to-dashboard routing.
-- Added role-aware session checks to student, recruiter, counselor, and administrator dashboard entry points.
+- Added role-aware session checks to student, recruiter, counselor, mentor, and administrator dashboard entry points.
 - Replaced navigation-only logout with the existing backend logout endpoint.
 - Added explicit preview notices wherever dashboard fixtures or simulated actions remain.
 - Added global focus, selection, and reduced-motion foundations.
@@ -48,8 +48,9 @@ Those workflows need their corresponding existing backend routes, request/respon
 
 ## Suggested next integration sequence
 
-1. Connect student profile and opportunity data to the existing student API routes.
-2. Connect counselor appointments, availability, CV review, and messaging to their existing route contracts.
-3. Connect recruiter company, job, and candidate workflows to the existing recruiter routes.
-4. Connect administrator management and analytics only after confirming the backend's admin endpoints and permissions.
-5. Add integration tests for cookie-based login, role redirects, logout, invitation registration, and each live workflow.
+1. Connect student opportunity, appointment, CV, and verification experiences only when matching backend routes and schemas are available.
+2. Connect counselor appointments, scheduling, CV review, and messaging to their corresponding backend services.
+3. Connect recruiter company administration, jobs, candidate pipelines, and messaging to their corresponding backend services.
+4. Add mentor matching, mentoring sessions, and mentor communications only after the backend exposes those workflows.
+5. Connect administrator management and analytics only after confirming the backend's admin endpoints and permissions.
+6. Add browser-level integration tests for cookie-based login, role redirects, logout, invitation registration, and each live workflow.
