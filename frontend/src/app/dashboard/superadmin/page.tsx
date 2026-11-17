@@ -169,7 +169,7 @@ function SuperadminDashboardContent() {
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900/90 border border-stone-800 text-xs text-stone-300">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            System Node: <span className="font-mono text-amber-400">iligan-main-dc1</span>
+            Workspace mode: <span className="font-mono text-amber-400">preview</span>
           </div>
 
           <button
@@ -187,8 +187,8 @@ function SuperadminDashboardContent() {
               SA
             </div>
             <div className="hidden sm:block text-left">
-              <p className="text-xs font-semibold leading-tight text-stone-200">Dir. Renato Santos</p>
-              <p className="text-[10px] text-stone-400 font-mono">Chief Career Executive</p>
+              <p className="text-xs font-semibold leading-tight text-stone-200">PACE Administrator</p>
+              <p className="text-[10px] text-stone-400 font-mono">Administrator workspace</p>
             </div>
             <button type="button" onClick={handleSignOut} disabled={signingOut} aria-label="Sign out" title="Sign out" className="ml-2 rounded-lg p-1.5 text-stone-400 hover:bg-stone-900 hover:text-stone-200 disabled:opacity-50">
               <LogOut className="h-4 w-4" />
@@ -344,7 +344,7 @@ function SuperadminDashboardContent() {
               >
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[#F5A623]" />
-                  <span>3 new recruiter applications pending review today!</span>
+                  <span>Sample notification preview — live alerts are not connected.</span>
                 </div>
                 <button onClick={() => setShowAlertToast(false)} className="text-stone-400 hover:text-white">✕</button>
               </motion.div>
@@ -360,21 +360,20 @@ function SuperadminDashboardContent() {
                 <div className="relative z-10 max-w-2xl space-y-3">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur border border-amber-400/30 text-[11px] text-amber-300 font-mono">
                     <Sparkles className="w-3 h-3 text-[#FFD700]" />
-                    MSU-IIT Professional Advancement & Career Enhancement v2.4
+                    PACE · ADMINISTRATOR PREVIEW
                   </div>
                   <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
-                    Welcome back, Executive Director.
+                    Welcome to the PACE administration workspace.
                   </h1>
                   <p className="text-sm text-stone-300 leading-relaxed">
-                    Platform synchronization is operating at <span className="text-[#FFD700] font-semibold">99.98% uptime</span>.
-                    Career counseling turnaround average has improved to <span className="text-emerald-400 font-semibold">18.4 hours</span> across all collegiate branches.
+                    The figures in this workspace are sample values for interface review. Live system health and institutional analytics will appear when the corresponding services are connected.
                   </p>
                   <div className="flex flex-wrap gap-3 pt-2">
                     <button onClick={() => setActiveTab("counselors")} className="px-4 py-2 rounded-xl bg-[#F5A623] text-stone-950 font-bold text-xs hover:bg-[#FFD700] transition-colors shadow-lg shadow-amber-500/20">
                       Balance Counselor Load
                     </button>
                     <button onClick={() => setActiveTab("recruiters")} className="px-4 py-2 rounded-xl bg-black/40 hover:bg-black/60 border border-stone-600 text-stone-200 text-xs font-semibold transition-colors">
-                      Review 2 Pending Recruiters
+                      Review recruiter workspace
                     </button>
                   </div>
                 </div>
