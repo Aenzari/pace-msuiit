@@ -135,7 +135,7 @@ function PreviewBadge() {
 function MetricCard({ item, index }: { item: (typeof metrics.student)[number]; index: number }) {
   const Icon = item.icon;
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * .05 }} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_4px_18px_rgba(15,23,42,.035)]">
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * .05, type: "spring", stiffness: 260, damping: 22 }} whileHover={{ y: -5, rotateX: 2, rotateY: -1, scale: 1.015 }} style={{ transformPerspective: 900, transformStyle: "preserve-3d" }} className="rounded-2xl border border-white/80 bg-white/90 p-4 shadow-[0_8px_30px_rgba(15,23,42,.055)] backdrop-blur-sm">
       <div className="flex items-start justify-between"><span className="text-xs font-medium text-slate-500">{item.label}</span><span className="rounded-xl bg-slate-50 p-2 text-[#7B1E2B]"><Icon size={17} /></span></div>
       <div className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">{item.value}</div>
       <div className="mt-1 flex items-center gap-1 text-[11px] text-slate-500"><ArrowUpRight size={12} className="text-emerald-600" />{item.change}</div>
@@ -348,7 +348,7 @@ export default function PreviewWorkspace() {
   };
   const today = "Career Center workspace";
   return (
-    <div className="min-h-screen bg-[#F4F5F7] text-slate-900">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(123,30,43,0.075),transparent_34%),radial-gradient(ellipse_at_bottom_right,rgba(52,74,134,0.055),transparent_32%),#F4F5F7] text-slate-900">
       <div className="sticky top-0 z-40 border-b border-amber-200 bg-[#FFF8E8] px-4 py-2.5 text-center text-[11px] font-medium text-amber-950 sm:text-xs">
         <Sparkles size={13} className="mr-1.5 inline-block" /> DEVELOPMENT PREVIEW · Fictional data and simulated actions only · No real accounts or backend records are changed
       </div>
@@ -359,7 +359,7 @@ export default function PreviewWorkspace() {
           <div className="mt-auto rounded-2xl bg-gradient-to-br from-[#651925] to-[#9D3E48] p-4 text-white"><Sparkles size={18}/><p className="mt-3 text-xs font-semibold">Career growth, connected.</p><p className="mt-1 text-[10px] leading-4 text-white/70">A shared journey from guidance to opportunity and beyond.</p></div>
         </aside>
         <main className="min-w-0 flex-1">
-          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-4 sm:px-7">
+          <header className="sticky top-[38px] z-30 flex flex-wrap items-center justify-between gap-3 border-b border-white/70 bg-white/85 px-4 py-4 shadow-[0_8px_30px_rgba(15,23,42,.025)] backdrop-blur-xl sm:px-7">
             <div className="flex items-center gap-3 lg:hidden"><div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#7B1E2B] font-black text-white">P</div><span className="font-black tracking-tight text-[#651925]">PACE</span></div>
             <div className="hidden text-xs text-slate-400 sm:block">MSU-IIT <span className="mx-1 text-slate-300">/</span> Career Center <span className="mx-1 text-slate-300">/</span> {config.label}</div>
             <div className="ml-auto flex items-center gap-2"><button onClick={()=>notify("You are viewing sample notifications.")} className="relative rounded-xl border border-slate-200 p-2 text-slate-500 hover:bg-slate-50"><Bell size={17}/><span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-rose-500"/></button><div className="relative"><button onClick={()=>setShowRoleMenu(!showRoleMenu)} className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-left hover:bg-slate-50"><span className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${config.accent} text-[10px] font-bold text-white`}>{config.initials}</span><span className="hidden sm:block"><span className="block text-xs font-semibold text-slate-800">{config.label} Preview</span><span className="block text-[10px] text-slate-400">Switch workspace</span></span><ChevronDown size={14} className="text-slate-400"/></button>{showRoleMenu&&<div className="absolute right-0 top-14 z-50 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-xl">{(Object.keys(roleConfig) as Role[]).map((key)=><button key={key} onClick={()=>switchRole(key)} className={`w-full rounded-lg px-3 py-2 text-left text-xs ${role===key?"bg-[#F8ECE9] font-semibold text-[#7B1E2B]":"text-slate-600 hover:bg-slate-50"}`}>{roleConfig[key].label}</button>)}</div>}</div></div>
