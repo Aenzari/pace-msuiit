@@ -32,6 +32,7 @@ const modules: Record<Role, { id: string; label: string; icon: typeof LayoutDash
     { id: "progress", label: "Career Development", icon: TrendingUp },
     { id: "resources", label: "Career Resources", icon: FileText },
     { id: "events", label: "Events & Workshops", icon: CalendarDays },
+    { id: "mentors", label: "Alumni Mentors", icon: Handshake },
     { id: "profile", label: "Career Profile", icon: UserRound },
   ],
   counselor: [
@@ -126,6 +127,7 @@ const sectionCopy: Record<string, { title: string; description: string }> = {
   mentorship: { title: "Alumni mentorship", description: "Choose how you want to stay involved with the next generation." },
   resources: { title: "Career resources", description: "Continue learning with resources from the Career Center." },
   events: { title: "Career events & workshops", description: "Discover career talks, job fairs, workshops, and employer sessions." },
+  mentors: { title: "Alumni mentor directory", description: "Learn from alumni who have chosen to mentor current students." },
 };
 
 function PreviewBadge() {
@@ -202,6 +204,10 @@ function ModuleContent({ role, active, notify }: { role: Role; active: string; n
   const [positionName, setPositionName] = useState("Associate Software Engineer");
   const [generalLocation, setGeneralLocation] = useState("Iligan City");
   const [followupUpdate, setFollowupUpdate] = useState("Employed");
+  const [mentorExpertise, setMentorExpertise] = useState("Software engineering, cloud computing");
+  const [mentorTitle, setMentorTitle] = useState("Associate Software Engineer");
+  const [mentorAvailability, setMentorAvailability] = useState("Two evenings per month");
+  const [mentorCapacity, setMentorCapacity] = useState("2");
   const rows: Record<string, string[]> = {
     appointments: ["Career consultation · Dr. Maria Santos · Thu, 10:00 AM", "Resume discussion · Dr. Maria Santos · Mon, 2:00 PM", "Career planning · Prof. Roberto Gomez · Completed"],
     students: ["Alexandra Reyes · BS Computer Science · Active case", "Daniel Cruz · BS Information Systems · Follow-up due", "Mika Tan · BS Computer Science · Resume improvement"],
