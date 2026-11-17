@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import PaceLogo from "@/components/PaceLogo";
 import { authApi, ApiError } from "@/lib/api/client";
-import type { BackendRole } from "@/lib/api/types";
 import { ROLE_DASHBOARD_PATHS } from "@/lib/constants/roles";
 
 const roleOptions = [
