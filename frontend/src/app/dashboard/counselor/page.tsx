@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardAuthGuard from "@/components/DashboardAuthGuard";
-import { authApi } from "@/lib/api/client";
+import { ApiError, authApi } from "@/lib/api/client";
+import type { CounselorProfile } from "@/lib/api/types";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
@@ -207,6 +208,18 @@ function CounselorDashboardContent() {
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [signOutError, setSignOutError] = useState("");
+  const [counselorProfile, setCounselorProfile] = useState<CounselorProfile | null>(null);
+  const [counselorProfileError, setCounselorProfileError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    authApi.counselorProfile()
+      .then(({ profile }) => { if (active) setCounselorProfile(profile); })
+      .catch((error: unknown) => {
+        if (active) setCounselorProfileError(error instanceof ApiError ? error.message : "Counselor profile could not be loaded.");
+      });
+    return () => { active = false; };
+  }, []);
 
   // Appointments
   const [appointments, setAppointments] = useState<PendingAppointment[]>(PENDING_APPOINTMENTS_INIT);
@@ -455,8 +468,8 @@ function CounselorDashboardContent() {
               MS
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-white text-xs font-medium truncate">Dr. Maria Santos</div>
-              <div className="text-white/40 text-xs truncate">Career Counselor</div>
+              <div className="text-white text-xs font-medium truncate">Career Counselor</div>
+              <div className="text-white/50 text-[10px] truncate">{counselorProfile ? `${counselorProfile.employeeId} · ${counselorProfile.department}` : counselorProfileError || "Loading counselor profile…"}</div>
             </div>
             <button
               type="button"
