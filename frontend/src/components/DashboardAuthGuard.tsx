@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle, LoaderCircle, RefreshCw } from "lucide-react";
 import { ApiError, authApi } from "@/lib/api/client";
@@ -15,7 +16,7 @@ const dashboardByRole: Record<BackendRole, string> = {
 };
 
 export default function DashboardAuthGuard({ children, allowedRoles }: {
-  children: React.ReactNode;
+  children: ReactNode;
   allowedRoles: BackendRole[];
 }) {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function DashboardAuthGuard({ children, allowedRoles }: {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
+  const allowedRoleKey = allowedRoles.join("|");
 
   useEffect(() => {
     let active = true;
@@ -35,7 +37,7 @@ export default function DashboardAuthGuard({ children, allowedRoles }: {
           router.replace("/auth/login");
           return;
         }
-        if (!allowedRoles.includes(currentUser.role)) {
+        if (!allowedRoleKey.split("|").includes(currentUser.role)) {
           router.replace(dashboardByRole[currentUser.role]);
           return;
         }
@@ -50,10 +52,10 @@ export default function DashboardAuthGuard({ children, allowedRoles }: {
         setLoading(false);
       });
     return () => { active = false; };
-  }, [allowedRoles, attempt, router]);
+  }, [allowedRoleKey, attempt, router]);
 
   if (loading) {
-    return <main className="flex min-h-screen items-center justify-center bg-[#0D0B0E] text-white"><div className="text-center"><LoaderCircle size={25} className="mx-auto animate-spin text-amber-400" /><p className="mt-4 text-sm font-semibold">Verifying administrator access…</p></div></main>;
+    return <main className="flex min-h-screen items-center justify-center bg-[#0D0B0E] text-white"><div className="text-center"><LoaderCircle size={25} className="mx-auto animate-spin text-amber-400" /><p className="mt-4 text-sm font-semibold">Verifying your PACE access…</p></div></main>;
   }
 
   if (error || !user) {
