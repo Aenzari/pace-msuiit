@@ -32,6 +32,7 @@ import {
   Layers
 } from "lucide-react";
 import PaceLogo from "@/components/PaceLogo";
+import DashboardAuthGuard from "@/components/DashboardAuthGuard";
 
 interface CounselorItem {
   id: string;
@@ -57,7 +58,7 @@ interface RecruiterItem {
   activeJobs: number;
 }
 
-export default function SuperadminDashboardPage() {
+function SuperadminDashboardContent() {
   const [activeTab, setActiveTab] = useState<"overview" | "counselors" | "recruiters" | "analytics" | "settings">("overview");
 
   // Counselor State
@@ -898,5 +899,13 @@ export default function SuperadminDashboardPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function SuperadminDashboardPage() {
+  return (
+    <DashboardAuthGuard allowedRoles={["admin", "superadmin"]}>
+      <SuperadminDashboardContent />
+    </DashboardAuthGuard>
   );
 }
