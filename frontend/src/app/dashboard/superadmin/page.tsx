@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
@@ -33,6 +34,7 @@ import {
 } from "lucide-react";
 import PaceLogo from "@/components/PaceLogo";
 import DashboardAuthGuard from "@/components/DashboardAuthGuard";
+import { authApi } from "@/lib/api/client";
 
 interface CounselorItem {
   id: string;
@@ -59,6 +61,9 @@ interface RecruiterItem {
 }
 
 function SuperadminDashboardContent() {
+  const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
   const [activeTab, setActiveTab] = useState<"overview" | "counselors" | "recruiters" | "analytics" | "settings">("overview");
 
   // Counselor State
@@ -130,6 +135,18 @@ function SuperadminDashboardContent() {
     }));
   };
 
+  async function handleSignOut() {
+    setSigningOut(true);
+    setSignOutError("");
+    try {
+      await authApi.logout();
+      router.replace("/auth/login");
+    } catch {
+      setSignOutError("Unable to confirm sign out. Please try again.");
+      setSigningOut(false);
+    }
+  }
+
   return (
     <div className="superadmin-page min-h-screen bg-[#EEF2F6] text-[#0F172A] flex flex-col selection:bg-[#F5A623] selection:text-white">
       {/* Top Navigation */}
@@ -173,12 +190,14 @@ function SuperadminDashboardContent() {
               <p className="text-xs font-semibold leading-tight text-stone-200">Dir. Renato Santos</p>
               <p className="text-[10px] text-stone-400 font-mono">Chief Career Executive</p>
             </div>
-            <Link href="/" className="ml-2 text-stone-400 hover:text-stone-200 p-1.5 rounded-lg hover:bg-stone-900">
-              <LogOut className="w-4 h-4" />
-            </Link>
+            <button type="button" onClick={handleSignOut} disabled={signingOut} aria-label="Sign out" title="Sign out" className="ml-2 rounded-lg p-1.5 text-stone-400 hover:bg-stone-900 hover:text-stone-200 disabled:opacity-50">
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </header>
+
+      {signOutError && <div role="alert" className="border-b border-red-200 bg-red-50 px-5 py-2 text-xs text-red-700">{signOutError}</div>}
 
       {/* Main Body Layout */}
       <div className="flex-1 flex overflow-hidden">
