@@ -80,7 +80,7 @@ export default function RecruiterProfilePanel() {
                 <h3 className="text-base font-bold text-slate-900">{profile.company.name}</h3>
                 <p className="mt-1 text-xs text-slate-500">{profile.company.industry}</p>
               </div>
-              <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold capitalize text-slate-600">{profile.company.verificationStatus}</span>
+              <div className="flex flex-col items-end gap-1"><span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold capitalize text-slate-600">Company: {profile.company.verificationStatus}</span><span className="text-[10px] text-slate-500">Recruiter: {profile.approvalStatus}</span></div>
             </div>
             <dl className="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
               <div><dt className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Company location</dt><dd className="mt-1 text-sm text-slate-700">{profile.company.location || "Not provided"}</dd></div>
