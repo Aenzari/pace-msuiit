@@ -5,7 +5,7 @@
  * backend/src/controllers/auth.controller.js. Do not rename these fields to
  * match UI labels; map UI labels at the component boundary instead.
  */
-export type BackendRole = "student" | "counselor" | "recruiter" | "mentor" | "admin" | "superadmin;
+export type BackendRole = "student" | "counselor" | "recruiter" | "mentor" | "admin" | "superadmin";
 
 export interface AuthUser {
   id: string;
