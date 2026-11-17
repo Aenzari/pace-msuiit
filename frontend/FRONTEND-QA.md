@@ -11,7 +11,8 @@
 - Reworked the public landing page around the current PACE name and MSU-IIT maroon/gold identity.
 - Rebuilt login and registration interfaces with responsive layouts, accessible form controls, clear errors, and loading/success states.
 - Connected login, logout, current-session lookup, and the existing student/counselor/recruiter registration endpoints to the backend's current routes.
-- Connected the student profile editor and recruiter company/contact profile panel to their existing profile endpoints; counselor identity and the availability toggle use the existing counselor profile endpoint.
+- Connected the student and mentor profile editors and recruiter company/contact profile panel to their existing profile endpoints; counselor identity and the availability toggle use the existing counselor profile endpoint.
+- Added an authenticated Industry Mentor workspace using the backend's existing mentor profile GET/PATCH endpoints and exposed the mentor portal on the sign-in screen.
 - Preserved backend payload field names and role identifiers in shared TypeScript contracts.
 - Centralized role-to-dashboard routing.
 - Added role-aware session checks to student, recruiter, counselor, and administrator dashboard entry points.
