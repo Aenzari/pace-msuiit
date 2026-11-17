@@ -251,17 +251,16 @@ export default function StudentDashboard() {
     >
       <div className="space-y-6">
 
-        {/* Top Profile Strip (Clean My.IIT Style) */}
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-l-[#7A0016]">
+        <div className="bg-white rounded-xl border border-[#E2E8F0] border-l-4 border-l-[#7A0016] p-5 shadow-xs flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div
-              className="w-14 h-14 rounded-full bg-[#F8FAFC] text-[#94A3B8] flex items-center justify-center border-2 border-[#D1D5DB] shadow-xs"
-              aria-label="Profile picture placeholder"
-            >
-              <User size={28} strokeWidth={1.5} />
-            </div>
+            <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#D1D5DB] bg-[#F8FAFC] text-[#94A3B8]"><User size={28} strokeWidth={1.5} /></div>
             <div>
-              <div className="flex items-center gap-2">
+              <h2 className="text-lg font-bold text-[#0F172A]">Your PACE workspace</h2>
+              <p className="mt-1 text-xs text-[#64748B]">Manage your career development, guidance, and opportunities.</p>
+              <p className="mt-1 text-[11px] text-[#64748B]">Open My Career Profile to view and update your account details.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold text-[#0F172A]">Alexandra Reyes</h2>
                 <span className="px-2 py-0.5 rounded-full bg-[#FFF3D6] text-[#7A0016] text-[10px] font-bold border border-[#F5A623]/60">
                   ★ DEAN'S LISTER
@@ -306,7 +305,7 @@ export default function StudentDashboard() {
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wider text-[#7A0016]">CareerConnect+ Student Workspace</p>
-                  <h1 className="text-2xl font-black text-[#0F172A] mt-1">Good morning, Alexandra.</h1>
+                  <h1 className="text-2xl font-black text-[#0F172A] mt-1">Welcome to your career workspace.</h1>
                   <p className="text-sm text-[#64748B] mt-1 max-w-2xl">
                     Manage your career guidance journey, connect with your counselor, and stay informed about opportunities.
                   </p>
