@@ -34,6 +34,12 @@ const audiences = [
     title: "Meet emerging talent.",
     description: "Connect with motivated candidates and strengthen your relationship with the MSU-IIT community.",
   },
+  {
+    icon: Handshake,
+    eyebrow: "FOR INDUSTRY MENTORS",
+    title: "Share what experience teaches.",
+    description: "Contribute professional insight and help emerging IITian talent navigate their career journeys.",
+  },
 ];
 
 const pillars = [
@@ -130,10 +136,11 @@ export default function PaceLandingPage() {
         </div>
         <div className="max-w-3xl">
           <p className="text-lg leading-8 text-slate-600">PACE is designed as a shared digital space for career development at MSU-IIT. It brings together the people and experiences that help students prepare for meaningful work and lifelong professional growth.</p>
-          <div className="mt-9 grid gap-6 border-t border-slate-200 pt-7 sm:grid-cols-3">
+          <div className="mt-9 grid gap-6 border-t border-slate-200 pt-7 sm:grid-cols-2 xl:grid-cols-4">
             <div><p className="text-2xl font-semibold text-[#7A0016]">Students</p><p className="mt-2 text-xs leading-5 text-slate-500">A clearer path from academic experience to professional opportunity.</p></div>
             <div><p className="text-2xl font-semibold text-[#7A0016]">Counselors</p><p className="mt-2 text-xs leading-5 text-slate-500">A connected way to support guidance and career readiness.</p></div>
             <div><p className="text-2xl font-semibold text-[#7A0016]">Employers</p><p className="mt-2 text-xs leading-5 text-slate-500">A meaningful bridge to emerging talent and university partnership.</p></div>
+            <div><p className="text-2xl font-semibold text-[#7A0016]">Mentors</p><p className="mt-2 text-xs leading-5 text-slate-500">Experienced professionals sharing insight and practical guidance.</p></div>
           </div>
         </div>
       </section>
@@ -158,7 +165,7 @@ export default function PaceLandingPage() {
 
       <section id="community" className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="max-w-2xl"><p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#9A6A20]">A platform for the community</p><h2 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Different roles. <span className="font-serif italic text-[#7A0016]">One shared direction.</span></h2></div>
-        <div className="mt-10 grid gap-4 lg:grid-cols-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {audiences.map(({ icon: Icon, eyebrow, title, description }) => (
             <article key={eyebrow} className="flex min-h-[250px] flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
               <div className="flex items-center justify-between"><span className="text-[9px] font-bold tracking-[0.18em] text-[#9A6A20]">{eyebrow}</span><Icon size={21} className="text-[#7A0016]" /></div>
