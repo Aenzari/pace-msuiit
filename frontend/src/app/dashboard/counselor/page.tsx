@@ -1046,7 +1046,7 @@ function CounselorDashboardContent() {
 
 export default function CounselorDashboard() {
   return (
-    <DashboardAuthGuard allowedRoles={["counselor"]}>
+    <DashboardAuthGuard allowedRoles={["counselor"]} previewNotice="Counselor appointments, CV reviews, schedules, and messages currently use demonstration data. Only your counselor profile and availability status are connected to the backend.">
       <CounselorDashboardContent />
     </DashboardAuthGuard>
   );
