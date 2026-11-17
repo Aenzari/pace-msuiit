@@ -58,20 +58,12 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [notifOpen, setNotifOpen] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState('');
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [sessionCheck, setSessionCheck] = useState(0);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState('');
-
-  const notifications = [
-    { id: 1, text: 'New student application received from CCS', time: '5m ago', unread: true },
-    { id: 2, text: 'Appointment confirmed with Dr. Maria Santos', time: '1h ago', unread: true },
-    { id: 3, text: 'Career Fair registration window is open', time: '3h ago', unread: false },
-  ];
-  const unreadCount = notifications.filter((notification) => notification.unread).length;
 
   useEffect(() => {
     let active = true;
