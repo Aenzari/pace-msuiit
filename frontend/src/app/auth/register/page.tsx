@@ -10,7 +10,6 @@ import {
   GraduationCap,
   LockKeyhole,
   Mail,
-  UserRound,
   AlertCircle,
   LoaderCircle,
 } from "lucide-react";
