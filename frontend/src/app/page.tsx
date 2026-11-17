@@ -6,7 +6,6 @@ import {
   ArrowUpRight,
   BookOpenCheck,
   BriefcaseBusiness,
-  Building2,
   Compass,
   GraduationCap,
   Handshake,
