@@ -210,6 +210,7 @@ function CounselorDashboardContent() {
   const [signOutError, setSignOutError] = useState("");
   const [counselorProfile, setCounselorProfile] = useState<CounselorProfile | null>(null);
   const [counselorProfileError, setCounselorProfileError] = useState("");
+  const [availabilitySaving, setAvailabilitySaving] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -283,6 +284,22 @@ function CounselorDashboardContent() {
     if (msgTab === "students") setStudentConvos(updater);
     else setRecruiterConvos(updater);
     setChatInput("");
+  };
+
+  const handleToggleAvailability = async () => {
+    if (!counselorProfile || availabilitySaving) return;
+    setAvailabilitySaving(true);
+    setCounselorProfileError("");
+    try {
+      const { profile } = await authApi.updateCounselorProfile({
+        isAvailable: !counselorProfile.isAvailable,
+      });
+      setCounselorProfile(profile);
+    } catch (error) {
+      setCounselorProfileError(error instanceof ApiError ? error.message : "Unable to update availability.");
+    } finally {
+      setAvailabilitySaving(false);
+    }
   };
 
   const handleSignOut = async () => {
@@ -470,6 +487,10 @@ function CounselorDashboardContent() {
             <div className="flex-1 min-w-0">
               <div className="text-white text-xs font-medium truncate">Career Counselor</div>
               <div className="text-white/50 text-[10px] truncate">{counselorProfile ? `${counselorProfile.employeeId} · ${counselorProfile.department}` : counselorProfileError || "Loading counselor profile…"}</div>
+              {counselorProfile && <button type="button" onClick={handleToggleAvailability} disabled={availabilitySaving} aria-pressed={counselorProfile.isAvailable} title="Toggle counselor availability" className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-semibold text-white/75 hover:text-white disabled:opacity-50">
+                <span className={`h-1.5 w-1.5 rounded-full ${counselorProfile.isAvailable ? "bg-emerald-400" : "bg-slate-400"}`} />
+                {availabilitySaving ? "Updating…" : counselorProfile.isAvailable ? "Available for advising" : "Not available"}
+              </button>}
             </div>
             <button
               type="button"
