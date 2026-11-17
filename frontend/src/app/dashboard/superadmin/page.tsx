@@ -922,7 +922,7 @@ function SuperadminDashboardContent() {
 
 export default function SuperadminDashboardPage() {
   return (
-    <DashboardAuthGuard allowedRoles={["admin", "superadmin"]}>
+    <DashboardAuthGuard allowedRoles={["admin", "superadmin"]} previewNotice="Administrator records, platform metrics, approvals, and settings in this workspace are demonstration data. No live administrative changes are being made.">
       <SuperadminDashboardContent />
     </DashboardAuthGuard>
   );
