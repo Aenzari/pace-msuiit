@@ -73,7 +73,7 @@ This addition does not change backend source, Prisma schema, migrations, databas
 ## Expanded PACE role-preview interactions
 
 The development-only preview now includes local, non-persistent interactions for:
-- Student: counselor selection, appointment request details, resume file selection, AI-style sample draft, counselor feedback display, scoped messages, partner job saving/Quick Apply, resources, events, and profile review.
+- Student: counselor selection, appointment request details, resume file selection, AI-style sample draft, counselor feedback display, scoped messages, partner job saving, saved-opportunity list, application tracker, explicit resume-sharing consent before Quick Apply, resources, events, and profile review.
 - Counselor: connected-student caseload, appointment service/availability controls, resume feedback text and 1–5 rating, endorsement draft with student-sharing choice, and graduate outcome follow-up.
 - Recruiter: local job-posting drafts, eligible applicant review, recruitment pipeline, scoped messages, and company profile.
 - SuperAdmin: account approval/decline/deactivation simulations, illustrative impact analytics, partner oversight, and audit-log preview.
