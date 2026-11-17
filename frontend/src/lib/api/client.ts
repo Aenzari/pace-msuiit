@@ -6,6 +6,13 @@ import type {
   LoginPayload,
   RecruiterRegistrationPayload,
   StudentRegistrationPayload,
+  StudentProfile,
+  StudentProfileUpdate,
+  CounselorProfile,
+  CounselorProfileUpdate,
+  RecruiterProfile,
+  RecruiterProfileUpdate,
+  MentorProfile,
 } from "./types";
 
 /**
@@ -102,5 +109,33 @@ export const authApi = {
       method: "POST",
       body: JSON.stringify(payload),
     });
+  },
+
+  studentProfile() {
+    return request<{ profile: StudentProfile }>("/students/me/profile");
+  },
+  updateStudentProfile(payload: StudentProfileUpdate) {
+    return request<{ profile: StudentProfile }>("/students/me/profile", {
+      method: "PATCH", body: JSON.stringify(payload),
+    });
+  },
+  counselorProfile() {
+    return request<{ profile: CounselorProfile }>("/counselors/me/profile");
+  },
+  updateCounselorProfile(payload: CounselorProfileUpdate) {
+    return request<{ profile: CounselorProfile }>("/counselors/me/profile", {
+      method: "PATCH", body: JSON.stringify(payload),
+    });
+  },
+  recruiterProfile() {
+    return request<{ profile: RecruiterProfile }>("/recruiters/me/profile");
+  },
+  updateRecruiterProfile(payload: RecruiterProfileUpdate) {
+    return request<{ profile: RecruiterProfile }>("/recruiters/me/profile", {
+      method: "PATCH", body: JSON.stringify(payload),
+    });
+  },
+  mentorProfile() {
+    return request<{ profile: MentorProfile }>("/mentors/me/profile");
   },
 };
