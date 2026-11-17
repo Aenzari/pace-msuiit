@@ -1,5 +1,7 @@
 # PACE Development Preview
 
+**No dummy login is required.** The `/preview` route opens a development-only role sandbox directly; use the top-right role switcher to inspect Student, Counselor, Recruiter, SuperAdmin, and Alumni. It is not an authenticated account and does not connect to live records.
+
 The role preview is a **development-only UI sandbox** for reviewing the approved PACE experience without creating real accounts or touching university records.
 
 ## Start the preview
