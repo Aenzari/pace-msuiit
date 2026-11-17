@@ -97,7 +97,7 @@ const metrics: Record<Role, { label: string; value: string; change: string; icon
     { label: "Alumni profile", value: "92%", change: "Almost complete", icon: UserRound },
     { label: "Career updates", value: "4", change: "Last updated recently", icon: Activity },
     { label: "Follow-ups", value: "1", change: "Next check-in upcoming", icon: CalendarDays },
-    { label: "Mentorship", value: "Opted in", change: "Profile visible to eligible students", icon: Handshake },
+    { label: "Mentorship", value: "Undecided", change: "Your choice · Alumni access retained", icon: Handshake },
   ],
 };
 
@@ -184,6 +184,15 @@ function ModuleContent({ role, active, notify }: { role: Role; active: string; n
   const [jobState, setJobState] = useState<Record<string, string>>({});
   const [savedJobs, setSavedJobs] = useState<string[]>([]);
   const [accountDecisions, setAccountDecisions] = useState<Record<string, string>>({});
+  const [selectedCounselor, setSelectedCounselor] = useState("Dr. Maria Santos · Career Guidance");
+  const [appointmentType, setAppointmentType] = useState("Career Talk");
+  const [appointmentDate, setAppointmentDate] = useState("2026-11-19");
+  const [appointmentTime, setAppointmentTime] = useState("10:00");
+  const [messageDraft, setMessageDraft] = useState("");
+  const [sentMessages, setSentMessages] = useState<string[]>([]);
+  const [resumeFile, setResumeFile] = useState("");
+  const [resumePrompt, setResumePrompt] = useState("Write a concise, achievement-focused summary for an aspiring software engineer.");
+  const [resumeDraft, setResumeDraft] = useState("");
   const rows: Record<string, string[]> = {
     appointments: ["Career consultation · Dr. Maria Santos · Thu, 10:00 AM", "Resume discussion · Dr. Maria Santos · Mon, 2:00 PM", "Career planning · Prof. Roberto Gomez · Completed"],
     students: ["Alexandra Reyes · BS Computer Science · Active case", "Daniel Cruz · BS Information Systems · Follow-up due", "Mika Tan · BS Computer Science · Resume improvement"],
