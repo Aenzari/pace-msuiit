@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, LoaderCircle, RefreshCw, ShieldCheck } from "lucide-react";
+import { AlertCircle, LoaderCircle, RefreshCw } from "lucide-react";
 import { ApiError, authApi } from "@/lib/api/client";
 import type { AuthUser, BackendRole } from "@/lib/api/types";
 
